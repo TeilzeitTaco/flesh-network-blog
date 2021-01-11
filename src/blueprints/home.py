@@ -13,9 +13,9 @@ def route_root():
     return render_template("home.html", title="Root", blog_posts=blog_posts)
 
 
-# TODO: title is optional
+@bp.route("/<int:blog_post_id>")
 @bp.route("/<int:blog_post_id>/<string:title>")
-def route_blog_post(blog_post_id: int, title: str):
+def route_blog_post(blog_post_id: int, title: str = ""):
     blog_post = db.query(BlogPost).get(blog_post_id)
     if not blog_post:
         return "error"

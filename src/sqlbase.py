@@ -1,4 +1,6 @@
-from sqlalchemy import create_engine, Integer, Column, String, ForeignKey
+from datetime import datetime
+
+from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
@@ -15,11 +17,11 @@ class Author(Base):
 
     blog_posts = relationship("BlogPost", back_populates="author")
 
-    def __init__(self, name: str, biography: str):
+    def __init__(self, name: str, biography: str) -> None:
         self.biography = biography
         self.name = name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Author(id=\"{self.id}\", name=\"{self.name}\")"
 
 
@@ -29,20 +31,25 @@ class BlogPost(Base):
     id = Column(Integer, primary_key=True)
     hits = Column(Integer, default=0)
     title = Column(String, unique=True, index=True, nullable=False, default="")
+    timestamp = Column(DateTime, default=datetime.utcnow())
 
     author_id = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", back_populates="blog_posts")
 
     @property
-    def slug_path(self):
-        return f"blogposts/{self.title.replace(' ', '-')}"
+    def slug(self) -> str:
+        return self.title.replace(" ", "-")
 
     @property
-    def css_path(self):
+    def slug_path(self) -> str:
+        return f"blogposts/{self.slug}"
+
+    @property
+    def css_path(self) -> str:
         return f"{self.slug_path}/post.css"
 
     @property
-    def html_path(self):
+    def html_path(self) -> str:
         return f"{self.slug_path}/post.html"
 
     def __init__(self, title: str, author_id: int) -> None:

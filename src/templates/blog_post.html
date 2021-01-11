@@ -2,7 +2,8 @@
 
 {% block content %}
 <div>
-    <h1>{{ blog_post.title }}</h1>
+    <span class="main_header">{{ blog_post.title }}</span>
+    <a class="sub_header" href="/">Return to root</a>
 
     <div>
         {{ blog_post_content | safe }}

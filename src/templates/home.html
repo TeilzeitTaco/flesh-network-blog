@@ -2,14 +2,14 @@
 
 {% block content %}
 <div>
-    <h1>Welcome to the Flesh-Network.</h1>
-    <h2>Because we are all connected.</h2>
+    <span class="main_header">Welcome to the Flesh-Network.</span><br>
+    <span class="sub_header">Because we are all connected.</span>
 </div>
 
 <div>
     {% for blog_post in blog_posts %}
     <div>
-        <span><span>{{blog_post.title}}</span>, written by <span>{{blog_post.author}}</span></span>
+        <span><a href="/{{blog_post.id}}/{{blog_post.slug}}">{{blog_post.title}}</a>, written by <span>{{blog_post.author.name}}</span></span>
     </div>
     {% endfor %}
 </div>
