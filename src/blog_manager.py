@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-import sys
 
-from sqlbase import db, Author
+import os
+import sys
+import shutil
+
+from sqlbase import db, Author, BlogPost
 
 
 BANNER = """\
@@ -26,29 +29,52 @@ def show_authors() -> None:
 
 def delete_author() -> None:
     author_id = int(input("Author ID: "))
-    author = db.query(Author).filter_by(id=author_id).first()
+    author = db.query(Author).get(author_id)
     if author:
         for blog_post in author.blog_posts:
-            print(f"Deleted post \"{blog_post.title}\".")
+            print(f"Deleted blog post \"{blog_post.title}\".")
+            shutil.rmtree(blog_post.slug_path)
             db.delete(blog_post)
 
         db.delete(author)
         db.commit()
         print(f"Deleted author \"{author.name}\".")
+
     else:
         print(f"No author with ID: {author_id}.")
 
 
 def create_blog_post() -> None:
-    print("Creating Blog Post")
+    author_id = int(input("Author ID: "))
+    title = input("Title: ")
+
+    blog_post = BlogPost(title, author_id)
+    os.makedirs(blog_post.slug_path)
+
+    open(blog_post.html_path, "w").close()
+    open(blog_post.css_path, "w").close()
+
+    db.add(blog_post)
+    db.commit()
 
 
 def show_blog_posts() -> None:
-    print("Showing Blog Posts")
+    print("Current blog posts:")
+    for blog_post in db.query(BlogPost):
+        print(f" ({blog_post.id}) - \"{blog_post.title}\"")
 
 
 def delete_blog_post() -> None:
-    print("Deleting Blog Post")
+    blog_post_id = int(input("Blog Post ID: "))
+    blog_post = db.query(BlogPost).get(blog_post_id)
+    if blog_post:
+        shutil.rmtree(blog_post.slug_path)
+        db.delete(blog_post)
+        db.commit()
+        print(f"Deleted blog post \"{blog_post.title}\".")
+
+    else:
+        print(f"No blog post with ID: {blog_post_id}.")
 
 
 def exit_program() -> None:

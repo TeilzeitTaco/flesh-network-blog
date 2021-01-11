@@ -1,32 +1,16 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-        <title>{{format_title(title)}}</title>
+{% block content %}
+<div>
+    <h1>Welcome to the Flesh-Network.</h1>
+    <h2>Because we are all connected.</h2>
+</div>
 
-        {% assets "js_base" %}
-        <script type="text/javascript" src="{{ASSET_URL}}"></script>
-        {% endassets %}
-
-        {% assets "css_base" %}
-        <link rel="stylesheet" href="{{ASSET_URL}}">
-        {% endassets %}
-    </head>
-
-    <body>
-        <div>
-            <h1>Welcome to the Flesh-Network.</h1>
-            <h2>Because we are all connected.</h2>
-        </div>
-
-        <div>
-            {% for blog_post in blog_posts %}
-            <div>
-                <span><span>{{blog_post.title}}</span>, written by <span>{{blog_post.author}}</span></span>
-            </div>
-            {% endfor %}
-        </div>
-    </body>
-</html>
+<div>
+    {% for blog_post in blog_posts %}
+    <div>
+        <span><span>{{blog_post.title}}</span>, written by <span>{{blog_post.author}}</span></span>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
