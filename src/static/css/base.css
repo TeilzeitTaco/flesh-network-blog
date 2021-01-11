@@ -1,0 +1,37 @@
+/* font-face headers generated on https://www.fontsquirrel.com */
+
+@font-face {
+    font-family: "jmh_typewriterregular";
+    src: url("../fonts/jmh_typewriter-webfont.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "jmh_typewriterblack";
+    src: url("../fonts/jmh_typewriter_black-webfont.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter_black-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "jmh_typewriterbold";
+    src: url("../fonts/jmh_typewriter_bold-webfont.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter_bold-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "jmh_typewriterthin";
+    src: url("../fonts/jmh_typewriter_thin-webfont.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter_thin-webfont.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+#main-page-header {
+    font-family: jmh_typewriterregular;
+}

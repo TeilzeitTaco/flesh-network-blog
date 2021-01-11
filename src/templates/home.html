@@ -2,14 +2,22 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>{{title}}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        {% assets "js_home" %}
+        <title>{{format_title(title)}}</title>
+
+        {% assets "js_base" %}
         <script type="text/javascript" src="{{ASSET_URL}}"></script>
+        {% endassets %}
+
+        {% assets "css_base" %}
+        <link rel="stylesheet" href="{{ASSET_URL}}">
         {% endassets %}
     </head>
 
     <body>
-
+        <span id="main-page-header">
+            Welcome to the Flesh-Network.
+        </span>
     </body>
 </html>
