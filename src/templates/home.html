@@ -20,5 +20,13 @@
             <h1>Welcome to the Flesh-Network.</h1>
             <h2>Because we are all connected.</h2>
         </div>
+
+        <div>
+            {% for blog_post in blog_posts %}
+            <div>
+                <span><span>{{blog_post.title}}</span>, written by <span>{{blog_post.author}}</span></span>
+            </div>
+            {% endfor %}
+        </div>
     </body>
 </html>

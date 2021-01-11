@@ -1,0 +1,5 @@
+{
+    "SECRET_KEY": "4675230f3beae8eba84819fe46dd617ef8a0f3d6c101e64bef768d952857c8d5f1d933b5bb335fcc164b888b419ff5a248ca7a05bc2cfeacb28b0a8474b1a4ca",
+    "PROPAGATE_EXCEPTIONS": true,
+    "BEHIND_PROXY": true
+}

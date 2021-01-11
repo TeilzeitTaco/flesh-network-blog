@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_assets import Environment, Bundle
 
@@ -7,7 +9,11 @@ BLOG_NAME = "Flesh-Network"
 
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static")
-    assets = Environment(app)
+    app.config.from_json("config.json")
+
+    if app.config["BEHIND_PROXY"]:
+        from werkzeug.middleware.proxy_fix import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 
     # These functions are available in Jinja templates.
     app.jinja_env.globals.update(
@@ -15,6 +21,8 @@ def create_app() -> Flask:
     )
 
     # Manage asset packaging
+    assets = Environment(app)
+
     js_base = Bundle("scripts/base.js", filters="jsmin", output="gen/js_base.js")
     assets.register("js_base", js_base)
 
