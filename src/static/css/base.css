@@ -2,32 +2,32 @@
 
 @font-face {
     font-family: "jmh_typewriter_regular";
-    src: url("../fonts/jmh_typewriter-webfont.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter-webfont.woff") format("woff");
+    src: url("../fonts/jmh_typewriter.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "jmh_typewriter_black";
-    src: url("../fonts/jmh_typewriter_black-webfont.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter_black-webfont.woff") format("woff");
+    src: url("../fonts/jmh_typewriter_black.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter_black.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "jmh_typewriter_bold";
-    src: url("../fonts/jmh_typewriter_bold-webfont.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter_bold-webfont.woff") format("woff");
+    src: url("../fonts/jmh_typewriter_bold.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter_bold.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "jmh_typewriter_thin";
-    src: url("../fonts/jmh_typewriter_thin-webfont.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter_thin-webfont.woff") format("woff");
+    src: url("../fonts/jmh_typewriter_thin.woff2") format("woff2"),
+         url("../fonts/jmh_typewriter_thin.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
