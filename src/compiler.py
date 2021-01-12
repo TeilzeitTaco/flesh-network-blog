@@ -13,14 +13,7 @@ from sqlbase import db, BlogPost
 MARKDOWN_IMAGE_REFERENCE = re.compile(r"!\[([^]]*?)]\(([^)]*?)\)", re.IGNORECASE)
 
 GENERATED_RESOURCES_PATH = "static/gen/res/"
-
-
-def hash_file(path: str) -> str:
-    with open(path, "rb") as f:
-        hash_sum = hashlib.shake_256()
-        hash_sum.update(f.read())
-
-    return hash_sum.hexdigest(16)
+RESOURCE_FILE_NAME_LENGTH = 16
 
 
 def process_resource_files(resource_path: str) -> Dict[str, str]:
@@ -74,8 +67,17 @@ def write_file(path: str, content: str) -> None:
         f.write(content)
 
 
+def hash_file(path: str) -> str:
+    with open(path, "rb") as f:
+        hash_sum = hashlib.shake_256()
+        hash_sum.update(f.read())
+
+    return hash_sum.hexdigest(RESOURCE_FILE_NAME_LENGTH)
+
+
 def compile_all_posts() -> None:
-    rmtree(GENERATED_RESOURCES_PATH)
+    if os.path.exists(GENERATED_RESOURCES_PATH):
+        rmtree(GENERATED_RESOURCES_PATH)
     os.mkdir(GENERATED_RESOURCES_PATH)
 
     for blog_post in db.query(BlogPost):

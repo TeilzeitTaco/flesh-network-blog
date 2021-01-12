@@ -22,7 +22,7 @@ class Author(Base):
     blog_posts = relationship("BlogPost", back_populates="author")
 
     @property
-    def slug(self):
+    def slug(self) -> str:
         return slugify(self.name)
 
     def __init__(self, name: str, biography: str) -> None:
