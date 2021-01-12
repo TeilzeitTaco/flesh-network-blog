@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_assets import Environment, Bundle
-
+from flask_caching import Cache
 
 BLOG_NAME = "Flesh-Network"
+
+cache = Cache()
 
 
 def create_app() -> Flask:
@@ -18,7 +20,10 @@ def create_app() -> Flask:
         format_title=lambda title: f"{title} | {BLOG_NAME}",
     )
 
-    # Manage asset packaging
+    # Caches pages.
+    cache.init_app(app)
+
+    # Manages asset packaging.
     assets = Environment(app)
 
     js_base = Bundle("scripts/base.js", filters="jsmin", output="gen/js_base.js")
