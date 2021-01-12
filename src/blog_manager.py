@@ -5,6 +5,7 @@ import sys
 import shutil
 
 from sqlbase import db, Author, BlogPost
+from compiler import compile_all_posts
 
 
 BANNER = """\
@@ -49,10 +50,9 @@ def create_blog_post() -> None:
     title = input("Title: ")
 
     blog_post = BlogPost(title, author_id)
-    os.makedirs(blog_post.slug_path)
+    os.makedirs(blog_post.resources_path)
 
-    open(blog_post.html_path, "w").close()
-    open(blog_post.css_path, "w").close()
+    open(blog_post.markdown_path, "w").close()
 
     db.add(blog_post)
     db.commit()
@@ -91,6 +91,7 @@ def main() -> None:
         ("Create Blog Post", create_blog_post),
         ("Show Blog Posts", show_blog_posts),
         ("Delete Blog Post", delete_blog_post),
+        ("Compile Blog Posts", compile_all_posts),
         ("Exit", exit_program),
     ]
 

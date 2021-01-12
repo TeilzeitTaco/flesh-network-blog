@@ -53,8 +53,12 @@ class BlogPost(Base):
         return f"blogposts/{self.slug}"
 
     @property
-    def css_path(self) -> str:
-        return f"{self.slug_path}/post.css"
+    def markdown_path(self) -> str:
+        return f"{self.slug_path}/post.md"
+
+    @property
+    def resources_path(self) -> str:
+        return  f"{self.slug_path}/res"
 
     @property
     def html_path(self) -> str:
