@@ -12,8 +12,8 @@ def route_root():
     return render_template("home.html", title="Root", blog_posts=blog_posts)
 
 
-@bp.route("/posts/<int:blog_post_id>")
-@bp.route("/posts/<int:blog_post_id>/<string:title>")
+@bp.route("/posts/<int:blog_post_id>/")
+@bp.route("/posts/<int:blog_post_id>/<string:title>/")
 def route_blog_post(blog_post_id: int, title: str = ""):
     blog_post = db.query(BlogPost).get(blog_post_id)
     if blog_post is None:
@@ -26,8 +26,8 @@ def route_blog_post(blog_post_id: int, title: str = ""):
                            blog_post=blog_post, blog_post_content=blog_post_content)
 
 
-@bp.route("/authors/<int:author_id>")
-@bp.route("/authors/<int:author_id>/<string:name>")
+@bp.route("/authors/<int:author_id>/")
+@bp.route("/authors/<int:author_id>/<string:name>/")
 def route_author(author_id: int, name: str = ""):
     author = db.query(Author).get(author_id)
     if author is None:

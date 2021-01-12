@@ -3,7 +3,8 @@
 @font-face {
     font-family: "jmh_typewriter_regular";
     src: url("../fonts/jmh_typewriter.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter.woff") format("woff");
+         url("../fonts/jmh_typewriter.woff") format("woff"),
+         url("../fonts/jmp_typewriter.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
 }
@@ -11,7 +12,8 @@
 @font-face {
     font-family: "jmh_typewriter_black";
     src: url("../fonts/jmh_typewriter_black.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter_black.woff") format("woff");
+         url("../fonts/jmh_typewriter_black.woff") format("woff"),
+         url("../fonts/jmp_typewriter_black.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
 }
@@ -19,7 +21,8 @@
 @font-face {
     font-family: "jmh_typewriter_bold";
     src: url("../fonts/jmh_typewriter_bold.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter_bold.woff") format("woff");
+         url("../fonts/jmh_typewriter_bold.woff") format("woff"),
+         url("../fonts/jmp_typewriter_bold.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
 }
@@ -27,13 +30,14 @@
 @font-face {
     font-family: "jmh_typewriter_thin";
     src: url("../fonts/jmh_typewriter_thin.woff2") format("woff2"),
-         url("../fonts/jmh_typewriter_thin.woff") format("woff");
+         url("../fonts/jmh_typewriter_thin.woff") format("woff"),
+         url("../fonts/jmp_typewriter_thin.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
 }
 
 body {
-    background-color: white;
+    background-image: url("../images/background.jpg");
 }
 
 .main_header {
@@ -42,6 +46,6 @@ body {
 }
 
 .sub_header {
-    font-family: jmh_typewriter_thin;
+    font-family: jmh_typewriter_regular;
     font-size: 1.5em;
 }

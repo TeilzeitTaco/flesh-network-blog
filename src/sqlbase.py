@@ -7,6 +7,10 @@ from sqlalchemy.orm import sessionmaker, relationship
 Base = declarative_base()
 
 
+def slugify(base: str) -> str:
+    return base.replace(" ", "-")
+
+
 class Author(Base):
     __tablename__ = "authors"
 
@@ -16,6 +20,10 @@ class Author(Base):
     biography = Column(String, nullable=False, default="")
 
     blog_posts = relationship("BlogPost", back_populates="author")
+
+    @property
+    def slug(self):
+        return slugify(self.name)
 
     def __init__(self, name: str, biography: str) -> None:
         self.biography = biography
@@ -38,7 +46,7 @@ class BlogPost(Base):
 
     @property
     def slug(self) -> str:
-        return self.title.replace(" ", "-")
+        return slugify(self.title)
 
     @property
     def slug_path(self) -> str:
