@@ -10,7 +10,7 @@ from shutil import copyfile, rmtree
 from sqlbase import db, BlogPost
 
 
-MARKDOWN_IMAGE_REFERENCE = re.compile(r"!\[([^]]*?)]\(([^)]*?)\)", re.IGNORECASE)
+MARKDOWN_IMAGE_REFERENCE = re.compile(r"!\[([^]]*?)]\(([^)]*?)( \"([^\"]*?)\")?\)", re.IGNORECASE)
 
 GENERATED_RESOURCES_PATH = "static/gen/res/"
 RESOURCE_FILE_NAME_LENGTH = 16
@@ -48,7 +48,12 @@ def post_process_image_clause(markdown_src: str, resources_name_mapping: Dict[st
             print(f"\nError! Missing resource \"{resource_file_name}\"!")
             sys.exit(-1)
 
-        return f"![{alt_text}](/{GENERATED_RESOURCES_PATH + hashed_file_name})"
+        title_text = match.group(4)
+        new_markdown = f"![{alt_text}](/{GENERATED_RESOURCES_PATH + hashed_file_name}"
+        if title_text is not None:
+            new_markdown += f" \"{title_text}\""
+
+        return new_markdown + ")"
 
     return MARKDOWN_IMAGE_REFERENCE.sub(processor, markdown_src)
 
