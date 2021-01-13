@@ -20,7 +20,7 @@ def create_app() -> Flask:
         format_title=lambda title: f"{title} | {BLOG_NAME}",
     )
 
-    # Caches pages.
+    # Caches pages to reduce server load.
     cache.init_app(app)
 
     # Manages asset packaging.
