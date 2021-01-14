@@ -11,6 +11,22 @@ def slugify(base: str) -> str:
     return base.replace(" ", "-")
 
 
+# Aux. mapping table
+class TagAssociation(Base):
+    __tablename__ = "tag_associations"
+
+    id = Column(Integer, primary_key=True)
+    blog_post_id = Column(Integer, ForeignKey("blogposts.id"))
+    tag_id = Column(Integer, ForeignKey("tags.id"))
+
+    def __init__(self, blog_post_id: int, tag_id: int) -> None:
+        self.blog_post_id = blog_post_id
+        self.tag_id = tag_id
+
+    def __repr__(self) -> str:
+        return f"TagAssociation(id={self.id}, blog_post_id={self.blog_post_id}, tag_id={self.tag_id})"
+
+
 class Author(Base):
     __tablename__ = "authors"
 
@@ -30,7 +46,22 @@ class Author(Base):
         self.name = name
 
     def __repr__(self) -> str:
-        return f"Author(id=\"{self.id}\", name=\"{self.name}\")"
+        return f"Author(id={self.id}, name=\"{self.name}\")"
+
+
+class Tag(Base):
+    __tablename__ = "tags"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, index=True, nullable=False, default="")
+
+    blog_posts = relationship("BlogPost", secondary="tag_associations")
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def __repr__(self) -> str:
+        return f"Tag(id={self.id}, name=\"{self.name}\""
 
 
 class BlogPost(Base):
@@ -40,6 +71,8 @@ class BlogPost(Base):
     hits = Column(Integer, default=0)
     title = Column(String, unique=True, index=True, nullable=False, default="")
     timestamp = Column(DateTime, default=datetime.utcnow())
+
+    tags = relationship("Tag", secondary="tag_associations")
 
     author_id = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", back_populates="blog_posts")
@@ -69,7 +102,7 @@ class BlogPost(Base):
         self.title = title
 
     def __repr__(self) -> str:
-        return f"BlogPost(id=\"{self.id}\", title=\"{self.title}\")"
+        return f"BlogPost(id={self.id}, title=\"{self.title}\")"
 
 
 def create_session(path: str) -> any:

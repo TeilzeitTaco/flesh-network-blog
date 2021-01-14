@@ -27,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ocdm/python-package/ocdm/sqlbase.py" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -77,10 +77,10 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="444" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1437.864@0.0.1437.864" timestamp="1610393271840" />
-    <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1610449128673">
+    <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1610629784472">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
-    <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864@0.0.1437.864" timestamp="1610449128673" />
+    <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864@0.0.1437.864" timestamp="1610629784472" />
     <state width="1416" height="224" key="GridCell.Tab.0.bottom" timestamp="1610491430703">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
@@ -97,5 +97,9 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state width="1416" height="224" key="GridCell.Tab.0.right/0.0.1437.864@0.0.1437.864" timestamp="1610491430703" />
+    <state x="537" y="346" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1610630594651">
+      <screen x="0" y="0" width="1437" height="864" />
+    </state>
+    <state x="537" y="346" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1437.864@0.0.1437.864" timestamp="1610630594651" />
   </component>
 </project>

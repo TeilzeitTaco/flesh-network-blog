@@ -81,6 +81,7 @@ def hash_file(path: str) -> str:
 
 
 def compile_all_posts() -> None:
+    print("Compiling all blog posts...")
     if os.path.exists(GENERATED_RESOURCES_PATH):
         rmtree(GENERATED_RESOURCES_PATH)
     os.mkdir(GENERATED_RESOURCES_PATH)
@@ -97,4 +98,6 @@ def compile_all_posts() -> None:
         html_src = markdown.markdown(markdown_src)
         write_file(blog_post.html_path, html_src)
 
-        print("ok")
+        print("Done!")
+
+    print("Done!")
