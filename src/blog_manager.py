@@ -79,7 +79,9 @@ def delete_blog_post() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     blog_post = db.query(BlogPost).get(blog_post_id)
     if blog_post:
-        shutil.rmtree(blog_post.slug_path)
+        if os.path.exists(blog_post.slug_path):
+            shutil.rmtree(blog_post.slug_path)
+
         db.delete(blog_post)
         db.commit()
         print(f"Deleted blog post \"{blog_post.name}\".")
