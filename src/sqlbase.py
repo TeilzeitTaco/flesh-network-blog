@@ -114,8 +114,8 @@ class BlogPost(Base):
     def formatted_timestamp(self) -> str:
         return self.timestamp.strftime(f"%A, the %d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
 
-    def __init__(self, title: str, author_id: int) -> None:
-        self.author_id = author_id
+    def __init__(self, title: str, author: Author) -> None:
+        self.author = author
         self.title = title
 
     def __repr__(self) -> str:
