@@ -4,6 +4,8 @@ import os
 import sys
 import shutil
 
+from functools import partial
+
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation
 from compiler import compile_all_posts
 
@@ -11,6 +13,22 @@ from compiler import compile_all_posts
 BANNER = """\
 -=[ Blog Manager ]=-
 """
+
+
+def show_rows(row_class: type) -> None:
+    print(f"Currently registered {row_class.__name__}s:")
+    for row in db.query(row_class):
+        print(f" * {str(row.id).rjust(3)} - \"{row.name}\"")
+
+
+def show_help(commands: any) -> None:
+    print("Possible Commands:")
+    for base_command in commands:
+        print(f" * {base_command}", end="")
+        sub_commands_string = "|".join([command for command in commands[base_command] if type(command) is str])
+        if sub_commands_string:
+            print(f" ({sub_commands_string})", end="")
+        print()
 
 
 def create_author() -> None:
@@ -22,18 +40,12 @@ def create_author() -> None:
     db.commit()
 
 
-def show_authors() -> None:
-    print("Currently registered authors:")
-    for author in db.query(Author):
-        print(f" * {str(author.id).rjust(3)} - \"{author.name}\"")
-
-
 def delete_author() -> None:
     author_name = input("Author Name: ")
     author = db.query(Author).filter_by(name=author_name).first()
     if author:
         for blog_post in author.blog_posts:
-            print(f"Deleted blog post \"{blog_post.title}\".")
+            print(f"Deleted blog post \"{blog_post.name}\".")
             shutil.rmtree(blog_post.slug_path)
             db.delete(blog_post)
 
@@ -63,12 +75,6 @@ def create_blog_post() -> None:
     db.commit()
 
 
-def show_blog_posts() -> None:
-    print("Current blog posts:")
-    for blog_post in db.query(BlogPost):
-        print(f" * {str(blog_post.id).rjust(3)} - \"{blog_post.title}\"")
-
-
 def delete_blog_post() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     blog_post = db.query(BlogPost).get(blog_post_id)
@@ -76,7 +82,7 @@ def delete_blog_post() -> None:
         shutil.rmtree(blog_post.slug_path)
         db.delete(blog_post)
         db.commit()
-        print(f"Deleted blog post \"{blog_post.title}\".")
+        print(f"Deleted blog post \"{blog_post.name}\".")
 
     else:
         print(f"No blog post with ID: {blog_post_id}.")
@@ -87,12 +93,6 @@ def create_tag() -> None:
     tag = Tag(tag_name)
     db.add(tag)
     db.commit()
-
-
-def show_tags() -> None:
-    print("Current tags:")
-    for tag in db.query(Tag):
-        print(f" * {str(tag.id).rjust(3)} - \"{tag.name}\"")
 
 
 def delete_tag() -> None:
@@ -111,16 +111,20 @@ def attach_tag() -> None:
     tag_name = input("Tag Name: ")
     blog_post_id = int(input("Blog Post ID: "))
 
-    tag = db.query(BlogPost).filter_by(name=tag_name).first()
+    tag = db.query(Tag).filter_by(name=tag_name).first()
     blog_post = db.query(BlogPost).get(blog_post_id)
 
-    if not (tag and blog_post):
-        print("Tag or blog post not found.")
+    if not tag:
+        print("Tag not found!")
+        return
 
-    else:
-        tag_association = TagAssociation(blog_post_id, tag.id)
-        db.add(tag_association)
-        db.commit()
+    if not blog_post:
+        print("Post not found")
+        return
+
+    tag_association = TagAssociation(blog_post_id, tag.id)
+    db.add(tag_association)
+    db.commit()
 
 
 def exit_program() -> None:
@@ -131,54 +135,59 @@ def exit_program() -> None:
 def main() -> None:
     print(BANNER)
 
+    commands = {
+        "create": {
+            "author": create_author,
+            "post": create_blog_post,
+            "tag": create_tag,
+        },
+
+        "delete": {
+            "author": delete_author,
+            "post": delete_blog_post,
+            "tag": delete_tag,
+        },
+
+        "show": {
+            "author": partial(show_rows, Author),
+            "post": partial(show_rows, BlogPost),
+            "tag": partial(show_rows, Tag),
+        },
+
+        "tag": {
+            "attach": attach_tag,
+        },
+
+        "compile": {
+            None: compile_all_posts,
+        },
+
+        "exit": {
+            None: exit_program,
+        },
+
+        "help": {
+            None: lambda: show_help(commands),
+        },
+    }
+
     while True:
-        options = {
-            "Author Management": [
-                ("Create Author", create_author),
-                ("Show Authors", show_authors),
-                ("Delete Author", delete_author),
-            ],
+        command_list = input("> ").split()
+        if not command_list:
+            continue
 
-            "Blog Post Management": [
-                ("Create Blog Post", create_blog_post),
-                ("Show Blog Posts", show_blog_posts),
-                ("Delete Blog Post", delete_blog_post),
-            ],
+        if len(command_list) not in [1, 2] or command_list[0] not in commands.keys():
+            print("Invalid command!")
+            continue
 
-            "Tag Management": [
-                ("Create Tag", create_tag),
-                ("Show Tags", show_tags),
-                ("Delete Tag", delete_tag),
-                ("Attach Tag", attach_tag),
-            ],
+        base_command = commands[command_list[0]]
+        sub_command_key = command_list[1] if 1 < len(command_list) else None
 
-            "Miscellaneous Options": [
-                ("Compile Blog Posts", compile_all_posts),
-                ("Exit", exit_program),
-            ],
-        }
+        if sub_command_key not in base_command.keys():
+            print("Invalid sub-command!")
+            continue
 
-        # Print the options menu
-        i = 1
-        option_functions = list()
-        for key, value in options.items():
-            print(f"{key}:")
-            for option in value:
-                option_functions.append(option[1])
-                print(f" * {str(i).rjust(2)} - {option[0]}")
-                i += 1
-            print()
-
-        # Get input and invoke the selected function
-        selected_option = int(input("Enter Option: ") or str(len(option_functions))) - 1
-        print()
-
-        if 0 <= selected_option < len(option_functions):
-            option_functions[selected_option]()  # Execute option
-            input()
-            [print() for _ in range(64)]
-        else:
-            print("Invalid option.")
+        base_command[sub_command_key]()
 
 
 if __name__ == "__main__":

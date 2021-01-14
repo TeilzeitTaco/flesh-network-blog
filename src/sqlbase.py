@@ -82,7 +82,7 @@ class BlogPost(Base):
 
     id = Column(Integer, primary_key=True)
     hits = Column(Integer, default=0)
-    title = Column(String, unique=True, index=True, nullable=False, default="")
+    name = Column(String, unique=True, index=True, nullable=False, default="")  # Title but called "name" for reflection
     timestamp = Column(DateTime, default=datetime.now())
 
     tags = relationship("Tag", secondary="tag_associations")
@@ -92,7 +92,7 @@ class BlogPost(Base):
 
     @property
     def slug(self) -> str:
-        return slugify(self.title)
+        return slugify(self.name)
 
     @property
     def slug_path(self) -> str:
@@ -114,12 +114,12 @@ class BlogPost(Base):
     def formatted_timestamp(self) -> str:
         return self.timestamp.strftime(f"%A, the %d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
 
-    def __init__(self, title: str, author: Author) -> None:
+    def __init__(self, name: str, author: Author) -> None:
         self.author = author
-        self.title = title
+        self.name = name
 
     def __repr__(self) -> str:
-        return f"BlogPost(id={self.id}, title=\"{self.title}\")"
+        return f"BlogPost(id={self.id}, title=\"{self.name}\")"
 
 
 def create_session(path: str) -> any:

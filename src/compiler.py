@@ -87,7 +87,7 @@ def compile_all_posts() -> None:
     os.mkdir(GENERATED_RESOURCES_PATH)
 
     for blog_post in db.query(BlogPost):
-        print(f"Compiling blog post \"{blog_post.title}\"... ", end="")
+        print(f"Compiling blog post \"{blog_post.name}\"... ", end="")
 
         # Process the files in the res/ directory
         resources_name_mapping = process_resource_files(blog_post.resources_path)

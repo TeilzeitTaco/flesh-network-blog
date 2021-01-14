@@ -15,9 +15,9 @@ def route_root():
 
 
 @bp.route("/posts/<int:blog_post_id>/")
-@bp.route("/posts/<int:blog_post_id>/<string:title>/")
+@bp.route("/posts/<int:blog_post_id>/<string:name>/")
 @cache.cached()
-def route_blog_post(blog_post_id: int, title: str = ""):
+def route_blog_post(blog_post_id: int, name: str = ""):
     blog_post = db.query(BlogPost).get(blog_post_id)
     if blog_post is None:
         return "error"
@@ -25,7 +25,7 @@ def route_blog_post(blog_post_id: int, title: str = ""):
     with open(blog_post.html_path, "r") as f:
         blog_post_content = f.read()
 
-    return render_template("blog_post.html", title=blog_post.title,
+    return render_template("blog_post.html", title=blog_post.name,
                            blog_post=blog_post, blog_post_content=blog_post_content)
 
 
