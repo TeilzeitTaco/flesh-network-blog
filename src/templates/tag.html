@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <span class="main_header">{{ tag.name }}</span>
+    <a class="sub_header" href="/">Return to root</a>
+</div>
+
+<div>
+    <p>
+        Posts marked with the tag "{{ tag.name }}":
+    </p>
+    {% for blog_post in tag.blog_posts %}
+    {% include "post_link.html" %}
+    {% endfor %}
+</div>
+{% endblock %}

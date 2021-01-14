@@ -1,0 +1,8 @@
+<div>
+    <a href="{{ url_for('home.route_blog_post', blog_post_id=blog_post.id, title=blog_post.slug) }}">
+        {{ blog_post.title }}
+    </a>
+    <span>, written by </span>
+    {% set author = blog_post.author %}
+    {% include "author_link.html" %}
+</div>

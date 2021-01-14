@@ -10,8 +10,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -101,5 +101,9 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="537" y="346" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1437.864@0.0.1437.864" timestamp="1610630594651" />
+    <state x="381" y="181" width="672" height="678" key="search.everywhere.popup" timestamp="1610637781421">
+      <screen x="0" y="0" width="1437" height="864" />
+    </state>
+    <state x="381" y="181" width="672" height="678" key="search.everywhere.popup/0.0.1437.864@0.0.1437.864" timestamp="1610637781421" />
   </component>
 </project>

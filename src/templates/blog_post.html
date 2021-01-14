@@ -2,8 +2,31 @@
 
 {% block content %}
 <div>
-    <span class="main_header">{{ blog_post.title }}</span>
-    <a class="sub_header" href="/">Return to root</a>
+    <p>
+        <span class="main_header">{{ blog_post.title }}</span>
+        <a class="sub_header" href="/">Return to root</a>
+    </p>
+
+    <div>
+        <p>
+            Posted on: {{ blog_post.formatted_timestamp }}
+        </p>
+
+        <p>
+            Written by:
+            {% set author = blog_post.author %}
+            {% include "author_link.html" %}
+        </p>
+
+        {% if blog_post.tags %}
+        <p>
+            Tags:
+            {% for tag in blog_post.tags %}
+            <a href="{{ url_for('home.route_tag', tag_id=tag.id, name=tag.name) }}">{{ tag.name }}</a>
+            {% endfor %}
+        </p>
+        {% endif %}
+    </div>
 
     <div>
         {{ blog_post_content | safe }}

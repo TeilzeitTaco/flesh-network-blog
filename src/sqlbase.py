@@ -1,3 +1,5 @@
+import re
+
 from datetime import datetime
 
 from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateTime
@@ -7,8 +9,13 @@ from sqlalchemy.orm import sessionmaker, relationship
 Base = declarative_base()
 
 
+def get_date_suffix(date: int) -> str:
+    date_suffix = ["th", "st", "nd", "rd"]
+    return date_suffix[date % 10] if date % 10 in [1, 2, 3] and date not in [11, 12, 13] else date_suffix[0]
+
+
 def slugify(base: str) -> str:
-    return base.replace(" ", "-")
+    return re.sub(r"[^a-zA-Z0-9-]+", "", base.replace(" ", "-"))
 
 
 # Aux. mapping table
@@ -28,6 +35,7 @@ class TagAssociation(Base):
 
 
 class Author(Base):
+    """Represents a person which authors posts."""
     __tablename__ = "authors"
 
     id = Column(Integer, primary_key=True)
@@ -50,12 +58,17 @@ class Author(Base):
 
 
 class Tag(Base):
+    """A thematic category a blog post might relate to."""
     __tablename__ = "tags"
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, index=True, nullable=False, default="")
 
     blog_posts = relationship("BlogPost", secondary="tag_associations")
+
+    @property
+    def slug(self) -> str:
+        return slugify(self.name)
 
     def __init__(self, name: str) -> None:
         self.name = name
@@ -70,7 +83,7 @@ class BlogPost(Base):
     id = Column(Integer, primary_key=True)
     hits = Column(Integer, default=0)
     title = Column(String, unique=True, index=True, nullable=False, default="")
-    timestamp = Column(DateTime, default=datetime.utcnow())
+    timestamp = Column(DateTime, default=datetime.now())
 
     tags = relationship("Tag", secondary="tag_associations")
 
@@ -91,11 +104,15 @@ class BlogPost(Base):
 
     @property
     def resources_path(self) -> str:
-        return  f"{self.slug_path}/res"
+        return f"{self.slug_path}/res"
 
     @property
     def html_path(self) -> str:
         return f"{self.slug_path}/post.html"
+
+    @property
+    def formatted_timestamp(self) -> str:
+        return self.timestamp.strftime(f"%A, the %d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
 
     def __init__(self, title: str, author_id: int) -> None:
         self.author_id = author_id
