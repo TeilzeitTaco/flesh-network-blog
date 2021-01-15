@@ -8,14 +8,15 @@
     </p>
 
     <ul>
-        <li>Posted on: {{ blog_post.formatted_timestamp }}</li>
-        <li>Written by: {% set author = blog_post.author %} {% include "author_link.html" %}</li>
+        <li>Posted on {{ blog_post.formatted_timestamp }}</li>
+        <li>Written by {% set author = blog_post.author %} {% include "author_link.html" %}</li>
 
         {% if blog_post.tags %}
         <li>
-            Tags:
+            Tagged with
             {% for tag in blog_post.tags %}
             <a href="{{ url_for('home.route_tag', tag_id=tag.id, name=tag.name) }}">{{ tag.name }}</a>
+            {% if not loop.last %}, {% endif %}
             {% endfor %}
         </li>
         {% endif %}
