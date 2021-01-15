@@ -1,15 +1,20 @@
+import logging
+
 from flask import Flask
 from flask_assets import Environment, Bundle
 from flask_caching import Cache
 
-BLOG_NAME = "Flesh-Network"
 
+BLOG_NAME = "Flesh-Network"
 cache = Cache()
 
 
 def create_app() -> Flask:
     app = Flask(__name__, static_folder="static")
     app.config.from_json("config.json")
+
+    if app.config["DEBUG_LOG_TO_FILE"]:
+        logging.basicConfig(filename="blog.log", level=logging.DEBUG)
 
     if app.config["BEHIND_PROXY"]:
         from werkzeug.middleware.proxy_fix import ProxyFix

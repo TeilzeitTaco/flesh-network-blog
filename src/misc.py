@@ -1,3 +1,5 @@
+import logging
+
 from datetime import datetime, timedelta
 
 
@@ -13,6 +15,7 @@ class FileCache:
         if path in self.cache:
             return self.cache[path]
 
+        logging.debug(f"FileCache: Reading file \"{path}\"...")
         with open(path, "r") as f:
             contents = f.read()
             self.cache[path] = contents
@@ -28,9 +31,11 @@ class IPTracker:
             if datetime.now() - timestamp > MAX_IP_RETENTION_TIME:
                 to_pop.append(ip)
 
-        # Alter afterwards to avoid a RuntimeError
-        for pop in to_pop:
-            self.known_ips.pop(pop)
+        # Alter dict afterwards to avoid a RuntimeError
+        if to_pop:
+            logging.debug(f"IPTracker: Purging addresses {str(to_pop)}...")
+            for pop in to_pop:
+                self.known_ips.pop(pop)
 
     def should_count_request(self, ip: str) -> bool:
         if ip in self.known_ips:
