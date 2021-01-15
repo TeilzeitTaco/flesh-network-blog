@@ -236,6 +236,10 @@ def main() -> None:
         "help": {
             None: lambda: show_help(commands),
         },
+
+        "cls": {
+            None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")
+        },
     }
 
     while True:
