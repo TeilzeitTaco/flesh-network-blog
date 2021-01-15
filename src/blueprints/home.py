@@ -1,5 +1,6 @@
 from flask.blueprints import Blueprint
 from flask import render_template, request
+from werkzeug.exceptions import abort
 
 from main import cache
 from misc import FileCache, static_vars, IPTracker
@@ -22,7 +23,7 @@ def route_root():
 def route_blog_post(blog_post_id: int, name: str = ""):
     blog_post = db.query(BlogPost).get(blog_post_id)
     if blog_post is None:
-        return "error"
+        abort(404)
 
     # The cache object is a function-static (like in C) variable
     blog_post_content = route_blog_post.file_cache.get_contents(blog_post.html_path)
@@ -43,7 +44,7 @@ def route_blog_post(blog_post_id: int, name: str = ""):
 def route_author(author_id: int, name: str = ""):
     author = db.query(Author).get(author_id)
     if author is None:
-        return "error"
+        abort(404)
 
     return render_template("author.html", title=f"Author: \"{author.name}\"",
                            author=author)
@@ -55,7 +56,7 @@ def route_author(author_id: int, name: str = ""):
 def route_tag(tag_id: int, name: str = ""):
     tag = db.query(Tag).get(tag_id)
     if tag is None:
-        return "error"
+        abort(404)
 
     return render_template("tag.html", title=f"Blog Posts with Tag: \"{tag.name}\"",
                            tag=tag)

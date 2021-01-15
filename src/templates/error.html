@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <p id="post_header_paragraph">
+        <span class="main_header">Error {{ exception.code }}: {{ exception.name }}</span>
+        <a class="sub_header" href="/">Return to root</a>
+    </p>
+
+    <p>
+        {{ exception.description }}
+    </p>
+</div>
+{% endblock %}

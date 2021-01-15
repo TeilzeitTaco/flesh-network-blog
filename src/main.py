@@ -1,9 +1,9 @@
 import logging
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_assets import Environment, Bundle
 from flask_caching import Cache
-
+from werkzeug.exceptions import HTTPException
 
 BLOG_NAME = "Flesh-Network"
 cache = Cache()
@@ -39,5 +39,9 @@ def create_app() -> Flask:
 
     from blueprints.home import bp as home_bp
     app.register_blueprint(home_bp)
+
+    @app.errorhandler(HTTPException)
+    def handle_500(exception):
+        return render_template("error.html", title=f"Error {exception.code}", exception=exception)
 
     return app
