@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 
 
 # How long a visitors IP address should be retained in the IP tracker.
+from typing import Callable
+
 MAX_IP_RETENTION_TIME = timedelta(minutes=15)
 
 
@@ -25,7 +27,7 @@ class FileCache:
 class IPTracker:
     known_ips = dict()
 
-    def remove_expired(self):
+    def remove_expired(self) -> None:
         to_pop = list()
         for ip, timestamp in self.known_ips.items():
             if datetime.now() - timestamp > MAX_IP_RETENTION_TIME:
@@ -46,9 +48,9 @@ class IPTracker:
         return True
 
 
-def static_vars(**kwargs):
+def static_vars(**kwargs) -> Callable:
     """A decorator to make function-static variables a bit prettier"""
-    def decorate(func):
+    def decorate(func) -> Callable:
         for key in kwargs:
             setattr(func, key, kwargs[key])
         return func
