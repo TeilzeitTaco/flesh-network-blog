@@ -43,6 +43,10 @@ body {
     font-family: jmh_typewriter_regular;
 }
 
+img {
+    max-width: 30em;
+}
+
 .main_header {
     font-size: 4em;
 }
