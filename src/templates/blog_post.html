@@ -20,6 +20,7 @@
         {% endif %}
 
         <li>Written by {% set author = blog_post.author %} {% include "author_link.html" %}</li>
+        <li>Viewed {{ blog_post.hits }} {{ "time" if blog_post.hits == 1 else "times" }}</li>
     </ul>
 
     <div>

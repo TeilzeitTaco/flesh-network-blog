@@ -1,8 +1,10 @@
 from flask.blueprints import Blueprint
-from flask import render_template
+from flask import render_template, request
 
 from main import cache
+from misc import FileCache, static_vars, IPTracker
 from sqlbase import db, BlogPost, Author, Tag
+
 
 bp = Blueprint("home", __name__, static_folder="../static")
 
@@ -16,14 +18,20 @@ def route_root():
 
 @bp.route("/posts/<int:blog_post_id>/")
 @bp.route("/posts/<int:blog_post_id>/<string:name>/")
-@cache.cached()
+@static_vars(file_cache=FileCache(), ip_tracker=IPTracker())
 def route_blog_post(blog_post_id: int, name: str = ""):
     blog_post = db.query(BlogPost).get(blog_post_id)
     if blog_post is None:
         return "error"
 
-    with open(blog_post.html_path, "r") as f:
-        blog_post_content = f.read()
+    # The cache object is a function-static (like in C) variable
+    blog_post_content = route_blog_post.file_cache.get_contents(blog_post.html_path)
+
+    # Flush the ip tracker, and then, check if we should count this request as a true hit.
+    route_blog_post.ip_tracker.remove_expired()
+    if route_blog_post.ip_tracker.should_count_request(request.remote_addr):
+        blog_post.hits += 1
+        db.commit()
 
     return render_template("blog_post.html", title=blog_post.name,
                            blog_post=blog_post, blog_post_content=blog_post_content)

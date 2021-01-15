@@ -31,6 +31,8 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Github\flesh-network-blog\src" />
+      <recent name="D:\Github\flesh-network-blog\src\misc" />
       <recent name="D:\Github\flesh-network-blog\src\static\scripts" />
     </key>
   </component>
@@ -73,10 +75,10 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="521" y="222" key="#Web_Browsers/0.0.1437.864@0.0.1437.864" timestamp="1610391473626" />
-    <state x="444" y="234" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1610393271840">
+    <state x="444" y="234" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1610719349588">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
-    <state x="444" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1437.864@0.0.1437.864" timestamp="1610393271840" />
+    <state x="444" y="234" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1437.864@0.0.1437.864" timestamp="1610719349588" />
     <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1610656083664">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
@@ -105,9 +107,10 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="429" y="165" width="578" height="534" key="find.popup/0.0.1437.864@0.0.1437.864" timestamp="1610647101470" />
-    <state x="381" y="181" width="672" height="678" key="search.everywhere.popup" timestamp="1610647242131">
+    <state x="381" y="181" width="672" height="678" key="search.everywhere.popup" timestamp="1610726048529">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
+    <state x="381" y="181" width="672" height="678" key="search.everywhere.popup/0.0.1437.864/-1920.0.1920.1050@0.0.1437.864" timestamp="1610726048529" />
     <state x="381" y="181" width="672" height="678" key="search.everywhere.popup/0.0.1437.864@0.0.1437.864" timestamp="1610647242131" />
   </component>
 </project>
