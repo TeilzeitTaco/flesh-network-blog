@@ -14,6 +14,35 @@ BANNER = """\
 -=[ Blog Manager ]=-
 """
 
+selected_object: any = None
+
+
+def get_selected_object_attribute() -> None:
+    if selected_object is None:
+        print("No object selected!")
+        return
+
+    attribute_name = input("Enter attribute name: ")
+    if not hasattr(selected_object, attribute_name):
+        print("Attribute does not exist!")
+        return
+
+    result = getattr(selected_object, attribute_name)
+    print(f"The attribute \"{attribute_name}\" of the object with name \"{selected_object.name}\" has the value:")
+    print(f"-> \"{result}\"")
+
+
+def select_object(row_class: type) -> None:
+    object_id = int(input(f"{row_class.__name__} ID: "))
+    result = db.query(row_class).get(object_id)
+    if not result:
+        print(f"No object of type {row_class.__name__} with ID {object_id} exists.")
+        return
+
+    global selected_object
+    selected_object = result
+    print(f"Selected object with name \"{selected_object.name}\"!")
+
 
 def show_rows(row_class: type) -> None:
     print(f"Currently registered {row_class.__name__}s:")
@@ -129,6 +158,31 @@ def attach_tag() -> None:
     db.commit()
 
 
+def detach_tag() -> None:
+    tag_name = input("Tag Name: ")
+    blog_post_id = int(input("Blog Post ID: "))
+
+    tag = db.query(Tag).filter_by(name=tag_name).first()
+    blog_post = db.query(BlogPost).get(blog_post_id)
+
+    if not tag:
+        print("Tag not found!")
+        return
+
+    if not blog_post:
+        print("Post not found")
+        return
+
+    tag_association = db.query(TagAssociation).filter_by(blog_post_id=blog_post_id, tag_id=tag.id).first()
+    if tag_association is None:
+        print("Tag is not attached to post!")
+        return
+
+    print(f"Detached tag \"{tag.name}\" from post \"{blog_post.name}\"!")
+    db.delete(tag_association)
+    db.commit()
+
+
 def exit_program() -> None:
     print("Exiting...\n")
     sys.exit(-1)
@@ -158,6 +212,17 @@ def main() -> None:
 
         "tag": {
             "attach": attach_tag,
+            "detach": detach_tag,
+        },
+
+        "select": {
+            "author": partial(select_object, Author),
+            "post": partial(select_object, BlogPost),
+            "tag": partial(select_object, Tag),
+        },
+
+        "get": {
+            None: get_selected_object_attribute,
         },
 
         "compile": {
