@@ -74,7 +74,7 @@ class Tag(Base):
         self.name = name
 
     def __repr__(self) -> str:
-        return f"Tag(id={self.id}, name=\"{self.name}\""
+        return f"Tag(id={self.id}, name=\"{self.name}\")"
 
 
 class BlogPost(Base):
