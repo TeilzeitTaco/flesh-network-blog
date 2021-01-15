@@ -1,11 +1,10 @@
 import logging
 
 from datetime import datetime, timedelta
+from typing import Callable
 
 
 # How long a visitors IP address should be retained in the IP tracker.
-from typing import Callable
-
 MAX_IP_RETENTION_TIME = timedelta(minutes=15)
 
 
