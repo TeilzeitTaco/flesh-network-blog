@@ -248,14 +248,14 @@ def main() -> None:
             continue
 
         if len(command_list) not in [1, 2] or command_list[0] not in commands.keys():
-            print("Invalid command!")
+            print("Invalid command!\n")
             continue
 
         base_command = commands[command_list[0]]
         sub_command_key = command_list[1] if 1 < len(command_list) else None
 
         if sub_command_key not in base_command.keys():
-            print("Invalid sub-command!")
+            print("Invalid sub-command!\n")
             continue
 
         base_command[sub_command_key]()
