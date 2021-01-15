@@ -130,7 +130,7 @@ def attach_tag() -> None:
 
 
 def exit_program() -> None:
-    print("Exiting...")
+    print("Exiting...\n")
     sys.exit(-1)
 
 
