@@ -10,8 +10,7 @@ from shutil import copyfile, rmtree
 from sqlbase import db, BlogPost
 
 
-MARKDOWN_IMAGE_REFERENCE = re.compile(r"!\[([^]]*?)]\(([^)]*?)( \"([^\"]*?)\")?\)", re.IGNORECASE)
-
+RESOURCE_PATH_INSERT = re.compile(r"{{(.*?)}}")
 GENERATED_RESOURCES_PATH = "static/gen/res/"
 RESOURCE_FILE_NAME_LENGTH = 16
 
@@ -34,13 +33,9 @@ def process_resource_files(resource_path: str) -> Dict[str, str]:
     return resources_name_mapping
 
 
-def post_process_image_clause(markdown_src: str, resources_name_mapping: Dict[str, str]) -> str:
+def post_process_paths(markdown_src: str, resources_name_mapping: Dict[str, str]) -> str:
     def processor(match) -> str:
-        # Replace the image filename in a markdown image embed with the
-        # newly generated hash filename referring to the file which is
-        # now stored in the static/gen/res/ folder.
-        alt_text = match.group(1)
-        resource_file_name = match.group(2)
+        resource_file_name = match.group(1).strip()
         hashed_file_name = resources_name_mapping.get(resource_file_name)
 
         # If the filename isn't in the mapping, the file doesn't exist.
@@ -48,14 +43,9 @@ def post_process_image_clause(markdown_src: str, resources_name_mapping: Dict[st
             print(f"\nError! Missing resource \"{resource_file_name}\"!")
             sys.exit(-1)
 
-        title_text = match.group(4)
-        new_markdown = f"![{alt_text}](/{GENERATED_RESOURCES_PATH + hashed_file_name}"
-        if title_text is not None:
-            new_markdown += f" \"{title_text}\""
+        return f"/{GENERATED_RESOURCES_PATH + hashed_file_name}"
 
-        return new_markdown + ")"
-
-    return MARKDOWN_IMAGE_REFERENCE.sub(processor, markdown_src)
+    return RESOURCE_PATH_INSERT.sub(processor, markdown_src)
 
 
 def read_file(path: str) -> str:
@@ -94,7 +84,7 @@ def compile_all_posts() -> None:
 
         # Convert the markdown post content into a HTML file.
         markdown_src = read_file(blog_post.markdown_path)
-        markdown_src = post_process_image_clause(markdown_src, resources_name_mapping)
+        markdown_src = post_process_paths(markdown_src, resources_name_mapping)
         html_src = markdown.markdown(markdown_src)
         write_file(blog_post.html_path, html_src)
 
