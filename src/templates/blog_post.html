@@ -2,12 +2,12 @@
 
 {% block content %}
 <div>
-    <p>
+    <p id="post_header_paragraph">
         <span class="main_header">{{ blog_post.name }}</span>
         <a class="sub_header" href="/">Return to root</a>
     </p>
 
-    <ul>
+    <ul id="post_metadata_list">
         <li>Posted on {{ blog_post.formatted_timestamp }}</li>
 
         {% if blog_post.tags %}

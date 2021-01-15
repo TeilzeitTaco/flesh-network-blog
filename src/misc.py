@@ -24,6 +24,7 @@ class FileCache:
 
 
 class IPTracker:
+    """Keeps track of recent IP addresses to make hit counting a bit less wonky"""
     known_ips = dict()
 
     def remove_expired(self) -> None:
@@ -49,7 +50,7 @@ class IPTracker:
 
 def static_vars(**kwargs) -> Callable:
     """A decorator to make function-static variables a bit prettier"""
-    def decorate(func) -> Callable:
+    def decorate(func: Callable) -> Callable:
         for key in kwargs:
             setattr(func, key, kwargs[key])
         return func

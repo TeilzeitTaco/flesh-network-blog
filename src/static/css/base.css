@@ -47,6 +47,17 @@ img {
     max-width: 30em;
 }
 
+#post_header_paragraph {
+    margin-bottom: 0px;
+}
+
+#post_metadata_list {
+    display: inline-block;
+    border: 1px solid #000;
+    padding-left: 20px;
+    margin-top: 0px;
+}
+
 .main_header {
     font-size: 4em;
 }
