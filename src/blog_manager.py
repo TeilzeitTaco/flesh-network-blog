@@ -190,6 +190,7 @@ def main() -> None:
             continue
 
         base_command[sub_command_key]()
+        print()
 
 
 if __name__ == "__main__":
