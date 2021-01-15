@@ -16,4 +16,4 @@ and add resources to the `res/` folder. You can reference these resources in you
 `{{ resource.extension }}` syntax.
 
 After completing your blog post (or changing your post afterwards) return to the command line and type `compile`
-to generate a static `.html` and sync resources. You should now see your blogpost appearing in the browser.
+to generate a `.html` file and sync resources. You should now see your blogpost appearing in the browser.
