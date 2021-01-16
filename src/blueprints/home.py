@@ -30,7 +30,7 @@ def route_blog_post(blog_post_id: int, name: str = ""):
 
     # Flush the ip tracker, and then, check if we should count this request as a true hit.
     route_blog_post.ip_tracker.remove_expired()
-    if route_blog_post.ip_tracker.should_count_request(request.remote_addr):
+    if route_blog_post.ip_tracker.should_count_request(request.remote_addr, blog_post_id):
         blog_post.hits += 1
         db.commit()
 

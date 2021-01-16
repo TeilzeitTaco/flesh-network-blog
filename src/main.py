@@ -41,7 +41,7 @@ def create_app() -> Flask:
     app.register_blueprint(home_bp)
 
     @app.errorhandler(HTTPException)
-    def handle_500(exception):
+    def handle_error(exception):
         return render_template("error.html", title=f"Error {exception.code}", exception=exception)
 
     return app

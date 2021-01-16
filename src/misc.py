@@ -5,7 +5,7 @@ from typing import Callable
 
 
 # How long a visitors IP address should be retained in the IP tracker.
-MAX_IP_RETENTION_TIME = timedelta(minutes=15)
+MAX_IP_RETENTION_TIME = timedelta(hours=1)
 
 
 class FileCache:
@@ -24,27 +24,28 @@ class FileCache:
 
 
 class IPTracker:
-    """Keeps track of recent IP addresses to make hit counting a bit less wonky"""
-    known_ips = dict()
+    """Keeps track of recent (IP address, post id) tuples to make hit counting a bit less wonky"""
+    recorded_hits = dict()
 
     def remove_expired(self) -> None:
         to_pop = list()
-        for ip, timestamp in self.known_ips.items():
+        for key, timestamp in self.recorded_hits.items():
             if datetime.now() - timestamp > MAX_IP_RETENTION_TIME:
-                to_pop.append(ip)
+                to_pop.append(key)
 
         # Alter dict afterwards to avoid a RuntimeError
         if to_pop:
-            logging.debug(f"IPTracker: Purging addresses {str(to_pop)}...")
+            logging.debug(f"IPTracker: Purging records {to_pop}...")
             for pop in to_pop:
-                self.known_ips.pop(pop)
+                self.recorded_hits.pop(pop)
 
-    def should_count_request(self, ip: str) -> bool:
-        if ip in self.known_ips:
-            self.known_ips[ip] = datetime.now()
+    def should_count_request(self, ip: str, post_id: int) -> bool:
+        key = (ip, post_id)
+        if key in self.recorded_hits:
+            self.recorded_hits[key] = datetime.now()
             return False
 
-        self.known_ips[ip] = datetime.now()
+        self.recorded_hits[key] = datetime.now()
         return True
 
 
@@ -56,4 +57,3 @@ def static_vars(**kwargs) -> Callable:
         return func
 
     return decorate
-
