@@ -5,6 +5,7 @@ from flask_assets import Environment, Bundle
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 
+
 BLOG_NAME = "Flesh-Network"
 cache = Cache()
 
