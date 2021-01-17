@@ -66,7 +66,6 @@ def create_author() -> None:
 
     author = Author(name, biography)
     db.add(author)
-    db.commit()
 
 
 def delete_author() -> None:
@@ -79,7 +78,6 @@ def delete_author() -> None:
             db.delete(blog_post)
 
         db.delete(author)
-        db.commit()
         print(f"Deleted author \"{author.name}\".")
 
     else:
@@ -99,9 +97,7 @@ def create_blog_post() -> None:
     os.makedirs(blog_post.resources_path)
 
     open(blog_post.markdown_path, "w").close()
-
     db.add(blog_post)
-    db.commit()
 
 
 def delete_blog_post() -> None:
@@ -112,7 +108,6 @@ def delete_blog_post() -> None:
             shutil.rmtree(blog_post.slug_path)
 
         db.delete(blog_post)
-        db.commit()
         print(f"Deleted blog post \"{blog_post.name}\".")
 
     else:
@@ -123,7 +118,6 @@ def create_tag() -> None:
     tag_name = input("Tag Name: ")
     tag = Tag(tag_name)
     db.add(tag)
-    db.commit()
 
 
 def delete_tag() -> None:
@@ -131,11 +125,19 @@ def delete_tag() -> None:
     tag = db.query(BlogPost).filter_by(name=tag_name).first()
     if tag:
         db.delete(tag)
-        db.commit()
         print(f"Deleted tag \"{tag.name}\".")
 
     else:
         print(f"No tag with name: \"{tag_name}\".")
+
+
+def delete_selected() -> None:
+    if selected_object is None:
+        print("No object selected!")
+        return
+
+    print(f"Deleted select object with name \"{selected_object.name}\"!")
+    db.delete(selected_object)
 
 
 def attach_tag() -> None:
@@ -155,7 +157,6 @@ def attach_tag() -> None:
 
     tag_association = TagAssociation(blog_post_id, tag.id)
     db.add(tag_association)
-    db.commit()
 
 
 def detach_tag() -> None:
@@ -180,12 +181,16 @@ def detach_tag() -> None:
 
     print(f"Detached tag \"{tag.name}\" from post \"{blog_post.name}\"!")
     db.delete(tag_association)
-    db.commit()
 
 
 def exit_program() -> None:
     print("Exiting...\n")
     sys.exit(-1)
+
+
+def save_changes() -> None:
+    print("Saving changes...")
+    db.commit()
 
 
 def main() -> None:
@@ -202,6 +207,7 @@ def main() -> None:
             "author": delete_author,
             "post": delete_blog_post,
             "tag": delete_tag,
+            None: delete_selected,
         },
 
         "show": {
@@ -238,7 +244,11 @@ def main() -> None:
         },
 
         "cls": {
-            None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")
+            None: lambda: os.system("cls") if os.name == "nt" else os.system("clear"),
+        },
+
+        "save": {
+            None: save_changes,
         },
     }
 
