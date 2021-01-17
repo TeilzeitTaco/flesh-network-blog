@@ -13,7 +13,7 @@ bp = Blueprint("home", __name__, static_folder="../static")
 @bp.route("/")
 @cache.cached()
 def route_root():
-    blog_posts = db.query(BlogPost)
+    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
     return render_template("home.html", title="Root", blog_posts=blog_posts)
 
 
