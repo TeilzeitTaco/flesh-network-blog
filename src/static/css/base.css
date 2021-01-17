@@ -47,7 +47,8 @@ img {
     max-width: 30em;
 }
 
-img {
+p {
+    text-align: justify;
     max-width: 40em;
 }
 
