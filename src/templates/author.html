@@ -5,4 +5,13 @@
     <span class="main_header">{{ author.name }}</span>
     <a class="sub_header" href="/">Return to root</a>
 </div>
+
+<div>
+    <p>
+        Posts written by "{{ author.name }}":
+    </p>
+    {% for blog_post in author.blog_posts %}
+    {% include "post_link.html" %}
+    {% endfor %}
+</div>
 {% endblock %}

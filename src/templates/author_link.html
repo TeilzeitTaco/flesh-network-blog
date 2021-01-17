@@ -1,3 +1,10 @@
-<a href="{{ url_for('home.route_author', author_id=author.id, name=author.name) }}">
-    {{ author.name }}
-</a>
+<div class="author">
+    <a class="author-link" href="{{ url_for('home.route_author', author_id=author.id, name=author.name) }}">
+        {{ author.name }}
+    </a>
+
+    <div class="author-biography">
+        Biography:<br>
+        {{ author.biography }}
+    </div>
+</div>

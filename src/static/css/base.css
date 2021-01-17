@@ -36,7 +36,7 @@
     font-style: normal;
 }
 
-/* blog css */
+/* Basic Formatting */
 
 body {
     background-image: url("../images/background-red.jpg");
@@ -47,6 +47,10 @@ img {
     max-width: 30em;
 }
 
+img {
+    max-width: 40em;
+}
+
 #post_header_paragraph {
     margin-bottom: 0px;
 }
@@ -54,6 +58,7 @@ img {
 #post_metadata_list {
     display: inline-block;
     border: 1px solid #000;
+    border-radius: 3px;
     padding-left: 20px;
     margin-top: 0px;
 }
@@ -64,4 +69,28 @@ img {
 
 .sub_header {
     font-size: 1.5em;
+}
+
+/* Author Link and Biography */
+
+.author {
+    position: relative;
+    display: inline-block;
+}
+
+.author-biography {
+    display: none;
+    position: absolute;
+    z-index: 10;
+
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 3px;
+
+    background-image: url("../images/background-red.jpg");
+}
+
+.author:hover
+.author-biography {
+    display: block;
 }
