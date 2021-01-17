@@ -54,7 +54,7 @@ def read_file(path: str) -> str:
         sys.exit(-1)
 
     with open(path, "r") as f:
-        return f.read()
+        return f.read().strip()
 
 
 def write_file(path: str, content: str) -> None:
