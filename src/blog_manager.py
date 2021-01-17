@@ -6,6 +6,8 @@ import shutil
 
 from functools import partial
 
+from sqlalchemy.exc import IntegrityError
+
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation
 from compiler import compile_all_posts
 
@@ -15,6 +17,10 @@ BANNER = """\
 """
 
 selected_object: any = None
+
+
+def save_tip() -> None:
+    print("You probably want to save.")
 
 
 def get_selected_object_attribute() -> None:
@@ -66,6 +72,7 @@ def create_author() -> None:
 
     author = Author(name, biography)
     db.add(author)
+    save_tip()
 
 
 def delete_author() -> None:
@@ -98,6 +105,7 @@ def create_blog_post() -> None:
 
     open(blog_post.markdown_path, "w").close()
     db.add(blog_post)
+    save_tip()
 
 
 def delete_blog_post() -> None:
@@ -118,6 +126,7 @@ def create_tag() -> None:
     tag_name = input("Tag Name: ")
     tag = Tag(tag_name)
     db.add(tag)
+    save_tip()
 
 
 def delete_tag() -> None:
@@ -189,8 +198,15 @@ def exit_program() -> None:
 
 
 def save_changes() -> None:
-    print("Saving changes...")
-    db.commit()
+    print("Saving changes... ", end="")
+
+    try:
+        db.commit()
+        print("Done!")
+    except IntegrityError:
+        print("Error!\n\n" +
+              "This error was caused by invalid data.\n" +
+              "You probably created multiple records with non-unique names.")
 
 
 def main() -> None:
