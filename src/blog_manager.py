@@ -70,7 +70,7 @@ def attributes() -> None:
 
     print("The select object has the following attributes:")
     for field in [field for field in dir(selected_object) if not field.startswith("_")]:
-        print(f" * {field.__class__.__name__.ljust(5)} - {field}")
+        print(f" * {getattr(selected_object, field).__class__.__name__.ljust(16)} - {field}")
 
 
 def select_object(row_class: type) -> None:
