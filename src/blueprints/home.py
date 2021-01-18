@@ -50,8 +50,8 @@ def route_author(author_id: int, name: str = ""):
                            author=author)
 
 
-@bp.route("/tag/<int:tag_id>/")
-@bp.route("/tag/<int:tag_id>/<string:name>/")
+@bp.route("/tags/<int:tag_id>/")
+@bp.route("/tags/<int:tag_id>/<string:name>/")
 @cache.cached()
 def route_tag(tag_id: int, name: str = ""):
     tag = db.query(Tag).get(tag_id)

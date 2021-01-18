@@ -7,8 +7,7 @@ import hashlib
 
 from typing import Dict, Optional, NoReturn
 from shutil import copyfile, rmtree
-from sqlbase import db, BlogPost, Author
-
+from sqlbase import db, BlogPost, Author, Tag
 
 RESOURCE_PATH_INSERT = re.compile(r"{{(.*?)}}")
 GENERATED_RESOURCES_PATH = "static/gen/res/"
@@ -75,6 +74,15 @@ def pre_process_markdown(markdown_src: str, resources_name_mapping: Dict[str, st
                 compiler_error(f"Missing post \"{decoded_reference}\"!")
 
             return f"/posts/{post.id}/{post.slug}/"
+
+        # A tag reference
+        decoded_reference = has_prefix(reference, "tag:")
+        if decoded_reference:
+            tag = db.query(Tag).filter_by(name=decoded_reference).first()
+            if tag is None:
+                compiler_error(f"Missing tag \"{decoded_reference}\"!")
+
+            return f"/tags/{tag.id}/{tag.slug}/"
 
         compiler_error(f"Invalid reference type: \"{reference}\".")
 

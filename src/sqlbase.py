@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
+
 Base = declarative_base()
 
 
