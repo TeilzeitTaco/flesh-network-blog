@@ -38,7 +38,7 @@ def get_selected_object_attribute() -> None:
 
     result = getattr(selected_object, attribute_name)
     print(f"The attribute \"{attribute_name}\" of the object with name \"{selected_object.name}\" has the value" +
-          f" \"{result}\" of the type \"{result.__class__.__name__}\"")
+          f" \"{result}\" of the type \"{result.__class__.__name__}\".")
 
 
 def set_selected_object_attribute() -> None:
@@ -70,7 +70,7 @@ def attributes() -> None:
 
     print("The select object has the following attributes:")
     for field in [field for field in dir(selected_object) if not field.startswith("_")]:
-        print(f" * {field}")
+        print(f" * {field.__class__.__name__.ljust(5)} - {field}")
 
 
 def select_object(row_class: type) -> None:
