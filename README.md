@@ -13,7 +13,8 @@ to create the first post, `create post`. Type `save` to commit your changes.
 
 After this, the posts data directory will be created in `src/blogposts/<post name>`. Edit the `post.md` file
 and add resources to the `res/` folder. You can reference these resources in your `post.md` file using the
-`{{ resource.extension }}` syntax.
+`{{ file: resource.extension }}` syntax. You can also reference posts and authors using the `{{ author: name }}`
+and `{{ post: id }}` constructs.
 
 After completing your blog post (or changing your post afterwards) return to the command line and type `compile`
 to generate a `.html` file and sync resources. You should now see your blogpost appearing in the browser.
