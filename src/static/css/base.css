@@ -90,6 +90,7 @@ p {
     border: 1px solid #000;
     border-radius: 3px;
 
+    text-align: justify;
     background-image: url("../images/background-red.jpg");
 }
 
