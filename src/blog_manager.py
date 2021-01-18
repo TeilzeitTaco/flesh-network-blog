@@ -12,6 +12,9 @@ from sqlbase import db, Author, BlogPost, Tag, TagAssociation
 from compiler import compile_all_posts
 
 
+ERROR_NO_OBJECT_SELECTED = "No object selected!"
+ERROR_ATTRIBUTE_DOES_NOT_EXIST = "Attribute does not exist!"
+
 BANNER = """\
 -=[ Blog Manager ]=-
 """
@@ -25,17 +28,49 @@ def save_tip() -> None:
 
 def get_selected_object_attribute() -> None:
     if selected_object is None:
-        print("No object selected!")
+        print(ERROR_NO_OBJECT_SELECTED)
         return
 
     attribute_name = input("Enter attribute name: ")
     if not hasattr(selected_object, attribute_name):
-        print("Attribute does not exist!")
+        print(ERROR_ATTRIBUTE_DOES_NOT_EXIST)
         return
 
     result = getattr(selected_object, attribute_name)
-    print(f"The attribute \"{attribute_name}\" of the object with name \"{selected_object.name}\" has the value:")
-    print(f"-> \"{result}\"")
+    print(f"The attribute \"{attribute_name}\" of the object with name \"{selected_object.name}\" has the value" +
+          f" \"{result}\" of the type \"{result.__class__.__name__}\"")
+
+
+def set_selected_object_attribute() -> None:
+    if selected_object is None:
+        print(ERROR_NO_OBJECT_SELECTED)
+        return
+
+    attribute_name = input("Enter attribute name: ")
+    if not hasattr(selected_object, attribute_name):
+        print(ERROR_ATTRIBUTE_DOES_NOT_EXIST)
+        return
+
+    type_name = input("Enter attribute type: ")
+    attribute_value = input("Enter attribute value: ")
+
+    converted_value = eval(f"{type_name}('{attribute_value}')")
+    setattr(selected_object, attribute_name, converted_value)
+
+    print(f"\nThe attribute \"{attribute_name}\" of the object with name \"{selected_object.name}\"" +
+          f" was set to the value \"{converted_value}\".")
+
+    save_tip()
+
+
+def attributes() -> None:
+    if selected_object is None:
+        print(ERROR_NO_OBJECT_SELECTED)
+        return
+
+    print("The select object has the following attributes:")
+    for field in [field for field in dir(selected_object) if not field.startswith("_")]:
+        print(f" * {field}")
 
 
 def select_object(row_class: type) -> None:
@@ -142,7 +177,7 @@ def delete_tag() -> None:
 
 def delete_selected() -> None:
     if selected_object is None:
-        print("No object selected!")
+        print(ERROR_NO_OBJECT_SELECTED)
         return
 
     print(f"Deleted select object with name \"{selected_object.name}\"!")
@@ -247,6 +282,10 @@ def main() -> None:
             None: get_selected_object_attribute,
         },
 
+        "set": {
+            None: set_selected_object_attribute,
+        },
+
         "compile": {
             None: compile_all_posts,
         },
@@ -259,6 +298,10 @@ def main() -> None:
             None: lambda: show_help(commands),
         },
 
+        "attributes": {
+            None: attributes,
+        },
+
         "cls": {
             None: lambda: os.system("cls") if os.name == "nt" else os.system("clear"),
         },
@@ -269,7 +312,7 @@ def main() -> None:
     }
 
     while True:
-        command_list = input("> ").split()
+        command_list = [command.lower() for command in input("> ").split()]
         if not command_list:
             continue
 
