@@ -1,3 +1,5 @@
+import random
+
 from flask.blueprints import Blueprint
 from flask import render_template, request
 from werkzeug.exceptions import abort
@@ -12,9 +14,16 @@ bp = Blueprint("home", __name__, static_folder="../static")
 
 @bp.route("/")
 @cache.cached()
+@static_vars(quotes=[
+    # Caching these doesn't matter, its okay if these only change occasionally.
+    "Embrace the chains you call yourself.",
+    "Because we are all connected.",
+    "What are you afraid of?",
+])
 def route_root():
+    quote = random.choice(route_root.quotes)
     blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
-    return render_template("home.html", title="Root", blog_posts=blog_posts)
+    return render_template("home.html", title="Root", blog_posts=blog_posts, quote=quote)
 
 
 @bp.route("/posts/<int:blog_post_id>/")
