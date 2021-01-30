@@ -16,9 +16,10 @@ bp = Blueprint("home", __name__, static_folder="../static")
 @cache.cached()
 @static_vars(quotes=[
     # Caching these doesn't matter, its okay if these only change occasionally.
-    "Embrace the chains you call yourself.",
     "Because we are all connected.",
     "What are you afraid of?",
+    "Please be nice.",
+    "Enter, Exit.",
 ])
 def route_root():
     quote = random.choice(route_root.quotes)
