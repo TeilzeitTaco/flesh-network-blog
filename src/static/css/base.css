@@ -53,6 +53,14 @@ p {
     max-width: 40em;
 }
 
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px double black;
+}
+
 #post_header {
     margin-bottom: 0px;
 }
