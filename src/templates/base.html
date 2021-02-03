@@ -7,12 +7,14 @@
         <title>{{ format_title(title) }}</title>
 
         {% assets "js_base" %}
-        <script type="text/javascript" src="{{ASSET_URL}}"></script>
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
 
         {% assets "css_base" %}
-        <link rel="stylesheet" href="{{ASSET_URL}}">
+        <link rel="stylesheet" href="{{ ASSET_URL }}">
         {% endassets %}
+
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     </head>
 
     <body>

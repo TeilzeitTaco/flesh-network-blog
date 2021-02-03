@@ -1,7 +1,8 @@
+import os
 import random
 
 from flask.blueprints import Blueprint
-from flask import render_template, request
+from flask import render_template, request, send_from_directory, current_app
 from werkzeug.exceptions import abort
 
 from main import cache
@@ -10,6 +11,13 @@ from sqlbase import db, BlogPost, Author, Tag
 
 
 bp = Blueprint("home", __name__, static_folder="../static")
+
+
+@bp.route("/favicon.ico")
+@cache.cached()
+def favicon():
+    return send_from_directory(os.path.join(current_app.root_path, "static"),
+                               "favicon.ico", mimetype="image/vnd.microsoft.icon")
 
 
 @bp.route("/")
