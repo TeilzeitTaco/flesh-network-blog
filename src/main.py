@@ -27,7 +27,8 @@ def create_app() -> Flask:
     )
 
     # The favourites icon
-    app.add_url_rule("/favicon.ico", redirect_to=url_for("static", filename="favicon.ico"))
+    with app.app_context():
+        app.add_url_rule("/favicon.ico", redirect_to=url_for("static", filename="favicon.ico"))
 
     # Caches pages to reduce server load.
     cache.init_app(app)
