@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
 from flask_assets import Environment, Bundle
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
@@ -25,6 +25,9 @@ def create_app() -> Flask:
     app.jinja_env.globals.update(
         format_title=lambda title: f"{title} | {BLOG_NAME}",
     )
+
+    # The favourites icon
+    app.add_url_rule("/favicon.ico", redirect_to=url_for("static", filename="favicon.ico"))
 
     # Caches pages to reduce server load.
     cache.init_app(app)
