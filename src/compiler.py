@@ -114,7 +114,7 @@ def compile_all_posts() -> None:
     print("Compiling all blog posts...")
     if os.path.exists(GENERATED_RESOURCES_PATH):
         rmtree(GENERATED_RESOURCES_PATH)
-    os.mkdir(GENERATED_RESOURCES_PATH)
+    os.makedirs(GENERATED_RESOURCES_PATH)
 
     for blog_post in db.query(BlogPost):
         print(f"Compiling blog post \"{blog_post.name}\"... ", end="")
