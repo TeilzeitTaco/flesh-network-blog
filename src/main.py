@@ -22,8 +22,12 @@ def create_app() -> Flask:
         from werkzeug.middleware.proxy_fix import ProxyFix
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 
-    # These functions are available in Jinja templates.
+    with open("description.txt") as f:
+        seo_description = f.read().replace("\n", " ").strip()
+
+    # These functions and values are available in Jinja templates.
     app.jinja_env.globals.update(
+        seo_description=seo_description,
         format_title=lambda title: f"{title} | {BLOG_NAME}",
         background_image_files=functools.partial(os.listdir, "static/images/"),
         file_name_to_display_name=lambda fn: fn.replace("-", " ").rsplit(".", 1)[0].title(),
