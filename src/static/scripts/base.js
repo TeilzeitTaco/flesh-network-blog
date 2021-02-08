@@ -8,9 +8,8 @@ function set_background(file_name) {
 (() => {
     let select = document.getElementById("background_select");
     select.onchange = () => set_background(select.value);
-
-    if (localStorage.background) {
+    if (localStorage.background)
         set_background(localStorage.background);
-        select.value = localStorage.background;
-    }
+
+    select.value = localStorage.background;
 })()
