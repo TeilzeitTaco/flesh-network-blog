@@ -7,6 +7,7 @@
          url("../fonts/jmp_typewriter.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -16,6 +17,7 @@
          url("../fonts/jmp_typewriter_black.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -25,6 +27,7 @@
          url("../fonts/jmp_typewriter_bold.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
@@ -34,6 +37,7 @@
          url("../fonts/jmp_typewriter_thin.ttf") format("ttf");
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 /* Basic Formatting */
