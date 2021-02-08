@@ -39,7 +39,9 @@
 /* Basic Formatting */
 
 body {
-    background-image: url("../images/background-red.jpg");
+    --global-background-image: url("/static/images/liniert-grün.jpg");
+
+    background-image: var(--global-background-image);
     font-family: jmh_typewriter_regular;
     padding: 0.5em;
 }
@@ -59,6 +61,13 @@ table {
 
 td, th {
     border: 3.5px double black;
+}
+
+footer {
+    margin: 1em;
+    position: fixed;
+    bottom: 0;
+    right: 0;
 }
 
 #post_header {
@@ -99,7 +108,7 @@ td, th {
     border-radius: 3px;
 
     text-align: justify;
-    background-image: url("../images/background-red.jpg");
+    background-image: var(--global-background-image);
 }
 
 .author:hover

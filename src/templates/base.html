@@ -7,7 +7,7 @@
         <title>{{ format_title(title) }}</title>
 
         {% assets "js_base" %}
-        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+        <script defer type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
 
         {% assets "css_base" %}
@@ -20,5 +20,14 @@
     <body>
         {% block content %}
         {% endblock %}
+
+        <footer>
+            <label>Perspective: </label>
+            <select id="background_select">
+                {% for background_file in background_image_files() %}
+                <option value="{{ background_file }}">{{ file_name_to_display_name(background_file) }}</option>
+                {% endfor %}
+            </select>
+        </footer>
     </body>
 </html>
