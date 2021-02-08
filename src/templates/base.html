@@ -22,12 +22,13 @@
         {% endblock %}
 
         <footer>
-            <label>Perspective: </label>
-            <select id="background_select">
-                {% for background_file in background_image_files() %}
-                <option value="{{ background_file }}">{{ file_name_to_display_name(background_file) }}</option>
-                {% endfor %}
-            </select>
+            <label>Perspective:
+                <select id="background_select">
+                    {% for background_file in background_image_files() %}
+                    <option value="{{ background_file }}">{{ file_name_to_display_name(background_file) }}</option>
+                    {% endfor %}
+                </select>
+            </label>
         </footer>
     </body>
 </html>
