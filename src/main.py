@@ -12,7 +12,7 @@ cache = Cache()
 
 
 def create_app() -> Flask:
-    app = Flask(__name__, static_folder="static")
+    app = Flask(__name__)
     app.config.from_json("config.json")
 
     if app.config["DEBUG_LOG_TO_FILE"]:
