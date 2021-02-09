@@ -1,14 +1,29 @@
 import random
 
-from flask import render_template, request
+from flask import render_template, request, send_from_directory, current_app, Response
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import abort
 
 from main import cache
 from misc import FileCache, static_vars, IPTracker
+from sitemap import generate_sitemap
 from sqlbase import db, BlogPost, Author, Tag
 
+
 bp = Blueprint("home", __name__, static_folder="../static")
+
+
+@bp.route("/robots.txt")
+@bp.route("/favicon.ico")
+@cache.cached()
+def static_from_root():
+    return send_from_directory(current_app.static_folder, request.path[1:])
+
+
+@bp.route("/sitemap.xml")
+@cache.cached()
+def sitemap_route():
+    return Response(generate_sitemap(), mimetype="application/xml")
 
 
 @bp.route("/")
@@ -69,4 +84,3 @@ def route_tag(tag_id: int, name: str = ""):
 
     return render_template("tag.html", title=f"Blog Posts with Tag: \"{tag.name}\"",
                            tag=tag)
-
