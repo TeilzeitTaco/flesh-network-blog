@@ -15,7 +15,6 @@ bp = Blueprint("home", __name__, static_folder="../static")
 
 @bp.route("/robots.txt")
 @bp.route("/favicon.ico")
-@cache.cached()
 def static_from_root():
     return send_from_directory(current_app.static_folder, request.path[1:])
 
