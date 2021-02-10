@@ -8,7 +8,7 @@ from functools import partial
 
 from sqlalchemy.exc import IntegrityError
 
-from sqlbase import db, Author, BlogPost, Tag, TagAssociation
+from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend
 from compiler import compile_all_posts
 
 
@@ -157,6 +157,27 @@ def delete_blog_post() -> None:
         print(f"No blog post with ID: {blog_post_id}.")
 
 
+def create_friend() -> None:
+    friend_name = input("Friend Name: ")
+    friend_link = input("Link: ")
+    friend_description = input("Description: ")
+
+    friend = Friend(friend_name, friend_link, friend_description)
+    db.add(friend)
+    save_tip()
+
+
+def delete_friend() -> None:
+    friend_name = input("Friend Name: ")
+    friend = db.query(Friend).filter_by(name=friend_name).first()
+    if friend:
+        db.delete(friend)
+        print(f"Deleted friend \"{friend.name}\".")
+
+    else:
+        print(f"No friend with name: \"{friend_name}\".")
+
+
 def create_tag() -> None:
     tag_name = input("Tag Name: ")
     tag = Tag(tag_name)
@@ -251,12 +272,14 @@ def main() -> None:
         "create": {
             "author": create_author,
             "post": create_blog_post,
+            "friend": create_friend,
             "tag": create_tag,
         },
 
         "delete": {
             "author": delete_author,
             "post": delete_blog_post,
+            "friend": delete_friend,
             "tag": delete_tag,
             None: delete_selected,
         },
@@ -264,6 +287,7 @@ def main() -> None:
         "show": {
             "author": partial(show_rows, Author),
             "post": partial(show_rows, BlogPost),
+            "friend": partial(show_rows, Friend),
             "tag": partial(show_rows, Tag),
         },
 
@@ -275,6 +299,7 @@ def main() -> None:
         "select": {
             "author": partial(select_object, Author),
             "post": partial(select_object, BlogPost),
+            "friend": partial(select_object, Friend),
             "tag": partial(select_object, Tag),
         },
 

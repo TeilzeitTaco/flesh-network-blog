@@ -2,13 +2,11 @@
 
 {% block content %}
 <div>
-    <div id="post_header_paragraph">
-        <span class="main_header">Error {{ exception.code }}: {{ exception.name }}</span>
-        <a class="sub_header" href="/">Return to root</a>
-    </div>
-
-    <p>
-        {{ exception.description }}
-    </p>
+    <span class="main_header">Error {{ exception.code }}: {{ exception.name }}</span>
+    <a class="sub_header" href="/">Return to root</a>
 </div>
+
+<p>
+    {{ exception.description }}
+</p>
 {% endblock %}

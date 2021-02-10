@@ -9,12 +9,30 @@
     <span class="main_header">Welcome to the Flesh-Network.</span><br>
     <span class="sub_header">{{ quote }}</span>
 </div>
-
 <hr>
 
-<div>
-    {% for blog_post in blog_posts %}
-    {% include "post_link.html" %}
-    {% endfor %}
-</div>
+<p>
+    <span class="sub_header">What is this?</span><br>
+    <ul>
+        <li>The Flesh-Network is my small semi-personal page.</li>
+    </ul>
+</p>
+
+<p>
+    <span class="sub_header">Friends of the Flesh-Network:</span>
+    <ul>
+        {% for friend in friends %}
+        <li><a href="{{ friend.link }}">{{ friend.name }}</a> - {{ friend.description }}</li>
+        {% endfor %}
+    </ul>
+</p>
+
+<p>
+    <span class="sub_header">Writings:</span>
+    <ul>
+        {% for blog_post in blog_posts %}
+        {% include "post_link.html" %}
+        {% endfor %}
+    </ul>
+</p>
 {% endblock %}

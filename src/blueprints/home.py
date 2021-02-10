@@ -7,8 +7,7 @@ from werkzeug.exceptions import abort
 from main import cache
 from misc import FileCache, static_vars, IPTracker
 from sitemap import generate_sitemap
-from sqlbase import db, BlogPost, Author, Tag
-
+from sqlbase import db, BlogPost, Author, Tag, Friend
 
 bp = Blueprint("home", __name__, static_folder="../static")
 
@@ -37,7 +36,9 @@ def sitemap_route():
 def route_root():
     quote = random.choice(route_root.quotes)
     blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
-    return render_template("home.html", title="Root", blog_posts=blog_posts, quote=quote)
+    friends = db.query(Friend).all()
+    return render_template("home.html", title="Root", blog_posts=blog_posts,
+                           friends=friends, quote=quote)
 
 
 @bp.route("/posts/<int:blog_post_id>/")

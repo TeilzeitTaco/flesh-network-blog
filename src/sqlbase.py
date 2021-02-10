@@ -58,6 +58,24 @@ class Author(Base):
         return f"Author(id={self.id}, name=\"{self.name}\")"
 
 
+class Friend(Base):
+    __tablename__ = "friends"
+
+    id = Column(Integer, primary_key=True)
+
+    name = Column(String, unique=True, nullable=False, default="")
+    link = Column(String, nullable=False, default="")
+    description = Column(String, nullable=False, default="")
+
+    def __init__(self, name: str, link: str, description: str) -> None:
+        self.description = description
+        self.name = name
+        self.link = link
+
+    def __repr__(self) -> str:
+        return f"Friend(id={self.id}, name=\"{self.name}\")"
+
+
 class Tag(Base):
     """A thematic category a blog post might relate to."""
     __tablename__ = "tags"
