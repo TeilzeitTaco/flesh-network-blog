@@ -43,6 +43,19 @@ class TagAssociation(Base):
         return f"TagAssociation(id={self.id}, blog_post_id={self.blog_post_id}, tag_id={self.tag_id})"
 
 
+class ReferrerHostname(Base, Nameable):
+    __tablename__ = "hostnames"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False, default="")
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+
+    def __repr__(self) -> str:
+        return f"ReferrerHostname(id={self.id}, name={self.name})"
+
+
 class Author(Base, Nameable):
     """Represents a person which authors posts."""
     __tablename__ = "authors"

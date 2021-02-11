@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <span class="main_header">What links here?</span>
+    <a class="sub_header" href="/">Return to root</a>
+</div>
+
+<p>
+    Domains which were found to link to the Flesh-Network:
+    <ul>
+        {% for hostname in hostnames %}
+        <li>{{ hostname.name }}</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endblock %}

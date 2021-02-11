@@ -1,5 +1,8 @@
 import random
 
+from urllib.parse import urlparse
+
+import sqlalchemy
 from flask import render_template, request, send_from_directory, current_app, Response
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import abort
@@ -7,9 +10,28 @@ from werkzeug.exceptions import abort
 from main import cache
 from misc import FileCache, static_vars, IPTracker
 from sitemap import generate_sitemap
-from sqlbase import db, BlogPost, Author, Tag, Friend
+from sqlbase import db, BlogPost, Author, Tag, Friend, ReferrerHostname
+
 
 bp = Blueprint("home", __name__, static_folder="../static")
+
+
+@bp.before_request
+def register_referrer():
+    # Save only the hostname (more would be dangerous privacy-wise) of the referrer url.
+    if raw_hostname := urlparse(request.referrer).hostname:
+        try:
+            db.add(ReferrerHostname(raw_hostname))
+            db.commit()
+        except sqlalchemy.exc.IntegrityError:
+            db.rollback()  # Duplicate hostname.
+
+
+@bp.route("/backlinks")
+@cache.cached()
+def route_backlinks() -> Response:
+    hostnames = db.query(ReferrerHostname).all()
+    return render_template("backlinks.html", title="Backlinks", hostnames=hostnames)
 
 
 @bp.route("/robots.txt")
