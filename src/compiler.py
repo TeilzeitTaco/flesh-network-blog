@@ -9,6 +9,7 @@ from typing import Dict, Optional, NoReturn
 from shutil import copyfile, rmtree
 from sqlbase import db, BlogPost, Author, Tag
 
+
 RESOURCE_PATH_INSERT = re.compile(r"{{(.*?)}}")
 GENERATED_RESOURCES_PATH = "static/gen/res/"
 RESOURCE_FILE_NAME_LENGTH = 16
@@ -48,41 +49,33 @@ def pre_process_markdown(markdown_src: str, resources_name_mapping: Dict[str, st
         reference = match.group(1).strip()
 
         # A file reference
-        decoded_reference = has_prefix(reference, "file:")
-        if decoded_reference:
-            hashed_file_name = resources_name_mapping.get(decoded_reference)
-            if hashed_file_name is None:
-                # If the filename isn't in the mapping, the file doesn't exist.
-                compiler_error(f"Missing resource \"{decoded_reference}\"!")
+        if decoded_reference := has_prefix(reference, "file:"):
+            if hashed_file_name := resources_name_mapping.get(decoded_reference):
+                return f"/{GENERATED_RESOURCES_PATH + hashed_file_name}"
 
-            return f"/{GENERATED_RESOURCES_PATH + hashed_file_name}"
+            # If the filename isn't in the mapping, the file doesn't exist.
+            compiler_error(f"Missing resource \"{decoded_reference}\"!")
 
         # A author reference
-        decoded_reference = has_prefix(reference, "author:")
-        if decoded_reference:
-            author = db.query(Author).filter_by(name=decoded_reference).first()
-            if author is None:
-                compiler_error(f"Missing author \"{decoded_reference}\"!")
+        if decoded_reference := has_prefix(reference, "author:"):
+            if author := db.query(Author).filter_by(name=decoded_reference).first():
+                return f"/authors/{author.id}/{author.slug}/"
 
-            return f"/authors/{author.id}/{author.slug}/"
+            compiler_error(f"Missing author \"{decoded_reference}\"!")
 
         # A post reference
-        decoded_reference = has_prefix(reference, "post:")
-        if decoded_reference:
-            post = db.query(BlogPost).get(int(decoded_reference))
-            if post is None:
-                compiler_error(f"Missing post \"{decoded_reference}\"!")
+        if decoded_reference := has_prefix(reference, "post:"):
+            if post := db.query(BlogPost).get(int(decoded_reference)):
+                return f"/posts/{post.id}/{post.slug}/"
 
-            return f"/posts/{post.id}/{post.slug}/"
+            compiler_error(f"Missing post \"{decoded_reference}\"!")
 
         # A tag reference
-        decoded_reference = has_prefix(reference, "tag:")
-        if decoded_reference:
-            tag = db.query(Tag).filter_by(name=decoded_reference).first()
-            if tag is None:
-                compiler_error(f"Missing tag \"{decoded_reference}\"!")
+        if decoded_reference := has_prefix(reference, "tag:"):
+            if tag := db.query(Tag).filter_by(name=decoded_reference).first():
+                return f"/tags/{tag.id}/{tag.slug}/"
 
-            return f"/tags/{tag.id}/{tag.slug}/"
+            compiler_error(f"Missing tag \"{decoded_reference}\"!")
 
         compiler_error(f"Invalid reference type: \"{reference}\".")
 

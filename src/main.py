@@ -7,6 +7,7 @@ from flask_assets import Environment, Bundle
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 
+
 BLOG_NAME = "Flesh-Network"
 cache = Cache()
 
@@ -22,6 +23,7 @@ def create_app() -> Flask:
         from werkzeug.middleware.proxy_fix import ProxyFix
         app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 
+    # Description for meta tag (SEO and such things)
     with open("description.txt") as f:
         seo_description = f.read().replace("\n", " ").strip()
 

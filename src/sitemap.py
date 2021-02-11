@@ -29,7 +29,7 @@ def get_base_url() -> str:
     return request.base_url.rsplit("/", 1)[0]
 
 
-def _insert_url(urlset: eT.Element, prefix: str, loc: str, priority: float):
+def _insert_url(urlset: eT.Element, prefix: str, loc: str, priority: float) -> None:
     url = eT.SubElement(urlset, "url")
     eT.SubElement(url, "loc").text = prefix + loc
     eT.SubElement(url, "priority").text = str(priority)

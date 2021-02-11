@@ -1,5 +1,6 @@
 import re
 
+from abc import abstractmethod
 from datetime import datetime
 
 from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateTime
@@ -19,6 +20,13 @@ def slugify(base: str) -> str:
     return re.sub(r"[^a-zA-Z0-9-]+", "", base.replace(" ", "-"))
 
 
+class Nameable:
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        pass
+
+
 # Aux. mapping table
 class TagAssociation(Base):
     __tablename__ = "tag_associations"
@@ -35,7 +43,7 @@ class TagAssociation(Base):
         return f"TagAssociation(id={self.id}, blog_post_id={self.blog_post_id}, tag_id={self.tag_id})"
 
 
-class Author(Base):
+class Author(Base, Nameable):
     """Represents a person which authors posts."""
     __tablename__ = "authors"
 
@@ -58,7 +66,7 @@ class Author(Base):
         return f"Author(id={self.id}, name=\"{self.name}\")"
 
 
-class Friend(Base):
+class Friend(Base, Nameable):
     __tablename__ = "friends"
 
     id = Column(Integer, primary_key=True)
@@ -76,7 +84,7 @@ class Friend(Base):
         return f"Friend(id={self.id}, name=\"{self.name}\")"
 
 
-class Tag(Base):
+class Tag(Base, Nameable):
     """A thematic category a blog post might relate to."""
     __tablename__ = "tags"
 
@@ -96,7 +104,7 @@ class Tag(Base):
         return f"Tag(id={self.id}, name=\"{self.name}\")"
 
 
-class BlogPost(Base):
+class BlogPost(Base, Nameable):
     __tablename__ = "blogposts"
 
     id = Column(Integer, primary_key=True)

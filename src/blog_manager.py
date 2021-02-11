@@ -5,10 +5,11 @@ import sys
 import shutil
 
 from functools import partial
+from typing import Optional
 
 from sqlalchemy.exc import IntegrityError
 
-from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend
+from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable
 from compiler import compile_all_posts
 
 
@@ -19,7 +20,7 @@ BANNER = """\
 -=[ Blog Manager ]=-
 """
 
-selected_object: any = None
+selected_object: Optional[Nameable] = None
 
 
 def save_tip() -> None:
@@ -75,8 +76,7 @@ def attributes() -> None:
 
 def select_object(row_class: type) -> None:
     object_id = int(input(f"{row_class.__name__} ID: "))
-    result = db.query(row_class).get(object_id)
-    if not result:
+    if not (result := db.query(row_class).get(object_id)):
         print(f"No object of type {row_class.__name__} with ID {object_id} exists.")
         return
 
@@ -112,8 +112,7 @@ def create_author() -> None:
 
 def delete_author() -> None:
     author_name = input("Author Name: ")
-    author = db.query(Author).filter_by(name=author_name).first()
-    if author:
+    if author := db.query(Author).filter_by(name=author_name).first():
         for blog_post in author.blog_posts:
             print(f"Deleted blog post \"{blog_post.name}\".")
             shutil.rmtree(blog_post.slug_path)
@@ -121,15 +120,14 @@ def delete_author() -> None:
 
         db.delete(author)
         print(f"Deleted author \"{author.name}\".")
+        return
 
-    else:
-        print(f"No author with name: \"{author_name}\".")
+    print(f"No author with name: \"{author_name}\".")
 
 
 def create_blog_post() -> None:
     author_name = input("Author Name: ")
-    author = db.query(Author).filter_by(name=author_name).first()
-    if not author:
+    if not (author := db.query(Author).filter_by(name=author_name).first()):
         print(f"No author with name: \"{author_name}\".")
         exit()
 
@@ -145,16 +143,15 @@ def create_blog_post() -> None:
 
 def delete_blog_post() -> None:
     blog_post_id = int(input("Blog Post ID: "))
-    blog_post = db.query(BlogPost).get(blog_post_id)
-    if blog_post:
+    if blog_post := db.query(BlogPost).get(blog_post_id):
         if os.path.exists(blog_post.slug_path):
             shutil.rmtree(blog_post.slug_path)
 
         db.delete(blog_post)
         print(f"Deleted blog post \"{blog_post.name}\".")
+        return
 
-    else:
-        print(f"No blog post with ID: {blog_post_id}.")
+    print(f"No blog post with ID: {blog_post_id}.")
 
 
 def create_friend() -> None:
@@ -169,13 +166,12 @@ def create_friend() -> None:
 
 def delete_friend() -> None:
     friend_name = input("Friend Name: ")
-    friend = db.query(Friend).filter_by(name=friend_name).first()
-    if friend:
+    if friend := db.query(Friend).filter_by(name=friend_name).first():
         db.delete(friend)
         print(f"Deleted friend \"{friend.name}\".")
+        return
 
-    else:
-        print(f"No friend with name: \"{friend_name}\".")
+    print(f"No friend with name: \"{friend_name}\".")
 
 
 def create_tag() -> None:
@@ -187,13 +183,12 @@ def create_tag() -> None:
 
 def delete_tag() -> None:
     tag_name = input("Tag Name: ")
-    tag = db.query(BlogPost).filter_by(name=tag_name).first()
-    if tag:
+    if tag := db.query(BlogPost).filter_by(name=tag_name).first():
         db.delete(tag)
         print(f"Deleted tag \"{tag.name}\".")
+        return
 
-    else:
-        print(f"No tag with name: \"{tag_name}\".")
+    print(f"No tag with name: \"{tag_name}\".")
 
 
 def delete_selected() -> None:
@@ -209,43 +204,39 @@ def attach_tag() -> None:
     tag_name = input("Tag Name: ")
     blog_post_id = int(input("Blog Post ID: "))
 
-    tag = db.query(Tag).filter_by(name=tag_name).first()
-    blog_post = db.query(BlogPost).get(blog_post_id)
-
-    if not tag:
+    if not (tag := db.query(Tag).filter_by(name=tag_name).first()):
         print("Tag not found!")
         return
 
-    if not blog_post:
+    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
         print("Post not found")
         return
 
     tag_association = TagAssociation(blog_post_id, tag.id)
     db.add(tag_association)
+    save_tip()
 
 
 def detach_tag() -> None:
     tag_name = input("Tag Name: ")
     blog_post_id = int(input("Blog Post ID: "))
 
-    tag = db.query(Tag).filter_by(name=tag_name).first()
-    blog_post = db.query(BlogPost).get(blog_post_id)
-
-    if not tag:
+    if not (tag := db.query(Tag).filter_by(name=tag_name).first()):
         print("Tag not found!")
         return
 
-    if not blog_post:
+    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
         print("Post not found")
         return
 
-    tag_association = db.query(TagAssociation).filter_by(blog_post_id=blog_post_id, tag_id=tag.id).first()
-    if tag_association is None:
+    if (tag_association := db.query(TagAssociation).filter_by(blog_post_id=blog_post_id, tag_id=tag.id)
+            .first()) is None:
         print("Tag is not attached to post!")
         return
 
     print(f"Detached tag \"{tag.name}\" from post \"{blog_post.name}\"!")
     db.delete(tag_association)
+    save_tip()
 
 
 def exit_program() -> None:
@@ -337,8 +328,7 @@ def main() -> None:
     }
 
     while True:
-        command_list = [command.lower() for command in input("> ").split()]
-        if not command_list:
+        if not (command_list := [command.lower() for command in input("> ").split()]):
             continue
 
         if len(command_list) not in [1, 2] or command_list[0] not in commands.keys():

@@ -14,13 +14,13 @@ bp = Blueprint("home", __name__, static_folder="../static")
 
 @bp.route("/robots.txt")
 @bp.route("/favicon.ico")
-def static_from_root():
+def static_from_root() -> Response:
     return send_from_directory(current_app.static_folder, request.path[1:])
 
 
 @bp.route("/sitemap.xml")
 @cache.cached()
-def sitemap_route():
+def sitemap_route() -> Response:
     return Response(generate_sitemap(), mimetype="application/xml")
 
 
@@ -33,7 +33,7 @@ def sitemap_route():
     "Please be nice.",
     "Enter, Exit.",
 ])
-def route_root():
+def route_root() -> any:
     quote = random.choice(route_root.quotes)
     blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
     friends = db.query(Friend).all()
@@ -44,9 +44,8 @@ def route_root():
 @bp.route("/posts/<int:blog_post_id>/")
 @bp.route("/posts/<int:blog_post_id>/<string:name>/")
 @static_vars(file_cache=FileCache(), ip_tracker=IPTracker())
-def route_blog_post(blog_post_id: int, name: str = ""):
-    blog_post = db.query(BlogPost).get(blog_post_id)
-    if blog_post is None:
+def route_blog_post(blog_post_id: int, name: str = "") -> any:
+    if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         abort(404)
 
     # The cache object is a function-static (like in C) variable
@@ -65,9 +64,8 @@ def route_blog_post(blog_post_id: int, name: str = ""):
 @bp.route("/authors/<int:author_id>/")
 @bp.route("/authors/<int:author_id>/<string:name>/")
 @cache.cached()
-def route_author(author_id: int, name: str = ""):
-    author = db.query(Author).get(author_id)
-    if author is None:
+def route_author(author_id: int, name: str = "") -> any:
+    if (author := db.query(Author).get(author_id)) is None:
         abort(404)
 
     return render_template("author.html", title=f"Author: \"{author.name}\"",
@@ -77,9 +75,8 @@ def route_author(author_id: int, name: str = ""):
 @bp.route("/tags/<int:tag_id>/")
 @bp.route("/tags/<int:tag_id>/<string:name>/")
 @cache.cached()
-def route_tag(tag_id: int, name: str = ""):
-    tag = db.query(Tag).get(tag_id)
-    if tag is None:
+def route_tag(tag_id: int, name: str = "") -> any:
+    if (tag := db.query(Tag).get(tag_id)) is None:
         abort(404)
 
     return render_template("tag.html", title=f"Blog Posts with Tag: \"{tag.name}\"",
