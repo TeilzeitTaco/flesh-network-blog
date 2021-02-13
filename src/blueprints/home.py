@@ -52,6 +52,7 @@ def sitemap_route() -> Response:
     # Caching these doesn't matter, its okay if these only change occasionally.
     "Because we are all connected.",
     "What are you afraid of?",
+    "Online Doom Cult.",
     "Please be nice.",
     "Enter, Exit.",
 ])
