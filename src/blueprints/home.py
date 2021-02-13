@@ -18,7 +18,7 @@ bp = Blueprint("home", __name__, static_folder="../static")
 
 @bp.before_request
 def register_referrer():
-    # Save only the hostname (more would be dangerous privacy-wise) of the referrer url.
+    # Save only the hostname (more could be dangerous privacy-wise) of the referrer url.
     if raw_hostname := urlparse(request.referrer).hostname:
         try:
             db.add(ReferrerHostname(raw_hostname))
