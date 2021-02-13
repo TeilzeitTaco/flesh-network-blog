@@ -5,11 +5,11 @@ import sys
 import shutil
 
 from functools import partial
-from typing import Optional
+from typing import Optional, Callable
 
 from sqlalchemy.exc import IntegrityError
 
-from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable
+from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname
 from compiler import compile_all_posts
 
 
@@ -164,16 +164,6 @@ def create_friend() -> None:
     save_tip()
 
 
-def delete_friend() -> None:
-    friend_name = input("Friend Name: ")
-    if friend := db.query(Friend).filter_by(name=friend_name).first():
-        db.delete(friend)
-        print(f"Deleted friend \"{friend.name}\".")
-        return
-
-    print(f"No friend with name: \"{friend_name}\".")
-
-
 def create_tag() -> None:
     tag_name = input("Tag Name: ")
     tag = Tag(tag_name)
@@ -181,14 +171,18 @@ def create_tag() -> None:
     save_tip()
 
 
-def delete_tag() -> None:
-    tag_name = input("Tag Name: ")
-    if tag := db.query(BlogPost).filter_by(name=tag_name).first():
-        db.delete(tag)
-        print(f"Deleted tag \"{tag.name}\".")
-        return
+def generic_delete_by_name(cls: any, input_question: str, deleted_prefix: str, error_prefix: str) -> Callable:
+    def concrete():
+        name = input(input_question)
+        if obj := db.query(cls).filter_by(name=name).first():
+            print(f"{deleted_prefix} \"{obj.name}\".")
+            db.delete(obj)
+            save_tip()
+            return
 
-    print(f"No tag with name: \"{tag_name}\".")
+        print(f"{error_prefix} \"{name}\".")
+
+    return concrete
 
 
 def delete_selected() -> None:
@@ -270,8 +264,9 @@ def main() -> None:
         "delete": {
             "author": delete_author,
             "post": delete_blog_post,
-            "friend": delete_friend,
-            "tag": delete_tag,
+            "friend": generic_delete_by_name(Friend, "Friend Name: ", "Deleted friend", "No friend with name:"),
+            "tag": generic_delete_by_name(Tag, "Tag Name: ", "Deleted tag", "No tag"),
+            "hostname": generic_delete_by_name(ReferrerHostname, "Hostname: ", "Deleted hostname", "No hostname"),
             None: delete_selected,
         },
 
@@ -280,6 +275,7 @@ def main() -> None:
             "post": partial(show_rows, BlogPost),
             "friend": partial(show_rows, Friend),
             "tag": partial(show_rows, Tag),
+            "hostname": partial(show_rows, ReferrerHostname),
         },
 
         "tag": {
