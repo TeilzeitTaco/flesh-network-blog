@@ -2,6 +2,7 @@ import re
 
 from abc import abstractmethod
 from datetime import datetime
+from hashlib import sha256
 
 from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -41,6 +42,29 @@ class TagAssociation(Base):
 
     def __repr__(self) -> str:
         return f"TagAssociation(id={self.id}, blog_post_id={self.blog_post_id}, tag_id={self.tag_id})"
+
+
+class Comment(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True)
+
+    blog_post_id = Column(Integer, ForeignKey("blogposts.id"))
+    blog_post = relationship("BlogPost", back_populates="comments")
+
+    pseudonym = Column(String, nullable=False, default="")
+    comment = Column(String, nullable=False, default="")
+    tag = Column(String, nullable=False, default="")
+
+    def __init__(self, pseudonym: str, password: str, comment: str):
+        self.tag = Comment.make_tag_for_pseudonym(pseudonym, password)
+        self.pseudonym = pseudonym
+        self.comment = comment
+
+    @staticmethod
+    def make_tag_for_pseudonym(pseudonym: str, password: str):
+        hex_digest = sha256(f"{pseudonym}#{password}".encode()).hexdigest()
+        return hex_digest[:3] + hex_digest[-3:]
 
 
 class ReferrerHostname(Base, Nameable):
@@ -129,6 +153,7 @@ class BlogPost(Base, Nameable):
 
     author_id = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", back_populates="blog_posts")
+    comments = relationship("Comment", back_populates="blog_post")
 
     @property
     def slug(self) -> str:

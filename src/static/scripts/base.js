@@ -4,12 +4,32 @@ function set_background(file_name) {
     localStorage.background = file_name;
 }
 
-
-(() => {
+(function remember_background() {
     let select = document.getElementById("background_select");
     select.onchange = () => set_background(select.value);
     if (localStorage.background)
         set_background(localStorage.background);
 
     select.value = localStorage.background;
+})()
+
+const PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const PASSWORD_LENGTH = 32;
+
+function generate_password() {
+   let result = "";
+   for (var i = 0; i < PASSWORD_LENGTH; i++)
+      result += PASSWORD_CHARS.charAt(Math.floor(Math.random() * PASSWORD_CHARS.length));
+
+   return result;
+}
+
+function get_password() {
+    return localStorage.comment_password || (localStorage.comment_password = generate_password());
+}
+
+(function remember_password() {
+    let form_field = document.getElementById("hidden_password");
+    if (form_field)
+        form_field.value = get_password();
 })()

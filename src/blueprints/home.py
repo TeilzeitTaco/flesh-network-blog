@@ -1,5 +1,4 @@
 import random
-
 from urllib.parse import urlparse
 
 import sqlalchemy
@@ -7,6 +6,7 @@ from flask import render_template, request, send_from_directory, current_app, Re
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import abort
 
+from forms import CommentForm
 from main import cache
 from misc import FileCache, static_vars, IPTracker
 from sitemap import generate_sitemap
@@ -63,12 +63,17 @@ def route_root() -> any:
                            friends=friends, quote=quote)
 
 
-@bp.route("/posts/<int:blog_post_id>/")
-@bp.route("/posts/<int:blog_post_id>/<string:name>/")
+@bp.route("/posts/<int:blog_post_id>/", methods=["GET", "POST"])
+@bp.route("/posts/<int:blog_post_id>/<string:name>/", methods=["GET", "POST"])
 @static_vars(file_cache=FileCache(), ip_tracker=IPTracker())
 def route_blog_post(blog_post_id: int, name: str = "") -> any:
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         abort(404)
+
+    if (form := CommentForm()).validate_on_submit():
+        comment = form.to_database_object()
+        blog_post.comments.append(comment)
+        db.commit()
 
     # The cache object is a function-static (like in C) variable
     blog_post_content = route_blog_post.file_cache.get_contents(blog_post.html_path)
@@ -79,7 +84,7 @@ def route_blog_post(blog_post_id: int, name: str = "") -> any:
         blog_post.hits += 1
         db.commit()
 
-    return render_template("blog_post.html", title=blog_post.name,
+    return render_template("blog_post.html", title=blog_post.name, form=CommentForm(),
                            blog_post=blog_post, blog_post_content=blog_post_content)
 
 

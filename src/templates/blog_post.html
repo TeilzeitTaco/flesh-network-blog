@@ -26,5 +26,39 @@
     <div>
         {{ blog_post_content | safe }}
     </div>
+
+    <hr>
+    <div>
+        <span class="sub_header">Comments</span>
+        {% for comment in blog_post.comments %}
+        <div>
+            <span>{{ comment.pseudonym }}#{{ comment.tag }}</span>
+            <div>
+                {{ comment.comment }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div>
+        <form method=post>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>{{ form.pseudonym.label }}</td>
+                        <td>{{ form.pseudonym() }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.comment.label }}</td>
+                        <td>{{ form.comment() }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{ form.submit() }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {{ form.hidden_tag() }}
+        </form>
+    </div>
 </div>
 {% endblock %}
