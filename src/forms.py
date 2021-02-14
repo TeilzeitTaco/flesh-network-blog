@@ -5,9 +5,13 @@ from sqlbase import Comment
 
 
 class CommentForm(FlaskForm):
-    pseudonym = StringField("Pseudonym", [validators.DataRequired(), validators.Length(max=32)])
-    comment = TextAreaField("Comment", [validators.DataRequired(), validators.Length(max=8192)])
+    pseudonym = StringField("Pseudonym", [validators.Length(min=1, max=32)])
+    comment = TextAreaField("Comment", [validators.Length(min=3, max=8192)])
+
+    # This is required so we can verify the identity of the submitter without
+    # requiring an explicit account. It gets filled in from localStorage using javascript.
     hidden_password = HiddenField("Hidden Password", [validators.Length(min=32, max=32)])
+
     submit = SubmitField("Post Public Comment")
 
     def to_database_object(self) -> any:
