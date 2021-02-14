@@ -27,7 +27,7 @@ def try_with_integrity_protection(statement: Callable) -> None:
 
 
 @bp.before_request
-def register_referrer():
+def register_referrer() -> None:
     # Save only the hostname (more could be dangerous privacy-wise) of the referrer url.
     if raw_hostname := urlparse(request.referrer).hostname:
         try_with_integrity_protection(lambda: db.add(ReferrerHostname(raw_hostname)))
