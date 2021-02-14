@@ -1,4 +1,5 @@
 import random
+from typing import Callable
 from urllib.parse import urlparse
 
 import sqlalchemy
@@ -16,15 +17,19 @@ from sqlbase import db, BlogPost, Author, Tag, Friend, ReferrerHostname
 bp = Blueprint("home", __name__, static_folder="../static")
 
 
+def try_with_integrity_protection(statement: Callable) -> None:
+    try:
+        statement()
+        db.commit()
+    except sqlalchemy.exc.IntegrityError:
+        db.rollback()  # Duplicate.
+
+
 @bp.before_request
 def register_referrer():
     # Save only the hostname (more could be dangerous privacy-wise) of the referrer url.
     if raw_hostname := urlparse(request.referrer).hostname:
-        try:
-            db.add(ReferrerHostname(raw_hostname))
-            db.commit()
-        except sqlalchemy.exc.IntegrityError:
-            db.rollback()  # Duplicate hostname.
+        try_with_integrity_protection(lambda: db.add(ReferrerHostname(raw_hostname)))
 
 
 @bp.route("/backlinks")
@@ -73,8 +78,7 @@ def route_blog_post(blog_post_id: int, name: str = "") -> any:
 
     if (form := CommentForm()).validate_on_submit():
         comment = form.to_database_object()
-        blog_post.comments.append(comment)
-        db.commit()
+        try_with_integrity_protection(lambda: blog_post.comments.append(comment))
 
     # The cache object is a function-static (like in C) variable
     blog_post_content = route_blog_post.file_cache.get_contents(blog_post.html_path)

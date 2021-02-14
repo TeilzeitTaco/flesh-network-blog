@@ -55,7 +55,7 @@ class Comment(Base, Nameable):
     timestamp = Column(DateTime, default=datetime.now())
 
     pseudonym = Column(String, nullable=False, default="")
-    comment = Column(String, nullable=False, default="")
+    comment = Column(String, unique=True, nullable=False, default="")
     tag = Column(String, nullable=False, default="")
 
     def __init__(self, pseudonym: str, password: str, comment: str):
