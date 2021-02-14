@@ -9,7 +9,7 @@ from typing import Optional, Callable
 
 from sqlalchemy.exc import IntegrityError
 
-from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname
+from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
 from compiler import compile_all_posts
 
 
@@ -101,6 +101,17 @@ def show_help(commands: any) -> None:
         print()
 
 
+def delete_comment() -> None:
+    comment_id = int(input("Comment ID: "))
+    if comment := db.query(Comment).get(comment_id):
+        db.delete(comment)
+        print(f"Deleted comment \"{comment.name}\".")
+        save_tip()
+        return
+
+    print(f"No comment with ID: {comment_id}.")
+
+
 def create_author() -> None:
     name = input("Author Name: ")
     biography = input("Biography: ")
@@ -120,6 +131,7 @@ def delete_author() -> None:
 
         db.delete(author)
         print(f"Deleted author \"{author.name}\".")
+        save_tip()
         return
 
     print(f"No author with name: \"{author_name}\".")
@@ -149,6 +161,7 @@ def delete_blog_post() -> None:
 
         db.delete(blog_post)
         print(f"Deleted blog post \"{blog_post.name}\".")
+        save_tip()
         return
 
     print(f"No blog post with ID: {blog_post_id}.")
@@ -192,6 +205,7 @@ def delete_selected() -> None:
 
     print(f"Deleted select object with name \"{selected_object.name}\"!")
     db.delete(selected_object)
+    save_tip()
 
 
 def attach_tag() -> None:
@@ -202,7 +216,7 @@ def attach_tag() -> None:
         print("Tag not found!")
         return
 
-    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
+    if not db.query(BlogPost).get(blog_post_id):
         print("Post not found")
         return
 
@@ -267,6 +281,7 @@ def main() -> None:
             "friend": generic_delete_by_name(Friend, "Friend Name: ", "Deleted friend", "No friend with name:"),
             "tag": generic_delete_by_name(Tag, "Tag Name: ", "Deleted tag", "No tag"),
             "hostname": generic_delete_by_name(ReferrerHostname, "Hostname: ", "Deleted hostname", "No hostname"),
+            "comment": delete_comment,
             None: delete_selected,
         },
 
@@ -276,6 +291,7 @@ def main() -> None:
             "friend": partial(show_rows, Friend),
             "tag": partial(show_rows, Tag),
             "hostname": partial(show_rows, ReferrerHostname),
+            "comment": partial(show_rows, Comment),
         },
 
         "tag": {
@@ -288,6 +304,8 @@ def main() -> None:
             "post": partial(select_object, BlogPost),
             "friend": partial(select_object, Friend),
             "tag": partial(select_object, Tag),
+            "hostname": partial(select_object, ReferrerHostname),
+            "comment": partial(select_object, Comment),
         },
 
         "get": {

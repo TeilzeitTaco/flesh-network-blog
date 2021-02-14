@@ -44,13 +44,15 @@ class TagAssociation(Base):
         return f"TagAssociation(id={self.id}, blog_post_id={self.blog_post_id}, tag_id={self.tag_id})"
 
 
-class Comment(Base):
+class Comment(Base, Nameable):
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True)
 
     blog_post_id = Column(Integer, ForeignKey("blogposts.id"))
     blog_post = relationship("BlogPost", back_populates="comments")
+
+    timestamp = Column(DateTime, default=datetime.now())
 
     pseudonym = Column(String, nullable=False, default="")
     comment = Column(String, nullable=False, default="")
@@ -65,6 +67,10 @@ class Comment(Base):
     def make_tag_for_pseudonym(pseudonym: str, password: str):
         hex_digest = sha256(f"{pseudonym}#{password}".encode()).hexdigest()
         return hex_digest[:3] + hex_digest[-3:]
+
+    @property
+    def name(self) -> str:
+        return f"{self.pseudonym} ({self.tag}): {self.comment[:10]}..."
 
 
 class ReferrerHostname(Base, Nameable):
