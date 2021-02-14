@@ -7,7 +7,7 @@
         <a class="sub_header" href="/">Return to root</a>
     </div>
 
-    <ul id="post_metadata_list">
+    <ul class="paper_background" id="post_metadata_list">
         <li>Posted on {{ blog_post.formatted_timestamp }}</li>
 
         {% if blog_post.tags %}
@@ -23,22 +23,25 @@
         <li>Viewed {{ blog_post.hits }} {{ "time" if blog_post.hits == 1 else "times" }}</li>
     </ul>
 
+    <hr>
     <div>
         {{ blog_post_content | safe }}
     </div>
 
     <hr>
+    {% if blog_post.comments %}
     <div>
-        <span class="sub_header">Comments</span>
+        <span class="sub_header">Comments:</span><br>
         {% for comment in blog_post.comments %}
-        <div>
-            <span>{{ comment.pseudonym }}#{{ comment.tag }}</span>
+        <div class="paper_background">
+            <span title="User Identity: {{ comment.tag }}">{{ comment.pseudonym }}</span>
             <div>
                 {{ comment.comment }}
             </div>
         </div>
         {% endfor %}
     </div>
+    {% endif %}
 
     <div>
         <form method=post>

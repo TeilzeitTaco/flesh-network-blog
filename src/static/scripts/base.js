@@ -28,7 +28,13 @@ function get_password() {
     return localStorage.comment_password || (localStorage.comment_password = generate_password());
 }
 
-(function remember_password() {
-    if (form_field = document.getElementById("hidden_password"))
-        form_field.value = get_password();
+(function remember_form_data() {
+    if (hidden_password_field = document.getElementById("hidden_password")) {
+        hidden_password_field.value = get_password();
+
+        let pseudonym_field = document.getElementById("pseudonym");
+        pseudonym_field.value = localStorage.pseudonym || "";
+
+        document.getElementById("submit").onclick = () => localStorage.pseudonym = pseudonym_field.value;
+    }
 })()

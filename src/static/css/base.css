@@ -46,6 +46,15 @@
     --global-background-image: url("/static/images/liniert-korrektur.jpg");
 }
 
+.paper_background {
+    background-image: var(--global-background-image);
+    display: inline-block;
+
+    border: 1px solid #000;
+    border-radius: 3px;
+    margin: 0.1rem;
+}
+
 body {
     background-image: var(--global-background-image);
     font-family: jmh_typewriter_regular;
@@ -82,7 +91,7 @@ td, th {
     border: 3.5px double black;
 }
 
-footer {
+#perspective_selector {
     margin: 1rem;
     position: fixed;
     bottom: 0;
@@ -127,7 +136,6 @@ footer {
     border-radius: 3px;
 
     text-align: justify;
-    background-image: var(--global-background-image);
 }
 
 .author:hover

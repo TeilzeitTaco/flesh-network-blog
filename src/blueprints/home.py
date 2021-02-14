@@ -3,9 +3,10 @@ from typing import Callable
 from urllib.parse import urlparse
 
 import sqlalchemy
-from flask import render_template, request, send_from_directory, current_app, Response
+from flask import render_template, request, send_from_directory, current_app, Response, url_for
 from flask.blueprints import Blueprint
 from werkzeug.exceptions import abort
+from werkzeug.utils import redirect
 
 from forms import CommentForm
 from main import cache
@@ -79,6 +80,7 @@ def route_blog_post(blog_post_id: int, name: str = "") -> any:
     if (form := CommentForm()).validate_on_submit():
         comment = form.to_database_object()
         try_with_integrity_protection(lambda: blog_post.comments.append(comment))
+        return redirect(url_for("home.route_blog_post", blog_post_id=blog_post_id, name=name))
 
     # The cache object is a function-static (like in C) variable
     blog_post_content = route_blog_post.file_cache.get_contents(blog_post.html_path)
