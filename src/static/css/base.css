@@ -52,6 +52,19 @@ body {
     padding: 0.5rem;
 }
 
+body::-webkit-scrollbar {
+    width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #404040;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #878787;
+    border-radius: 2px;
+}
+
 img {
     max-width: 30rem;
 }
