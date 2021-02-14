@@ -58,19 +58,19 @@ class Comment(Base, Nameable):
     comment = Column(String, unique=True, nullable=False, default="")
     tag = Column(String, nullable=False, default="")
 
-    def __init__(self, pseudonym: str, password: str, comment: str):
+    def __init__(self, pseudonym: str, password: str, comment: str) -> None:
         self.tag = Comment.make_tag_for_pseudonym(pseudonym, password)
         self.pseudonym = pseudonym
         self.comment = comment
 
     @staticmethod
-    def make_tag_for_pseudonym(pseudonym: str, password: str):
+    def make_tag_for_pseudonym(pseudonym: str, password: str) -> str:
         hex_digest = sha256(f"{pseudonym}#{password}".encode()).hexdigest()
         return hex_digest[:3] + hex_digest[-3:]
 
     @property
     def name(self) -> str:
-        return f"{self.pseudonym} ({self.tag}): {self.comment[:10]}..."
+        return f"{self.pseudonym} ({self.tag}): {self.comment[:16]}..."
 
 
 class ReferrerHostname(Base, Nameable):
