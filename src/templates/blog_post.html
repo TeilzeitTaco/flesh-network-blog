@@ -28,13 +28,13 @@
         {{ blog_post_content | safe }}
     </div>
 
-    <hr>
     {% if blog_post.comments %}
+    <hr>
     <div>
         <span class="sub_header">Comments:</span><br>
         {% for comment in blog_post.comments %}
         <div class="paper_background">
-            <span title="User Identity: {{ comment.tag }}">{{ comment.pseudonym }}</span>
+            <span title="User Identity: {{ comment.tag }}">From: {{ comment.pseudonym }}</span>
             <div>
                 {{ comment.comment }}
             </div>
@@ -43,6 +43,7 @@
     </div>
     {% endif %}
 
+    <hr>
     <div>
         <form method=post>
             <table>
