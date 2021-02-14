@@ -86,9 +86,13 @@ def select_object(row_class: type) -> None:
 
 
 def show_rows(row_class: type) -> None:
-    print(f"Currently registered {row_class.__name__}s:")
-    for row in db.query(row_class):
-        print(f" * {str(row.id).rjust(3)} - \"{row.name}\"")
+    rows = db.query(row_class).all()
+    if rows:
+        print(f"Currently registered {row_class.__name__}s:")
+        for row in rows:
+            print(f" * {str(row.id).rjust(3)} - \"{row.name}\"")
+    else:
+        print(f"There are currently no registered {row_class.__name__}s.")
 
 
 def show_help(commands: any) -> None:
