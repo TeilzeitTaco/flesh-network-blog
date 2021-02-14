@@ -29,7 +29,6 @@ function get_password() {
 }
 
 (function remember_password() {
-    let form_field = document.getElementById("hidden_password");
-    if (form_field)
+    if (form_field = document.getElementById("hidden_password"))
         form_field.value = get_password();
 })()
