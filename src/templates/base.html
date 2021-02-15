@@ -18,6 +18,24 @@
     </head>
 
     <body>
+        <div>
+            <!-- Welcome dear traveler, to the source of this blog...
+                 What you are looking for here, my mind inquires,
+                 but for you to continue, my heart desires... -->
+
+            <span class="main_header">{{ header }}</span>
+
+            {% if sub_header %}
+            {# A two line header-sub-header. #}
+            <br><span class="sub_header">{{ sub_header }}</span>
+            {% endif %}
+
+            {% if return_to_root %}
+            <a class="sub_header" href="/">Return to root</a>
+            {% endif %}
+        </div>
+        <hr>
+
         {% block content %}
         {% endblock %}
 

@@ -37,7 +37,10 @@ def register_referrer() -> None:
 @cache.cached()
 def route_backlinks() -> Response:
     hostnames = db.query(ReferrerHostname).all()
-    return render_template("backlinks.html", title="Backlinks", hostnames=hostnames)
+
+    title = "Backlinks"
+    return render_template("backlinks.html", title=title, header=title, return_to_root=True,
+                           hostnames=hostnames)
 
 
 @bp.route("/robots.txt")
@@ -66,8 +69,8 @@ def route_root() -> any:
     quote = random.choice(route_root.quotes)
     blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
     friends = db.query(Friend).all()
-    return render_template("home.html", title="Root", blog_posts=blog_posts,
-                           friends=friends, quote=quote)
+    return render_template("home.html", title="Root", header="Welcome to the Flesh-Network", sub_header=quote,
+                           blog_posts=blog_posts, friends=friends, quote=quote)
 
 
 @bp.route("/posts/<int:blog_post_id>/", methods=["GET", "POST"])
@@ -91,8 +94,9 @@ def route_blog_post(blog_post_id: int, name: str = "") -> any:
         blog_post.hits += 1
         db.commit()
 
-    return render_template("blog_post.html", title=blog_post.name, form=CommentForm(),
-                           blog_post=blog_post, blog_post_content=blog_post_content)
+    return render_template("blog_post.html", title=blog_post.name, header=blog_post.name, return_to_root=True,
+                           blog_post=blog_post, blog_post_content=blog_post_content,
+                           form=CommentForm())
 
 
 @bp.route("/authors/<int:author_id>/")
@@ -102,7 +106,8 @@ def route_author(author_id: int, name: str = "") -> any:
     if (author := db.query(Author).get(author_id)) is None:
         abort(404)
 
-    return render_template("author.html", title=f"Author: \"{author.name}\"",
+    title = f"Author: \"{author.name}\""
+    return render_template("author.html", title=title, header=title, return_to_root=True,
                            author=author)
 
 
@@ -113,5 +118,6 @@ def route_tag(tag_id: int, name: str = "") -> any:
     if (tag := db.query(Tag).get(tag_id)) is None:
         abort(404)
 
-    return render_template("tag.html", title=f"Blog Posts with Tag: \"{tag.name}\"",
+    title = f"Blog Posts with Tag: \"{tag.name}\""
+    return render_template("tag.html", title=title, header=title, return_to_root=True,
                            tag=tag)

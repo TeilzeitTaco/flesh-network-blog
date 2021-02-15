@@ -1,16 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    <!-- Welcome dear traveler, to the source of this blog...
-         What you are looking for here, my mind inquires,
-         but for you to continue, my heart desires... -->
-
-    <span class="main_header">Welcome to the Flesh-Network.</span><br>
-    <span class="sub_header">{{ quote }}</span>
-</div>
-<hr>
-
 <p>
     <span class="sub_header">What is this?</span><br>
     <ul>
@@ -19,6 +9,7 @@
     </ul>
 </p>
 
+{% if friends %}
 <p>
     <span class="sub_header">Friends of the Flesh-Network:</span>
     <ul>
@@ -27,7 +18,9 @@
         {% endfor %}
     </ul>
 </p>
+{% endif %}
 
+{% if blog_posts %}
 <p>
     <span class="sub_header">Writings:</span>
     <ul>
@@ -36,4 +29,5 @@
         {% endfor %}
     </ul>
 </p>
+{% endif %}
 {% endblock %}
