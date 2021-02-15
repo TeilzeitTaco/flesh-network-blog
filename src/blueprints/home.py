@@ -74,16 +74,16 @@ def route_root() -> any:
 
 
 @bp.route("/posts/<int:blog_post_id>/", methods=["GET", "POST"])
-@bp.route("/posts/<int:blog_post_id>/<string:name>/", methods=["GET", "POST"])
+@bp.route("/posts/<int:blog_post_id>/<string:_name>/", methods=["GET", "POST"])
 @static_vars(file_cache=FileCache(), ip_tracker=IPTracker())
-def route_blog_post(blog_post_id: int, name: str = "") -> any:
+def route_blog_post(blog_post_id: int, _name: str = "") -> any:
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         abort(404)
 
     if (form := CommentForm()).validate_on_submit():
         comment = form.to_database_object()
         try_with_integrity_protection(lambda: blog_post.comments.append(comment))
-        return redirect(url_for("home.route_blog_post", blog_post_id=blog_post_id, name=name))
+        return redirect(url_for("home.route_blog_post", blog_post_id=blog_post_id, _name=_name))
 
     # The cache object is a function-static (like in C) variable
     blog_post_content = route_blog_post.file_cache.get_contents(blog_post.html_path)
@@ -100,7 +100,7 @@ def route_blog_post(blog_post_id: int, name: str = "") -> any:
 
 
 @bp.route("/authors/<int:author_id>/")
-@bp.route("/authors/<int:author_id>/<string:name>/")
+@bp.route("/authors/<int:author_id>/<string:_name>/")
 @cache.cached()
 def route_author(author_id: int, _name: str = "") -> any:
     if (author := db.query(Author).get(author_id)) is None:
@@ -112,7 +112,7 @@ def route_author(author_id: int, _name: str = "") -> any:
 
 
 @bp.route("/tags/<int:tag_id>/")
-@bp.route("/tags/<int:tag_id>/<string:name>/")
+@bp.route("/tags/<int:tag_id>/<string:_name>/")
 @cache.cached()
 def route_tag(tag_id: int, _name: str = "") -> any:
     if (tag := db.query(Tag).get(tag_id)) is None:

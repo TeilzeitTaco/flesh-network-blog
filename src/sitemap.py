@@ -15,11 +15,11 @@ def generate_sitemap() -> str:
     insert_url(loc="", priority=1)
 
     for post in db.query(BlogPost):
-        insert_url(loc=url_for("home.route_blog_post", blog_post_id=post.id, name=post.slug),
+        insert_url(loc=url_for("home.route_blog_post", blog_post_id=post.id, _name=post.slug),
                    priority=0.8)
 
     for author in db.query(Author):
-        insert_url(loc=url_for("home.route_author", author_id=author.id, name=author.slug),
+        insert_url(loc=url_for("home.route_author", author_id=author.id, _name=author.slug),
                    priority=0.5)
 
     return XML_HEADER + eT.tostring(urlset, encoding="unicode", method="xml")
