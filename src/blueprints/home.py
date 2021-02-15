@@ -2,9 +2,9 @@ import random
 from typing import Callable
 from urllib.parse import urlparse
 
-import sqlalchemy
 from flask import render_template, request, send_from_directory, current_app, Response, url_for
 from flask.blueprints import Blueprint
+from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
@@ -22,7 +22,7 @@ def try_with_integrity_protection(statement: Callable) -> None:
     try:
         statement()
         db.commit()
-    except sqlalchemy.exc.IntegrityError:
+    except IntegrityError:
         db.rollback()  # Duplicate.
 
 
