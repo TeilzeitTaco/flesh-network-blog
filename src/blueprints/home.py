@@ -115,6 +115,9 @@ def route_author(author_id: int, _name: str = "") -> any:
 @bp.route("/tags/<int:tag_id>/<string:_name>/")
 @cache.cached()
 def route_tag(tag_id: int, _name: str = "") -> any:
+    # The "name" parameter is called "_name" to avoid unused variable
+    # warnings in PyCharm. It is not beautiful but better than someone
+    # removing them just by following suggestions.
     if (tag := db.query(Tag).get(tag_id)) is None:
         abort(404)
 
