@@ -102,7 +102,7 @@ def route_blog_post(blog_post_id: int, name: str = "") -> any:
 @bp.route("/authors/<int:author_id>/")
 @bp.route("/authors/<int:author_id>/<string:name>/")
 @cache.cached()
-def route_author(author_id: int, name: str = "") -> any:
+def route_author(author_id: int, _name: str = "") -> any:
     if (author := db.query(Author).get(author_id)) is None:
         abort(404)
 
@@ -114,7 +114,7 @@ def route_author(author_id: int, name: str = "") -> any:
 @bp.route("/tags/<int:tag_id>/")
 @bp.route("/tags/<int:tag_id>/<string:name>/")
 @cache.cached()
-def route_tag(tag_id: int, name: str = "") -> any:
+def route_tag(tag_id: int, _name: str = "") -> any:
     if (tag := db.query(Tag).get(tag_id)) is None:
         abort(404)
 
