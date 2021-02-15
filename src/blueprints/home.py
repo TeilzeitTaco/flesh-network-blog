@@ -69,7 +69,7 @@ def route_root() -> any:
     quote = random.choice(route_root.quotes)
     blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
     friends = db.query(Friend).all()
-    return render_template("home.html", title="Root", header="Welcome to the Flesh-Network", sub_header=quote,
+    return render_template("home.html", title="Root", header="Welcome to the Flesh-Network.", sub_header=quote,
                            blog_posts=blog_posts, friends=friends, quote=quote)
 
 
