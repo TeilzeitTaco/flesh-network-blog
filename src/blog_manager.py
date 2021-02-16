@@ -188,10 +188,10 @@ def create_tag() -> None:
     save_tip()
 
 
-def generic_delete_by_name(cls: any, input_question: str, deleted_prefix: str, error_prefix: str) -> Callable:
+def generic_delete_by_name(row_class: type, input_question: str, deleted_prefix: str, error_prefix: str) -> Callable:
     def concrete():
         name = input(input_question)
-        if obj := db.query(cls).filter_by(name=name).first():
+        if obj := db.query(row_class).filter_by(name=name).first():
             print(f"{deleted_prefix} \"{obj.name}\".")
             db.delete(obj)
             save_tip()
