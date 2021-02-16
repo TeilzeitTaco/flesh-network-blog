@@ -18,9 +18,7 @@ class FileCache:
 
         logging.debug(f"FileCache: Reading file \"{path}\"...")
         with open(path, "r") as f:
-            contents = f.read()
-            self.cache[path] = contents
-            return contents
+            return self.cache.setdefault(path, f.read())
 
 
 class IPTracker:
@@ -41,12 +39,9 @@ class IPTracker:
 
     def should_count_request(self, ip: str, post_id: int) -> bool:
         key = (ip, post_id)
-        if key in self.recorded_hits:
-            self.recorded_hits[key] = datetime.now()
-            return False
-
+        was_in_hits_previously = key in self.recorded_hits
         self.recorded_hits[key] = datetime.now()
-        return True
+        return was_in_hits_previously
 
 
 def static_vars(**kwargs) -> Callable:

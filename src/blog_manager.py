@@ -354,10 +354,7 @@ def main() -> None:
             continue
 
         base_command = commands[command_list[0]]
-        sub_command_key = command_list[1] if 1 < len(command_list) else None
-        if sub_command_key is not None:
-            sub_command_key = sub_command_key.rstrip("s")  # Allow "post" and "posts"
-
+        sub_command_key = command_list[1].rstrip("s") if 1 < len(command_list) else None  # Allow "post" and "posts"
         if sub_command_key not in base_command.keys():
             print("Invalid sub-command!\n")
             continue
