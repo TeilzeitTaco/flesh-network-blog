@@ -11,7 +11,7 @@ function set_background(file_name) {
         set_background(localStorage.background);
 
     select.value = localStorage.background;
-})()
+})();
 
 const PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const PASSWORD_LENGTH = 32;
@@ -37,11 +37,11 @@ function get_password() {
 
         document.getElementById("submit").onclick = () => localStorage.pseudonym = pseudonym_field.value;
     }
-})()
+})();
 
 
 (function set_image_onclick() {
     let image_tags = document.getElementsByTagName("img");
     for (image_tag of image_tags)
         image_tag.onclick = () => window.location.href = image_tag.src;
-})()
+})();
