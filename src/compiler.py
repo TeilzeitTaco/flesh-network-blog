@@ -16,7 +16,7 @@ RESOURCE_PATH_INSERT = re.compile(r"{{(.*?)}}")
 GENERATED_RESOURCES_PATH = "static/gen/res/"
 RESOURCE_FILE_NAME_LENGTH = 16
 MAX_THUMBNAIL_WIDTH = 512
-IMAGE_FORMAT = "jpeg"
+IMAGE_FORMAT = "png"
 
 
 def in_res_path(path: str) -> str:
@@ -52,11 +52,9 @@ def process_resource_files(resource_path: str) -> Dict[str, str]:
 
                 with Image.open(file_path) as image:
                     image.thumbnail((MAX_THUMBNAIL_WIDTH, -1))
-                    image.convert("RGB")
                     image.save(in_res_path(thumbnail_file_name), IMAGE_FORMAT, optimize=True)
 
                 with Image.open(file_path) as image:
-                    image.convert("RGB")
                     image.save(in_res_path(full_size_file_name), IMAGE_FORMAT, optimize=True)
 
             else:
