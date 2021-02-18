@@ -43,7 +43,7 @@ function get_password() {
 (function set_image_onclick() {
     let image_tags = document.getElementsByTagName("img");
     for (image_tag of image_tags) {
-        let image_src = image_tag.src;
-        image_tag.onclick = () => window.location.href = image_src;
+        let full_image_src = image_tag.src.replace("-thumb", "");
+        image_tag.onclick = () => window.location.href = full_image_src;
     }
 })();

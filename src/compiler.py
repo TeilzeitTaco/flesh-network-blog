@@ -1,10 +1,12 @@
 import os
 import re
 import sys
+import imghdr
 
 import markdown
 import hashlib
 
+from PIL import Image
 from typing import Dict, Optional, NoReturn
 from shutil import copyfile, rmtree
 from sqlbase import db, BlogPost, Author, Tag
@@ -13,6 +15,12 @@ from sqlbase import db, BlogPost, Author, Tag
 RESOURCE_PATH_INSERT = re.compile(r"{{(.*?)}}")
 GENERATED_RESOURCES_PATH = "static/gen/res/"
 RESOURCE_FILE_NAME_LENGTH = 16
+MAX_THUMBNAIL_WIDTH = 512
+IMAGE_FORMAT = "jpeg"
+
+
+def in_res_path(path: str) -> str:
+    return GENERATED_RESOURCES_PATH + path
 
 
 def compiler_error(message: str) -> NoReturn:
@@ -34,11 +42,26 @@ def process_resource_files(resource_path: str) -> Dict[str, str]:
             extension = "." + file.rsplit(".",  1)[-1]
 
             # Hash file contents, this is the new file name
-            new_file_name = hash_file(file_path) + extension
-            resources_name_mapping[file] = new_file_name
+            file_hash = hash_file(file_path)
 
-            # Copy the file to the resource dir
-            copyfile(file_path, GENERATED_RESOURCES_PATH + new_file_name)
+            # Optimize images for web
+            if imghdr.what(file_path):
+                full_size_file_name = f"{file_hash}.{IMAGE_FORMAT}"
+                thumbnail_file_name = f"{file_hash}-thumb.{IMAGE_FORMAT}"
+                resources_name_mapping[file] = thumbnail_file_name
+
+                with Image.open(file_path) as image:
+                    image.thumbnail((MAX_THUMBNAIL_WIDTH, -1))
+                    image.save(in_res_path(thumbnail_file_name), IMAGE_FORMAT, optimize=True)
+
+                with Image.open(file_path) as image:
+                    image.save(in_res_path(full_size_file_name), IMAGE_FORMAT, optimize=True)
+
+            else:
+                # Copy the file to the resources dir
+                new_file_name = file_hash + extension
+                resources_name_mapping[file] = new_file_name
+                copyfile(file_path, in_res_path(new_file_name))
 
     return resources_name_mapping
 
@@ -51,7 +74,7 @@ def pre_process_markdown(markdown_src: str, resources_name_mapping: Dict[str, st
         # A file reference
         if decoded_reference := has_prefix(reference, "file:"):
             if hashed_file_name := resources_name_mapping.get(decoded_reference):
-                return f"/{GENERATED_RESOURCES_PATH + hashed_file_name}"
+                return "/" + in_res_path(hashed_file_name)
 
             # If the filename isn't in the mapping, the file doesn't exist.
             compiler_error(f"Missing resource \"{decoded_reference}\"!")

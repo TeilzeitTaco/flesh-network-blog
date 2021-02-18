@@ -4,6 +4,10 @@ import os
 import sys
 import shutil
 
+if os.name != "nt":
+    import readline
+    str(readline)
+
 from functools import partial
 from typing import Optional, Callable
 
