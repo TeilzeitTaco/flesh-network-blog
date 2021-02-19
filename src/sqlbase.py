@@ -4,7 +4,7 @@ from abc import abstractmethod
 from datetime import datetime
 from hashlib import sha256
 
-from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateTime
+from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
@@ -154,6 +154,7 @@ class BlogPost(Base, Nameable):
     hits = Column(Integer, default=0)
     name = Column(String, unique=True, index=True, nullable=False, default="")  # Title but called "name" for reflection
     timestamp = Column(DateTime, default=datetime.now())
+    allow_comments = Column(Boolean, default=True)
 
     tags = relationship("Tag", secondary="tag_associations")
 

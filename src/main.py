@@ -32,7 +32,6 @@ def create_app() -> Flask:
     app.jinja_env.globals.update(
         in_res_path=in_res_path,
         seo_description=seo_description,
-        allow_comments=app.config["ALLOW_COMMENTS"],
         format_title=lambda title: f"{title} | {BLOG_NAME}",
         background_image_files=functools.partial(os.listdir, "static/images/"),
         file_name_to_display_name=lambda fn: fn.replace("-", " ").rsplit(".", 1)[0].title(),
