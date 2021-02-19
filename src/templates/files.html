@@ -5,12 +5,13 @@
     Files hosted on the Flesh-Network:
     <ul>
         {% for post_name, name_mapping in name_mapping.items() %}
-        <li>{{ post_name }} </li>
-        <ul>
-            {% for file_name, path in name_mapping.items() %}
-            <li><a href="{{ in_res_path(path) }}">{{ file_name }}</a></li>
-            {% endfor %}
-        </ul>
+        <li>{{ post_name }}
+            <ul>
+                {% for file_name, path in name_mapping.items() %}
+                <li><a href="{{ in_res_path(path) }}">{{ file_name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
         {% endfor %}
     </ul>
 </p>
