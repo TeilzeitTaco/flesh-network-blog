@@ -152,7 +152,7 @@ def compile_all_posts() -> None:
 
     file_name_mapping = dict()
     for blog_post in db.query(BlogPost):
-        print(f"Compiling blog post \"{blog_post.name}\"... ", end="")
+        print(f"Compiling blog post \"{blog_post.name}\"... ", end="", flush=True)
 
         # Process the files in the res/ directory
         resources_name_mapping = process_resource_files(file_name_mapping, blog_post.resources_path)
