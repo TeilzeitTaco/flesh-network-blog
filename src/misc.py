@@ -39,7 +39,7 @@ class IPTracker:
 
     def should_count_request(self, ip: str, post_id: int) -> bool:
         key = (ip, post_id)
-        was_in_hits_previously = key in self.recorded_hits
+        was_in_hits_previously = key not in self.recorded_hits
         self.recorded_hits[key] = datetime.now()
         return was_in_hits_previously
 
