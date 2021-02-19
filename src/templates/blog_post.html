@@ -38,6 +38,7 @@
     </div>
     {% endif %}
 
+    {% if allow_comments %}
     <hr>
     <div>
         <form method=post>
@@ -59,5 +60,6 @@
             {{ form.hidden_tag() }}
         </form>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

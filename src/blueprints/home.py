@@ -80,7 +80,7 @@ def route_blog_post(blog_post_id: int, _name: str = "") -> any:
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         abort(404)
 
-    if (form := CommentForm()).validate_on_submit():
+    if (form := CommentForm()).validate_on_submit() and current_app.config["ALLOW_COMMENTS"]:
         comment = form.to_database_object()
         try_with_integrity_protection(lambda: blog_post.comments.append(comment))
         return redirect(url_for("home.route_blog_post", blog_post_id=blog_post_id, _name=_name))

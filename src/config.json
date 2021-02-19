@@ -5,6 +5,7 @@
 
     "BEHIND_PROXY": true,
     "DEBUG_LOG_TO_FILE": true,
+    "ALLOW_COMMENTS": false,
 
     "CACHE_TYPE": "simple",
     "CACHE_DEFAULT_TIMEOUT": 300
