@@ -62,8 +62,8 @@ def process_resource_files(file_title_mapping: Dict[str, str], resource_path: st
                 resources_name_mapping[file] = thumbnail_file_name
 
                 file_title = file_name_to_title(file)
-                file_title_mapping[full_size_file_name] = file_title
-                file_title_mapping[thumbnail_file_name] = file_title + " (Thumbnail)"
+                file_title_mapping[file_title] = full_size_file_name
+                file_title_mapping[file_title + " (Thumbnail)"] = thumbnail_file_name
 
                 with Image.open(file_path) as image:
                     image.thumbnail((MAX_THUMBNAIL_WIDTH, -1))
@@ -155,7 +155,8 @@ def compile_all_posts() -> None:
         print(f"Compiling blog post \"{blog_post.name}\"... ", end="", flush=True)
 
         # Process the files in the res/ directory
-        resources_name_mapping = process_resource_files(file_name_mapping, blog_post.resources_path)
+        post_dict = file_name_mapping[blog_post.name] = dict()
+        resources_name_mapping = process_resource_files(post_dict, blog_post.resources_path)
 
         # Convert the markdown post content into a HTML file.
         markdown_src = read_file(blog_post.markdown_path)
