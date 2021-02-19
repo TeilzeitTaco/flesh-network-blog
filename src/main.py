@@ -7,6 +7,7 @@ from flask_assets import Environment, Bundle
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 
+from compiler import in_res_path
 
 BLOG_NAME = "Flesh-Network"
 cache = Cache()
@@ -29,6 +30,7 @@ def create_app() -> Flask:
 
     # These functions and values are available in Jinja templates.
     app.jinja_env.globals.update(
+        in_res_path=in_res_path,
         seo_description=seo_description,
         format_title=lambda title: f"{title} | {BLOG_NAME}",
         background_image_files=functools.partial(os.listdir, "static/images/"),

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>
+    Files hosted on the Flesh-Network:
+    <ul>
+        {% for file in files %}
+        <li><a href="{{ in_res_path(file) }}">{{ name_mapping[file] }}</a></li>
+        {% endfor %}
+    </ul>
+</p>
+{% endblock %}

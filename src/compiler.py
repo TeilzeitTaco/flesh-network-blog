@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -14,9 +15,14 @@ from sqlbase import db, BlogPost, Author, Tag
 
 RESOURCE_PATH_INSERT = re.compile(r"{{(.*?)}}")
 GENERATED_RESOURCES_PATH = "static/gen/res/"
+NAME_MAPPING_FILE_NAME = "name_mapping.json"
 RESOURCE_FILE_NAME_LENGTH = 16
 MAX_THUMBNAIL_WIDTH = 512
 IMAGE_FORMAT = "png"
+
+
+def done() -> None:
+    print("Done!")
 
 
 def in_res_path(path: str) -> str:
@@ -33,8 +39,13 @@ def has_prefix(string: str, prefix: str) -> Optional[str]:
         return string[len(prefix):].strip()
 
 
-def process_resource_files(resource_path: str) -> Dict[str, str]:
+def file_name_to_title(file_name: str) -> str:
+    return " ".join(file_name.rsplit(".", 1)[0].replace("-", " ").replace("_", " ").split()).title()
+
+
+def process_resource_files(file_title_mapping: Dict[str, str], resource_path: str) -> Dict[str, str]:
     resources_name_mapping = dict()
+
     for root, _, files in os.walk(resource_path, topdown=True):
         for file in files:
             # Get file path and file extension
@@ -50,6 +61,10 @@ def process_resource_files(resource_path: str) -> Dict[str, str]:
                 thumbnail_file_name = f"{file_hash}-thumb.{IMAGE_FORMAT}"
                 resources_name_mapping[file] = thumbnail_file_name
 
+                file_title = file_name_to_title(file)
+                file_title_mapping[full_size_file_name] = file_title
+                file_title_mapping[thumbnail_file_name] = file_title + " (Thumbnail)"
+
                 with Image.open(file_path) as image:
                     image.thumbnail((MAX_THUMBNAIL_WIDTH, -1))
                     image.save(in_res_path(thumbnail_file_name), IMAGE_FORMAT, optimize=True)
@@ -60,6 +75,8 @@ def process_resource_files(resource_path: str) -> Dict[str, str]:
             else:
                 # Copy the file to the resources dir
                 new_file_name = file_hash + extension
+                file_title_mapping[new_file_name] = file_name_to_title(file)
+
                 resources_name_mapping[file] = new_file_name
                 copyfile(file_path, in_res_path(new_file_name))
 
@@ -67,7 +84,7 @@ def process_resource_files(resource_path: str) -> Dict[str, str]:
 
 
 def pre_process_markdown(markdown_src: str, resources_name_mapping: Dict[str, str]) -> str:
-    def processor(match) -> str:
+    def processor(match: any) -> str:
         # The reference syntax inside of the {{ brackets }}.
         reference = match.group(1).strip()
 
@@ -127,23 +144,27 @@ def hash_file(path: str) -> str:
 
 
 def compile_all_posts() -> None:
-    print("Compiling all blog posts...")
+    print("Cleaning directory... ", end="")
     if os.path.exists(GENERATED_RESOURCES_PATH):
         rmtree(GENERATED_RESOURCES_PATH)
     os.makedirs(GENERATED_RESOURCES_PATH)
+    done()
 
+    file_name_mapping = dict()
     for blog_post in db.query(BlogPost):
         print(f"Compiling blog post \"{blog_post.name}\"... ", end="")
 
         # Process the files in the res/ directory
-        resources_name_mapping = process_resource_files(blog_post.resources_path)
+        resources_name_mapping = process_resource_files(file_name_mapping, blog_post.resources_path)
 
         # Convert the markdown post content into a HTML file.
         markdown_src = read_file(blog_post.markdown_path)
         markdown_src = pre_process_markdown(markdown_src, resources_name_mapping)
         html_src = markdown.markdown(markdown_src)
         write_file(blog_post.html_path, html_src)
+        done()
 
-        print("Done!")
-
-    print("Done!")
+    print("Writing name mapping file... ", end="")
+    json_string = json.dumps(file_name_mapping, indent=4)
+    write_file(NAME_MAPPING_FILE_NAME, json_string)
+    done()

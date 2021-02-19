@@ -1,4 +1,7 @@
+import json
+import os
 import random
+
 from typing import Callable
 from urllib.parse import urlparse
 
@@ -8,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
+from compiler import GENERATED_RESOURCES_PATH, NAME_MAPPING_FILE_NAME
 from forms import CommentForm
 from main import cache
 from misc import FileCache, static_vars, IPTracker
@@ -36,11 +40,8 @@ def register_referrer() -> None:
 @bp.route("/backlinks")
 @cache.cached()
 def route_backlinks() -> Response:
-    hostnames = db.query(ReferrerHostname).all()
-
-    title = "Backlinks"
-    return render_template("backlinks.html", title=title, header=title, return_to_root=True,
-                           hostnames=hostnames)
+    return render_template("backlinks.html", title="Backlinks", return_to_root=True,
+                           hostnames=db.query(ReferrerHostname).all())
 
 
 @bp.route("/robots.txt")
@@ -94,7 +95,7 @@ def route_blog_post(blog_post_id: int, _name: str = "") -> any:
         blog_post.hits += 1
         db.commit()
 
-    return render_template("blog_post.html", title=blog_post.name, header=blog_post.name, return_to_root=True,
+    return render_template("blog_post.html", title=blog_post.name, return_to_root=True,
                            blog_post=blog_post, blog_post_content=blog_post_content,
                            form=CommentForm())
 
@@ -106,8 +107,7 @@ def route_author(author_id: int, _name: str = "") -> any:
     if (author := db.query(Author).get(author_id)) is None:
         abort(404)
 
-    title = f"Author: \"{author.name}\""
-    return render_template("author.html", title=title, header=title, return_to_root=True,
+    return render_template("author.html", title=f"Author: \"{author.name}\"", return_to_root=True,
                            author=author)
 
 
@@ -121,6 +121,16 @@ def route_tag(tag_id: int, _name: str = "") -> any:
     if (tag := db.query(Tag).get(tag_id)) is None:
         abort(404)
 
-    title = f"Blog Posts with Tag: \"{tag.name}\""
-    return render_template("tag.html", title=title, header=title, return_to_root=True,
+    return render_template("tag.html", title=f"Blog Posts with Tag: \"{tag.name}\"", return_to_root=True,
                            tag=tag)
+
+
+@bp.route("/files")
+@cache.cached()
+def route_files() -> any:
+    files = os.listdir(GENERATED_RESOURCES_PATH)
+    with open(NAME_MAPPING_FILE_NAME) as f:
+        name_mapping = json.load(f)
+
+    return render_template("files.html", title="File Index", return_to_root=True,
+                           name_mapping=name_mapping, files=files)
