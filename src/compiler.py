@@ -75,7 +75,7 @@ def process_resource_files(file_title_mapping: Dict[str, str], resource_path: st
             else:
                 # Copy the file to the resources dir
                 new_file_name = file_hash + extension
-                file_title_mapping[new_file_name] = file_name_to_title(file)
+                file_title_mapping[file_name_to_title(file)] = new_file_name
 
                 resources_name_mapping[file] = new_file_name
                 copyfile(file_path, in_res_path(new_file_name))
