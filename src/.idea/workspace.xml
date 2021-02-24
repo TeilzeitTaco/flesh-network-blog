@@ -27,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ocdm" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -88,11 +88,11 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="449" y="179" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1437.864@0.0.1437.864" timestamp="1612790786925" />
-    <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1613735678372">
+    <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1614204123618">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864/-1920.0.1920.1050@0.0.1437.864" timestamp="1610996892241" />
-    <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864@0.0.1437.864" timestamp="1613735678372" />
+    <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864@0.0.1437.864" timestamp="1614204123618" />
     <state width="1416" height="224" key="GridCell.Tab.0.bottom" timestamp="1612880192373">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
