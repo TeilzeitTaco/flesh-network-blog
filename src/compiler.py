@@ -126,7 +126,7 @@ def read_file(path: str) -> str:
     if not os.path.exists(path):
         compiler_error(f"Missing file: \"{path}\"!")
 
-    with open(path, "r") as f:
+    with open(path, "r", encoding="latin-1") as f:
         return f.read().strip()
 
 
