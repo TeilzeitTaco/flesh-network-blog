@@ -40,6 +40,11 @@
     font-display: swap;
 }
 
+.post_metadata_list {
+    margin: 0em;
+    padding-left: 1em;
+}
+
 /* Basic Formatting */
 
 :root {
@@ -91,6 +96,12 @@ td, th {
     border: 3.5px double black;
 }
 
+fieldset {
+    display: inline-block;
+    border-radius: 3px;
+    margin-top: 0px;
+}
+
 #perspective_selector {
     margin: 1rem;
     position: fixed;
@@ -100,14 +111,6 @@ td, th {
 
 #post_header {
     margin-bottom: 0px;
-}
-
-#post_metadata_list {
-    display: inline-block;
-    border: 1px solid #000;
-    border-radius: 3px;
-    padding-left: 20px;
-    margin-top: 0px;
 }
 
 .main_header {
