@@ -7,7 +7,11 @@
         <meta name="google-site-verification" content="hUdQI8_27hfNzSiq4Nssk7leYnQ3hzLYwp438hWDIIM" />
 
         {% if open_graph_image %}
+        <meta property="og:url" content="https://flesh-network.ddns.net" />
+        <meta property="og:description" content="{{ seo_description }}" />
         <meta property="og:image" content="{{ open_graph_image }}" />
+        <meta property="og:title" content="Flesh-Network" />
+        <meta property="og:type" content="website" />
         {% endif %}
 
         <title>{{ format_title(title) }}</title>
