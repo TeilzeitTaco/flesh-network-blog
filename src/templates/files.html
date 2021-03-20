@@ -6,7 +6,7 @@
     <ul>
         {% for blog_post in blog_posts %}
         {% if blog_post.file_resources %}
-        <li>{{ post_name }}
+        <li>{{ blog_post.name }}
             <ul>
                 {% for file_resource in blog_post.file_resources %}
                 <li><a href="{{ in_res_path(file_resource.name) }}">{{ file_resource.title }}</a></li>
