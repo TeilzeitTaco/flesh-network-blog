@@ -93,7 +93,7 @@ def pre_process_markdown(markdown_src: str, blog_post: BlogPost) -> str:
             # If the filename isn't in the mapping, the file doesn't exist.
             compiler_error(f"Missing resource \"{decoded_reference}\"!")
 
-        # A author reference
+        # An author reference
         if decoded_reference := has_prefix(reference, "author:"):
             if author := db.query(Author).filter_by(name=decoded_reference).first():
                 return f"/authors/{author.id}/{author.slug}/"
@@ -157,7 +157,7 @@ def compile_all_posts() -> None:
         # Process the files in the res/ directory
         process_resource_files(blog_post)
 
-        # Convert the markdown post content into a HTML file.
+        # Convert the markdown post content into HTML
         markdown_src = read_file(blog_post.markdown_path)
         markdown_src = pre_process_markdown(markdown_src, blog_post)
         html_src = markdown.markdown(markdown_src)

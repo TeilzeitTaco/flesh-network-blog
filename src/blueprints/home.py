@@ -78,6 +78,7 @@ def route_blog_post(blog_post_id: int, _name: str = "") -> any:
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         abort(404)
 
+    # Comment posting
     if (form := CommentForm()).validate_on_submit() and blog_post.allow_comments:
         comment = form.to_database_object()
         try_with_integrity_protection(lambda: blog_post.comments.append(comment))
@@ -92,6 +93,7 @@ def route_blog_post(blog_post_id: int, _name: str = "") -> any:
         blog_post.hits += 1
         db.commit()
 
+    # Select a random image to be served for opengraph embeds.
     image_resources = [fr for fr in blog_post.file_resources if fr.is_thumbnail]
     open_graph_image = in_res_path(random.choice(image_resources).name) if image_resources else None
 

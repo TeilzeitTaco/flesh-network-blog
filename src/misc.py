@@ -5,7 +5,7 @@ from typing import Callable
 
 
 # How long a visitors IP address should be retained in the IP tracker.
-MAX_IP_RETENTION_TIME = timedelta(hours=12)
+MAX_IP_RETENTION_TIME = timedelta(hours=24)
 
 
 class FileCache:
