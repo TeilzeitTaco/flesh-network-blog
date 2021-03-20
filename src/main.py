@@ -2,7 +2,9 @@ import functools
 import logging
 import os
 
-from flask import Flask, render_template
+from urllib.parse import urlparse
+
+from flask import Flask, render_template, request
 from flask_assets import Environment, Bundle
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
@@ -30,11 +32,13 @@ def create_app() -> Flask:
 
     # These functions and values are available in Jinja templates.
     app.jinja_env.globals.update(
-        in_res_path=in_res_path,
-        seo_description=seo_description,
-        format_title=lambda title: f"{title} | {BLOG_NAME}",
-        background_image_files=functools.partial(os.listdir, "static/images/"),
+        root_url=lambda: "{uri.scheme}://{uri.netloc}/".format(uri=urlparse(request.base_url)),
         file_name_to_display_name=lambda fn: fn.replace("-", " ").rsplit(".", 1)[0].title(),
+        background_image_files=functools.partial(os.listdir, "static/images/"),
+        format_title=lambda title: f"{title} | {BLOG_NAME}",
+        this_url=lambda: request.base_url,
+        seo_description=seo_description,
+        in_res_path=in_res_path,
     )
 
     # Caches pages to reduce server load.
