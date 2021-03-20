@@ -1,6 +1,4 @@
-import json
 import random
-
 from typing import Callable
 from urllib.parse import urlparse
 
@@ -10,13 +8,11 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
-from compiler import NAME_MAPPING_FILE_NAME
 from forms import CommentForm
 from main import cache
 from misc import FileCache, static_vars, IPTracker
 from sitemap import generate_sitemap
 from sqlbase import db, BlogPost, Author, Tag, Friend, ReferrerHostname
-
 
 bp = Blueprint("home", __name__, static_folder="../static")
 
@@ -128,8 +124,5 @@ def route_tag(tag_id: int, _name: str = "") -> any:
 @bp.route("/files")
 @cache.cached()
 def route_files() -> any:
-    with open(NAME_MAPPING_FILE_NAME) as f:
-        name_mapping = json.load(f)
-
     return render_template("files.html", title="File Index", return_to_root=True,
-                           name_mapping=name_mapping)
+                           blog_posts=db.query(BlogPost).all())

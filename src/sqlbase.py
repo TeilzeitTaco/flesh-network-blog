@@ -1,3 +1,4 @@
+import os
 import re
 
 from abc import abstractmethod
@@ -147,6 +148,27 @@ class Tag(Base, Nameable):
         return f"Tag(id={self.id}, name=\"{self.name}\")"
 
 
+class FileResource(Base, Nameable):
+    __tablename__ = "file_resources"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True, nullable=False, default="")
+    title = Column(String, unique=True, nullable=False, default="")
+    clear_name = Column(String, unique=True, index=True, nullable=False, default="")
+
+    blog_post_id = Column(Integer, ForeignKey("blogposts.id"))
+    blog_post = relationship("BlogPost", back_populates="file_resources")
+
+    def __init__(self, name: str, clear_name: str, title: str, blog_post: any) -> None:
+        self.clear_name = clear_name
+        self.blog_post = blog_post
+        self.title = title
+        self.name = name
+
+    def __repr__(self) -> str:
+        return f"FileResource(id={self.id}, name=\"{self.name}\")"
+
+
 class BlogPost(Base, Nameable):
     __tablename__ = "blogposts"
 
@@ -161,6 +183,7 @@ class BlogPost(Base, Nameable):
     author_id = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", back_populates="blog_posts")
     comments = relationship("Comment", back_populates="blog_post")
+    file_resources = relationship("FileResource", back_populates="blog_post")
 
     @property
     def slug(self) -> str:
