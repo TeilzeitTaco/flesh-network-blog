@@ -59,6 +59,7 @@ def sitemap_route() -> Response:
 @cache.cached()
 @static_vars(quotes=[
     # Caching these doesn't matter, its okay if these only change occasionally.
+    "Total Inexcusable Obscurantism.",
     "Because we are all connected.",
     "What are you afraid of?",
     "Online Doom Cult.",
