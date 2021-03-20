@@ -6,6 +6,10 @@
         <meta name="description" content="{{ seo_description }}">
         <meta name="google-site-verification" content="hUdQI8_27hfNzSiq4Nssk7leYnQ3hzLYwp438hWDIIM" />
 
+        {% if open_graph_image %}
+        <meta property="og:image" content="{{ open_graph_image }}" />
+        {% endif %}
+
         <title>{{ format_title(title) }}</title>
 
         {% assets "js_base" %}

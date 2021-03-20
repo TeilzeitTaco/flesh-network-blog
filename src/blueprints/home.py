@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
+from compiler import in_res_path
 from forms import CommentForm
 from main import cache
 from misc import FileCache, static_vars, IPTracker
@@ -91,9 +92,12 @@ def route_blog_post(blog_post_id: int, _name: str = "") -> any:
         blog_post.hits += 1
         db.commit()
 
+    image_resources = [fr for fr in blog_post.file_resources if fr.is_thumbnail]
+    open_graph_image = in_res_path(random.choice(image_resources).name) if image_resources else None
+
     return render_template("blog_post.html", title=blog_post.name, return_to_root=True,
                            blog_post=blog_post, blog_post_content=blog_post_content,
-                           form=CommentForm())
+                           form=CommentForm(), open_graph_image=open_graph_image)
 
 
 @bp.route("/authors/<int:author_id>/")

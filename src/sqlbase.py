@@ -156,10 +156,18 @@ class FileResource(Base, Nameable):
     title = Column(String, unique=True, nullable=False, default="")
     clear_name = Column(String, unique=True, index=True, nullable=False, default="")
 
+    is_image = Column(Boolean, default=True)
+    is_thumbnail = Column(Boolean, default=True)
+
     blog_post_id = Column(Integer, ForeignKey("blogposts.id"))
     blog_post = relationship("BlogPost", back_populates="file_resources")
 
-    def __init__(self, name: str, clear_name: str, title: str, blog_post: any) -> None:
+    def __init__(self, name: str, clear_name: str, title: str, blog_post: any,
+                 is_image: bool = False, is_thumbnail: bool = False) -> None:
+
+        self.is_thumbnail = is_thumbnail
+        self.is_image = is_image
+
         self.clear_name = clear_name
         self.blog_post = blog_post
         self.title = title

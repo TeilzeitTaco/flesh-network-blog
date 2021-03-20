@@ -57,8 +57,11 @@ def process_resource_files(blog_post: BlogPost) -> None:
                 thumbnail_file_name = f"{file_hash}-thumb.{IMAGE_FORMAT}"
 
                 # Add database entries
-                db.add(FileResource(full_size_file_name, "high-res-" + file, file_title, blog_post))
-                db.add(FileResource(thumbnail_file_name, file, file_title + " (Thumbnail)", blog_post))
+                db.add(FileResource(full_size_file_name, "high-res-" + file, file_title, blog_post,
+                                    is_image=True, is_thumbnail=False))
+
+                db.add(FileResource(thumbnail_file_name, file, file_title + " (Thumbnail)", blog_post,
+                                    is_image=True, is_thumbnail=True))
 
                 with Image.open(file_path) as image:
                     image.thumbnail((MAX_THUMBNAIL_WIDTH, -1))
