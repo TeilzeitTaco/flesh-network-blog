@@ -16,7 +16,6 @@ from sqlalchemy.exc import IntegrityError
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
 from compiler import compile_all_posts
 
-
 ERROR_NO_OBJECT_SELECTED = "No object selected!"
 ERROR_ATTRIBUTE_DOES_NOT_EXIST = "Attribute does not exist!"
 
@@ -224,10 +223,11 @@ def attach_tag() -> None:
         print("Tag not found!")
         return
 
-    if not db.query(BlogPost).get(blog_post_id):
-        print("Post not found")
+    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
+        print("Post not found!")
         return
 
+    print(f"Attached tag \"{tag.name}\" to post \"{blog_post.name}\"!")
     tag_association = TagAssociation(blog_post_id, tag.id)
     db.add(tag_association)
     save_tip()
@@ -242,7 +242,7 @@ def detach_tag() -> None:
         return
 
     if not (blog_post := db.query(BlogPost).get(blog_post_id)):
-        print("Post not found")
+        print("Post not found!")
         return
 
     if (tag_association := db.query(TagAssociation).filter_by(blog_post_id=blog_post_id, tag_id=tag.id)
@@ -316,37 +316,14 @@ def main() -> None:
             "comment": partial(select_object, Comment),
         },
 
-        "get": {
-            None: get_selected_object_attribute,
-        },
-
-        "set": {
-            None: set_selected_object_attribute,
-        },
-
-        "compile": {
-            None: compile_all_posts,
-        },
-
-        "exit": {
-            None: exit_program,
-        },
-
-        "help": {
-            None: lambda: show_help(commands),
-        },
-
-        "attributes": {
-            None: attributes,
-        },
-
-        "cls": {
-            None: lambda: os.system("cls") if os.name == "nt" else os.system("clear"),
-        },
-
-        "save": {
-            None: save_changes,
-        },
+        "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},
+        "get": {None: get_selected_object_attribute},
+        "set": {None: set_selected_object_attribute},
+        "help": {None: lambda: show_help(commands)},
+        "compile": {None: compile_all_posts},
+        "attributes": {None: attributes},
+        "exit": {None: exit_program},
+        "save": {None: save_changes},
     }
 
     while True:
