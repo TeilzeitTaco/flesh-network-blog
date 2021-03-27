@@ -59,6 +59,7 @@ def sitemap_route() -> Response:
     "Total Inexcusable Obscurantism.",
     "Because we are all connected.",
     "What are you afraid of?",
+    "Do bats eat cats?",
     "Online Doom Cult.",
     "Please be nice.",
     "Enter, Exit.",
