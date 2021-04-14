@@ -66,10 +66,21 @@ def sitemap_route() -> Response:
 ])
 def route_root() -> any:
     quote = random.choice(route_root.quotes)
-    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc())
+
     friends = db.query(Friend).all()
+    category_tags = [tag for tag in db.query(Tag).filter_by(main_section=True) if tag.blog_posts]
+    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc()).limit(5).all()
+
     return render_template("home.html", title="Root", header="Welcome to the Flesh-Network.", sub_header=quote,
-                           blog_posts=blog_posts, friends=friends, quote=quote)
+                           blog_posts=blog_posts, friends=friends, category_tags=category_tags,
+                           quote=quote)
+
+
+@bp.route("/posts/")
+def route_posts() -> any:
+    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc()).all()
+    return render_template("posts.html", title="All Writings", return_to_root=True,
+                           blog_posts=blog_posts)
 
 
 @bp.route("/posts/<int:blog_post_id>/", methods=["GET", "POST"])
@@ -124,7 +135,8 @@ def route_tag(tag_id: int, _name: str = "") -> any:
     if (tag := db.query(Tag).get(tag_id)) is None:
         abort(404)
 
-    return render_template("tag.html", title=f"Blog Posts with Tag: \"{tag.name}\"", return_to_root=True,
+    title = f"Posts in category \"{tag.name}\":" if tag.main_section else f"Posts with tag \"{tag.name}\":"
+    return render_template("tag.html", title=title, return_to_root=True,
                            tag=tag)
 
 

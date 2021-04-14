@@ -48,7 +48,7 @@
 /* Basic Formatting */
 
 :root {
-    --global-background-image: url("/static/images/liniert-korrektur.jpg");
+    --global-background-image: url("/static/images/backgrounds/liniert-korrektur.jpg");
 }
 
 .paper_background {
@@ -128,7 +128,7 @@ fieldset {
     display: inline-block;
 }
 
-.author-biography {
+.author_biography {
     display: none;
     position: absolute;
     z-index: 10;
@@ -141,7 +141,14 @@ fieldset {
     text-align: justify;
 }
 
+.inline_block {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 1em;
+    margin-bottom: 0.7em;
+}
+
 .author:hover
-.author-biography {
+.author_biography {
     display: block;
 }

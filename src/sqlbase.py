@@ -133,6 +133,12 @@ class Tag(Base, Nameable):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, index=True, nullable=False, default="")
+    short_description = Column(String, nullable=False, default="")
+    long_description = Column(String, nullable=False, default="")
+
+    # If this is a section tag, a tag that is shown as its own
+    # category on the root page.
+    main_section = Column(Boolean, default=True)
 
     blog_posts = relationship("BlogPost", secondary="tag_associations")
 
@@ -140,7 +146,10 @@ class Tag(Base, Nameable):
     def slug(self) -> str:
         return slugify(self.name)
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, short_description: str, long_description: str, main_section: bool) -> None:
+        self.short_description = short_description
+        self.long_description = long_description
+        self.main_section = main_section
         self.name = name
 
     def __repr__(self) -> str:

@@ -1,35 +1,68 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>
-    <span class="sub_header">What is this?</span><br>
-    <ul>
-        <li>The Flesh-Network is my small semi-personal page.</li>
-        <li>Explore the <a href="https://github.com/TeilzeitTaco/flesh-network-blog">source code</a> of this page.</li>
-        <li>Find out <a href="{{ url_for('home.route_backlinks') }}">what links here</a>.</li>
-        <li>View the <a href="{{ url_for('home.route_files') }}">file index</a>.</li>
-    </ul>
-</p>
+<div>
+    <!-- Left Block -->
+    <div class="inline_block">
+        <div class="inline_block">
+            <span class="sub_header">What is this?</span><br>
+            <ul>
+                <li>The Flesh-Network is my semi-personal page.</li>
+                <li>Explore the <a href="https://github.com/TeilzeitTaco/flesh-network-blog">source code</a> of this page.</li>
+                <li>Find out <a href="{{ url_for('home.route_backlinks') }}">what links here</a>.</li>
+                <li>View the <a href="{{ url_for('home.route_files') }}">file index</a>.</li>
+                <li>View the <a href="{{ url_for('home.route_posts') }}">post index</a>.</li>
+            </ul>
+        </div>
+        <br>
 
-{% if friends %}
-<p>
-    <span class="sub_header">Friends of the Flesh-Network:</span>
-    <ul>
-        {% for friend in friends %}
-        <li><a href="{{ friend.link }}">{{ friend.name }}</a> - {{ friend.description }}</li>
-        {% endfor %}
-    </ul>
-</p>
-{% endif %}
+        {% if blog_posts %}
+        <div class="inline_block">
+            <span class="sub_header">Recent posts:</span>
+            <ul>
+                {% for blog_post in blog_posts %}
+                {% include "post_link.html" %}
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        {% endif %}
 
-{% if blog_posts %}
-<p>
-    <span class="sub_header">Writings:</span>
-    <ul>
-        {% for blog_post in blog_posts %}
-        {% include "post_link.html" %}
-        {% endfor %}
-    </ul>
-</p>
-{% endif %}
+        {% if category_tags %}
+        <div>
+            <span class="sub_header">Collected Writings:</span>
+            <ul>
+                {% for category_tag in category_tags %}
+                <li>
+                    <a href="{{ url_for('home.route_tag', tag_id=category_tag.id, _name=category_tag.name) }}">
+                        {{ category_tag.name }}
+                    </a> - <span>{{ category_tag.short_description }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        {% endif %}
+    </div>
+
+    <!-- Right Block -->
+    <div class="inline_block">
+        {% if friends %}
+        <div class="inline_block">
+            <span class="sub_header">Friends of the Flesh-Network:</span>
+            <ul>
+                {% for friend in friends %}
+                <li><a href="{{ friend.link }}">{{ friend.name }}</a> - {{ friend.description }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <br>
+        {% endif %}
+
+        <div class="inline_block">
+            <img src="{{ url_for('static', filename='images/wings.png') }}"><br>
+            <i>At dawn, beauty unfolds in unseen patterns.</i>
+        </div>
+    </div>
+</div>
 {% endblock %}

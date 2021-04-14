@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>
+    <ul>
+        {% for blog_post in blog_posts %}
+        {% include "post_link.html" %}
+        {% endfor %}
+    </ul>
+</p>
+{% endblock %}

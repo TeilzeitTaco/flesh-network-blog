@@ -2,7 +2,7 @@
 
 {% block content %}
 <p>
-    Posts tagged with "{{ tag.name }}":
+    {{ tag.long_description | safe }}
     <ul>
         {% for blog_post in tag.blog_posts %}
         {% include "post_link.html" %}

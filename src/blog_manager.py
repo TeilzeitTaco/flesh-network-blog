@@ -186,7 +186,10 @@ def create_friend() -> None:
 
 def create_tag() -> None:
     tag_name = input("Tag Name: ")
-    tag = Tag(tag_name)
+    tag_short_desc = input("Tag short description: ")
+    tag_long_desc = input("Tag long description: ")
+    tag_main = input("Is tag a section (y/n)? ").lower().startswith("y")
+    tag = Tag(tag_name, tag_short_desc, tag_long_desc, tag_main)
     db.add(tag)
     save_tip()
 

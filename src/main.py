@@ -34,7 +34,7 @@ def create_app() -> Flask:
     app.jinja_env.globals.update(
         root_url=lambda: "{uri.scheme}://{uri.netloc}/".format(uri=urlparse(request.base_url)),
         file_name_to_display_name=lambda fn: fn.replace("-", " ").rsplit(".", 1)[0].title(),
-        background_image_files=functools.partial(os.listdir, "static/images/"),
+        background_image_files=functools.partial(os.listdir, "static/images/backgrounds/"),
         format_title=lambda title: f"{title} | {BLOG_NAME}",
         this_url=lambda: request.base_url,
         seo_description=seo_description,
