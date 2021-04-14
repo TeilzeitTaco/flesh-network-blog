@@ -50,7 +50,7 @@
             <span class="sub_header">Friends of the Flesh-Network:</span>
             <ul>
                 {% for friend in friends %}
-                <li><a href="{{ friend.link }}">{{ friend.name }}</a> - {{ friend.description }}</li>
+                <li><a href="{{ friend.link }}" rel="noopener">{{ friend.name }}</a> - {{ friend.description }}</li>
                 {% endfor %}
             </ul>
         </div>
