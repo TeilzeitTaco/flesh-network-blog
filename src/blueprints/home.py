@@ -143,5 +143,6 @@ def route_tag(tag_id: int, _name: str = "") -> any:
 @bp.route("/files")
 @cache.cached()
 def route_files() -> any:
+    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc()).all()
     return render_template("files.html", title="File Index", return_to_root=True,
-                           blog_posts=db.query(BlogPost).all())
+                           blog_posts=blog_posts)
