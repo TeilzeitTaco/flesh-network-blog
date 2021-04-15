@@ -4,7 +4,7 @@
 <div>
     <!-- Left Block -->
     <div class="inline_block">
-        <div class="inline_block">
+        <div>
             <span class="sub_header">What is this?</span><br>
             <ul>
                 <li>The Flesh-Network is my semi-personal page.</li>
@@ -14,10 +14,9 @@
                 <li>View the <a href="{{ url_for('home.route_posts') }}">post index</a>.</li>
             </ul>
         </div>
-        <br>
 
         {% if blog_posts %}
-        <div class="inline_block">
+        <div>
             <span class="sub_header">Recent posts:</span>
             <ul>
                 {% for blog_post in blog_posts %}
@@ -25,7 +24,6 @@
                 {% endfor %}
             </ul>
         </div>
-        <br>
         {% endif %}
 
         {% if category_tags %}
@@ -39,14 +37,13 @@
                 {% endfor %}
             </ul>
         </div>
-        <br>
         {% endif %}
     </div>
 
     <!-- Right Block -->
     <div class="inline_block">
         {% if friends %}
-        <div class="inline_block">
+        <div>
             <span class="sub_header">Friends of the Flesh-Network:</span>
             <ul>
                 {% for friend in friends %}
@@ -54,10 +51,9 @@
                 {% endfor %}
             </ul>
         </div>
-        <br>
         {% endif %}
 
-        <div class="inline_block">
+        <div>
             <img src="{{ url_for('static', filename='images/wings.png') }}" alt=""><br>
             <i>At dawn, beauty unfolds in unseen patterns.</i>
         </div>

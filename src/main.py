@@ -58,6 +58,7 @@ def create_app() -> Flask:
 
     @app.errorhandler(HTTPException)
     def handle_error(exception):
-        return render_template("error.html", title=f"Error {exception.code}", exception=exception)
+        return render_template("error.html", title=f"Error {exception.code}: {exception.name}",
+                               exception=exception, return_to_root=True), exception.code
 
     return app
