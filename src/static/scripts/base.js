@@ -15,6 +15,22 @@ function set_background(file_name) {
 })();
 
 
+function set_font(font_name) {
+    document.body.style.setProperty("--global-font", font_name);
+    localStorage.font = font_name;
+}
+
+
+(function remember_font() {
+    let select = document.getElementById("font_select");
+    select.onchange = () => set_font(select.value);
+    if (localStorage.font)
+        set_font(localStorage.font);
+
+    select.value = localStorage.font;
+})();
+
+
 const PASSWORD_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const PASSWORD_LENGTH = 32;
 

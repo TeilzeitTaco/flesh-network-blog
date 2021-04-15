@@ -1,5 +1,7 @@
 /* font-face headers generated on https://www.fontsquirrel.com */
 
+@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400&display=swap");
+
 @font-face {
     font-family: "jmh_typewriter_regular";
     src: url("../fonts/jmh_typewriter.woff2") format("woff2"),
@@ -49,6 +51,7 @@
 
 :root {
     --global-background-image: url("/static/images/backgrounds/liniert-korrektur.jpg");
+    --global-font: jmh_typewriter_regular;
 }
 
 .paper_background {
@@ -62,7 +65,7 @@
 
 body {
     background-image: var(--global-background-image);
-    font-family: jmh_typewriter_regular;
+    font-family: var(--global-font);
     padding: 0.5rem;
 }
 
