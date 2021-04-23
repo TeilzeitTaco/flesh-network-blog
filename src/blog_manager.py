@@ -3,6 +3,7 @@
 import os
 import sys
 import shutil
+from zipfile import ZipFile, ZIP_LZMA
 
 if os.name != "nt":
     import readline
@@ -15,6 +16,8 @@ from sqlalchemy.exc import IntegrityError
 
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
 from compiler import compile_all_posts
+
+BACKUP_FILE_NAME = "backup.zip"
 
 ERROR_NO_OBJECT_SELECTED = "No object selected!"
 ERROR_ATTRIBUTE_DOES_NOT_EXIST = "Attribute does not exist!"
@@ -275,6 +278,28 @@ def save_changes() -> None:
               "You probably created multiple records with non-unique names.")
 
 
+def zip_dir(pathname: str, zipfile: ZipFile) -> None:
+    for root, dirs, files in os.walk(pathname):
+        for file in files:
+            file_path = os.path.join(root, file)
+            relative_path = os.path.relpath(os.path.join(root, file), os.path.join(pathname, ".."))
+            zipfile.write(file_path, relative_path)
+
+
+def make_backup() -> None:
+    if os.path.exists(BACKUP_FILE_NAME):
+        print("Removing old backup...")
+        os.remove(BACKUP_FILE_NAME)
+
+    print("Backing up...")
+    with ZipFile(BACKUP_FILE_NAME, "w", ZIP_LZMA) as f:
+        zip_dir("blogposts", f)
+        f.write("blog.db")
+        f.write("config.json")
+
+    print(f"Done! ({os.path.getsize(BACKUP_FILE_NAME)} bytes)")
+
+
 def main() -> None:
     print(BANNER)
 
@@ -325,6 +350,7 @@ def main() -> None:
         "help": {None: lambda: show_help(commands)},
         "compile": {None: compile_all_posts},
         "attributes": {None: attributes},
+        "backup": {None: make_backup},
         "exit": {None: exit_program},
         "save": {None: save_changes},
     }
