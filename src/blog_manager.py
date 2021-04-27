@@ -166,6 +166,19 @@ def create_blog_post() -> None:
     save_tip()
 
 
+def mark_post_as_graph_page() -> None:
+    blog_post_id = int(input("Blog Post ID: "))
+    if blog_post := db.query(BlogPost).get(blog_post_id):
+        blog_post.include_in_graph = True
+        blog_post.allow_comments = False
+        blog_post.hidden = True
+
+        print(f"Marked blog post \"{blog_post.name}\" as graph page.")
+        return
+
+    print(f"No blog post with ID: {blog_post_id}.")
+
+
 def delete_blog_post() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     if blog_post := db.query(BlogPost).get(blog_post_id):
@@ -369,6 +382,7 @@ def main() -> None:
             "posts": compile_all_blog_posts,
         },
 
+        "mark": {None: mark_post_as_graph_page},
         "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},
         "get": {None: get_selected_object_attribute},
         "set": {None: set_selected_object_attribute},
