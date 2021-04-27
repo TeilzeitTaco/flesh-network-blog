@@ -379,7 +379,7 @@ def main() -> None:
             "all": recompile_all_posts,
             "id": compile_post_by_id,
             "graph": compile_all_graph_pages,
-            "posts": compile_all_blog_posts,
+            "post": compile_all_blog_posts,
         },
 
         "mark": {None: mark_post_as_graph_page},

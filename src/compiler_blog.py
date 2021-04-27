@@ -15,5 +15,6 @@ def compile_blog_post(blog_post: BlogPost) -> None:
 
 
 def compile_all_blog_posts() -> None:
+    print("Compiling blog posts...")
     for blog_post in get_all_blog_posts():
         compile_blog_post(blog_post)
