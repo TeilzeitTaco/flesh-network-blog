@@ -8,10 +8,10 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
-from compiler_blog import in_res_path
+from readable_queries import get_all_visible_blog_posts
 from forms import CommentForm
 from main import cache
-from misc import FileCache, static_vars, IPTracker
+from misc import FileCache, static_vars, IPTracker, in_res_path
 from sitemap import generate_sitemap
 from sqlbase import db, BlogPost, Author, Tag, Friend, ReferrerHostname
 
@@ -72,7 +72,7 @@ def route_root() -> any:
 
     friends = db.query(Friend).all()
     category_tags = [tag for tag in db.query(Tag).filter_by(main_section=True) if tag.blog_posts]
-    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc()).limit(5).all()
+    blog_posts = get_all_visible_blog_posts().order_by(BlogPost.timestamp.desc()).limit(5).all()
 
     return render_template("home.html", title="Root", header="Welcome to the Flesh-Network.", sub_header=quote,
                            blog_posts=blog_posts, friends=friends, category_tags=category_tags,
@@ -81,7 +81,7 @@ def route_root() -> any:
 
 @bp.route("/posts/")
 def route_posts() -> any:
-    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc()).all()
+    blog_posts = get_all_visible_blog_posts().order_by(BlogPost.timestamp.desc()).all()
     return render_template("posts.html", title="All Writings", return_to_root=True,
                            blog_posts=blog_posts)
 
@@ -146,6 +146,6 @@ def route_tag(tag_id: int, _name: str = "") -> any:
 @bp.route("/files")
 @cache.cached()
 def route_files() -> any:
-    blog_posts = db.query(BlogPost).order_by(BlogPost.timestamp.desc()).all()
+    blog_posts = get_all_visible_blog_posts().order_by(BlogPost.timestamp.desc()).all()
     return render_template("files.html", title="File Index", return_to_root=True,
                            blog_posts=blog_posts)

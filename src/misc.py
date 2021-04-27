@@ -1,6 +1,7 @@
 import hashlib
 import logging
 import os
+import re
 import sys
 
 from datetime import datetime, timedelta
@@ -103,3 +104,7 @@ def in_res_path(path: str) -> str:
 
 def file_name_to_title(file_name: str) -> str:
     return " ".join(file_name.rsplit(".", 1)[0].replace("-", " ").replace("_", " ").split()).title()
+
+
+def first_word_in_string(string: str) -> str:
+    return re.split(r"[^A-Za-z]+", string, 1)[0]

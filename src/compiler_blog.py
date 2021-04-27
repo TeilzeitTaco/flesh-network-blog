@@ -1,10 +1,7 @@
 from compiler_core import compile_post
 from misc import done, lenient_error
-from sqlbase import db, BlogPost
-
-
-def get_all_blog_posts() -> list:
-    return db.query(BlogPost).filter_by(include_in_graph=False)
+from readable_queries import get_all_blog_posts
+from sqlbase import BlogPost
 
 
 def compile_blog_post(blog_post: BlogPost) -> None:

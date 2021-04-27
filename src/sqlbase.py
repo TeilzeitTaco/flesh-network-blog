@@ -192,10 +192,10 @@ class BlogPost(Base, Nameable):
     name = Column(String, unique=True, index=True, nullable=False, default="")  # Title but called "name" for interface
     timestamp = Column(DateTime, default=datetime.now())
 
-    # defaults for     | graph pages | blog posts
-    # include_in_graph |      x      |
-    # allow_comments   |             |     x
-    # hidden           |      x      |
+    # defaults for     | graph pages | blog posts |
+    # include_in_graph |      x      |            | if this is a graph page or a blog post
+    # allow_comments   |             |     x      | if viewers can post comments
+    # hidden           |      x      |            | if this post can be shown in "Recent Posts" or the post index
 
     include_in_graph = Column(Boolean, default=False)
     allow_comments = Column(Boolean, default=True)
