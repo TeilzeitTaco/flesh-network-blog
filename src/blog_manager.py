@@ -32,6 +32,10 @@ BANNER = """\
 selected_object: Optional[Nameable] = None
 
 
+def yes_or_no(message: str) -> bool:
+    return input(f"{message} (y/n)? ").lower().startswith("y")
+
+
 def save_tip() -> None:
     print("You probably want to save.")
 
@@ -169,11 +173,12 @@ def create_blog_post() -> None:
 def mark_post_as_graph_page() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     if blog_post := db.query(BlogPost).get(blog_post_id):
-        blog_post.include_in_graph = True
-        blog_post.allow_comments = False
-        blog_post.hidden = True
+        blog_post.include_in_graph = yes_or_no("Enable graph annotations")
+        blog_post.allow_comments = yes_or_no("Allow comments")
+        blog_post.hidden = yes_or_no("Hide post")
 
-        print(f"Marked blog post \"{blog_post.name}\" as graph page.")
+        print(f"Changed flags of \"{blog_post.name}\".")
+        save_tip()
         return
 
     print(f"No blog post with ID: {blog_post_id}.")
@@ -207,7 +212,7 @@ def create_tag() -> None:
     tag_name = input("Tag Name: ")
     tag_short_desc = input("Tag short description: ")
     tag_long_desc = input("Tag long description: ")
-    tag_main = input("Is tag a section (y/n)? ").lower().startswith("y")
+    tag_main = yes_or_no("Is tag a section")
     tag = Tag(tag_name, tag_short_desc, tag_long_desc, tag_main)
     db.add(tag)
     save_tip()
