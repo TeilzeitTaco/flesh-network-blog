@@ -25,7 +25,7 @@
             <ul>
                 {% for category_tag in category_tags %}
                 <li>
-                    <a href="{{ url_for('home.route_tag', tag_id=category_tag.id, _name=category_tag.name) }}">{{ category_tag.name }}</a> - <span>{{ category_tag.short_description }}</span>
+                    <a href="{{ url_for('home.route_tag', tag_id=category_tag.id, _name=category_tag.slug) }}">{{ category_tag.name }}</a> - <span>{{ category_tag.short_description }}</span>
                 </li>
                 {% endfor %}
             </ul>

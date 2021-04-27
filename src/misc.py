@@ -1,8 +1,12 @@
+import hashlib
 import logging
+import os
+import sys
 
 from datetime import datetime, timedelta
-from typing import Callable
+from typing import Callable, NoReturn, Optional
 
+GENERATED_RESOURCES_PATH = "static/gen/res/"
 
 # How long a visitors IP address should be retained in the IP tracker.
 MAX_IP_RETENTION_TIME = timedelta(hours=24)
@@ -52,3 +56,55 @@ def static_vars(**kwargs) -> Callable:
         return func
 
     return decorate
+
+
+def done() -> None:
+    print("Done!")
+
+
+def critical_error(message: str) -> NoReturn:
+    print(f"Critical Error!\n{message}")
+    sys.exit(-1)
+
+
+def lenient_error(message: str) -> None:
+    print(f"Error!\n{message}")
+
+
+def nothing_to_do() -> None:
+    print("Nothing to do!")
+
+
+def read_file(path: str) -> str:
+    if not os.path.exists(path):
+        critical_error(f"Missing file: \"{path}\"!")
+
+    with open(path, "r", encoding="latin-1") as f:
+        return f.read().strip()
+
+
+def write_file(path: str, content: str) -> None:
+    with open(path, "w") as f:
+        f.write(content)
+
+
+def hash_file(path: str) -> str:
+    with open(path, "rb") as f:
+        hash_sum = hashlib.shake_256()
+        hash_sum.update(f.read())
+
+    return hash_sum.hexdigest(32)
+
+
+def has_prefix(string: str, prefix: str) -> Optional[str]:
+    if string.lower().startswith(prefix.lower()):
+        return string[len(prefix):].strip()
+
+
+def in_res_path(path: str) -> str:
+    return GENERATED_RESOURCES_PATH + path
+
+
+def file_name_to_title(file_name: str) -> str:
+    return " ".join(file_name.rsplit(".", 1)[0].replace("-", " ").replace("_", " ").split()).title()
+

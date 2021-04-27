@@ -1,7 +1,7 @@
 import functools
 import xml.etree.cElementTree as eT
 
-from sqlbase import db, BlogPost, Author
+from sqlbase import db, BlogPost, Author, Tag
 from flask import url_for, request
 
 
@@ -18,9 +18,13 @@ def generate_sitemap() -> str:
         insert_url(loc=url_for("home.route_blog_post", blog_post_id=post.id, _name=post.slug),
                    priority=0.8)
 
+    for tag in db.query(Tag):
+        insert_url(loc=url_for("home.route_tag", tag_id=tag.id, _name=tag.slug),
+                   priority=0.6)
+
     for author in db.query(Author):
         insert_url(loc=url_for("home.route_author", author_id=author.id, _name=author.slug),
-                   priority=0.5)
+                   priority=0.4)
 
     return XML_HEADER + eT.tostring(urlset, encoding="unicode", method="xml")
 

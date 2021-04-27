@@ -11,7 +11,7 @@
             <li>
                 Tagged with
                 {% for tag in blog_post.tags %}
-                <a href="{{ url_for('home.route_tag', tag_id=tag.id, _name=tag.name) }}">{{ tag.name }}</a>{{ ", " if not loop.last }}
+                <a href="{{ url_for('home.route_tag', tag_id=tag.id, _name=tag.slug) }}">{{ tag.name }}</a>{{ ", " if not loop.last }}
                 {% endfor %}
             </li>
             {% endif %}
