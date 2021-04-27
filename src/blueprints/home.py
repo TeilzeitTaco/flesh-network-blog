@@ -60,6 +60,7 @@ def sitemap_route() -> Response:
     "Watch the turtle cross the road.",
     "Total Inexcusable Obscurantism.",
     "Because we are all connected.",
+    "You'll be walking on air~",
     "What are you afraid of?",
     "Do bats eat cats?",
     "Online Doom Cult.",
