@@ -147,15 +147,13 @@ def clean_compiler_output() -> None:
     os.makedirs(GENERATED_RESOURCES_PATH)
     done()
 
-    print("Cleaning database... ", end="")
-    db.query(FileResource).delete()
-    done()
-
 
 def compile_post(blog_post: BlogPost) -> None:
     print(f"Compiling blog post \"{blog_post.name}\"... ", end="", flush=True)
 
     # Process the files in the res/ directory
+    for file_resource in blog_post.file_resources:
+        file_resource.delete()
     process_resource_files(blog_post)
 
     # Convert the markdown post content into HTML
