@@ -69,7 +69,7 @@ def pre_process_markdown(markdown_src: str, blog_post: BlogPost) -> str:
 
 def recreate_file_resources_for_post(blog_post: BlogPost):
     for file_resource in blog_post.file_resources:
-        file_resource.delete()
+        db.delete(file_resource)
     process_resource_files(blog_post)
 
 
