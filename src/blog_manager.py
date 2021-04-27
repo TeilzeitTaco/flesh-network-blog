@@ -15,7 +15,7 @@ from typing import Optional, Callable
 from sqlalchemy.exc import IntegrityError
 
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
-from compiler import compile_all_posts
+from compiler import clean_compiler_output, compile_post
 
 BACKUP_FILE_NAME = "backup.zip"
 
@@ -300,6 +300,21 @@ def make_backup() -> None:
     print(f"Done! ({os.path.getsize(BACKUP_FILE_NAME)} bytes)")
 
 
+def compile_post_by_id() -> None:
+    blog_post_id = int(input("Blog Post ID: "))
+    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
+        print("Post not found!")
+        return
+
+    compile_post(blog_post)
+
+
+def recompile_all_posts() -> None:
+    clean_compiler_output()
+    for blog_post in db.query(BlogPost):
+        compile_post(blog_post)
+
+
 def main() -> None:
     print(BANNER)
 
@@ -344,11 +359,15 @@ def main() -> None:
             "comment": partial(select_object, Comment),
         },
 
+        "compile": {
+            "all": recompile_all_posts,
+            "post": compile_post_by_id,
+        },
+
         "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},
         "get": {None: get_selected_object_attribute},
         "set": {None: set_selected_object_attribute},
         "help": {None: lambda: show_help(commands)},
-        "compile": {None: compile_all_posts},
         "attributes": {None: attributes},
         "backup": {None: make_backup},
         "exit": {None: exit_program},

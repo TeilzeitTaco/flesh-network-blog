@@ -4,7 +4,7 @@ import os
 import re
 import sys
 from shutil import copyfile, rmtree
-from typing import Optional, NoReturn
+from typing import Optional, NoReturn, List
 
 import markdown
 from PIL import Image
@@ -140,7 +140,7 @@ def hash_file(path: str) -> str:
     return hash_sum.hexdigest(RESOURCE_FILE_NAME_LENGTH)
 
 
-def compile_all_posts() -> None:
+def clean_compiler_output() -> None:
     print("Cleaning directory... ", end="")
     if os.path.exists(GENERATED_RESOURCES_PATH):
         rmtree(GENERATED_RESOURCES_PATH)
@@ -151,15 +151,16 @@ def compile_all_posts() -> None:
     db.query(FileResource).delete()
     done()
 
-    for blog_post in db.query(BlogPost):
-        print(f"Compiling blog post \"{blog_post.name}\"... ", end="", flush=True)
 
-        # Process the files in the res/ directory
-        process_resource_files(blog_post)
+def compile_post(blog_post: BlogPost) -> None:
+    print(f"Compiling blog post \"{blog_post.name}\"... ", end="", flush=True)
 
-        # Convert the markdown post content into HTML
-        markdown_src = read_file(blog_post.markdown_path)
-        markdown_src = pre_process_markdown(markdown_src, blog_post)
-        html_src = markdown.markdown(markdown_src)
-        write_file(blog_post.html_path, html_src)
-        done()
+    # Process the files in the res/ directory
+    process_resource_files(blog_post)
+
+    # Convert the markdown post content into HTML
+    markdown_src = read_file(blog_post.markdown_path)
+    markdown_src = pre_process_markdown(markdown_src, blog_post)
+    html_src = markdown.markdown(markdown_src)
+    write_file(blog_post.html_path, html_src)
+    done()
