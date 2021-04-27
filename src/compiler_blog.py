@@ -1,5 +1,5 @@
 from compiler_core import compile_post
-from misc import done, lenient_error
+from misc import done, lenient_error, nothing_to_do
 from readable_queries import get_all_blog_posts
 from sqlbase import BlogPost
 
@@ -16,5 +16,10 @@ def compile_blog_post(blog_post: BlogPost) -> None:
 
 def compile_all_blog_posts() -> None:
     print("Compiling blog posts...")
-    for blog_post in get_all_blog_posts():
-        compile_blog_post(blog_post)
+    if blog_posts := get_all_blog_posts().all():
+        for blog_post in blog_posts:
+            compile_blog_post(blog_post)
+        done()
+
+    else:
+        nothing_to_do()

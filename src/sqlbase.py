@@ -197,6 +197,10 @@ class BlogPost(Base, Nameable):
     # allow_comments   |             |     x      | if viewers can post comments
     # hidden           |      x      |            | if this post can be shown in "Recent Posts" or the post index
 
+    # Graph pages generally hold descriptions for overarching
+    # thoughts and concepts. They are automatically annotated
+    # with references to other graph pages at compile time.
+
     include_in_graph = Column(Boolean, default=False)
     allow_comments = Column(Boolean, default=True)
     hidden = Column(Boolean, default=False)
