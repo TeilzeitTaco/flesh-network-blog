@@ -5,6 +5,9 @@ import sys
 import shutil
 from zipfile import ZipFile, ZIP_LZMA
 
+from compiler_core import clean_compiler_output
+from compiler_graph import compile_all_graph_pages
+
 if os.name != "nt":
     import readline
     str(readline)
@@ -15,7 +18,7 @@ from typing import Optional, Callable
 from sqlalchemy.exc import IntegrityError
 
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
-from compiler import clean_compiler_output, compile_post
+from compiler_blog import compile_blog_post, compile_all_blog_posts
 
 BACKUP_FILE_NAME = "backup.zip"
 
@@ -306,13 +309,13 @@ def compile_post_by_id() -> None:
         print("Post not found!")
         return
 
-    compile_post(blog_post)
+    compile_blog_post(blog_post)
 
 
 def recompile_all_posts() -> None:
     clean_compiler_output()
-    for blog_post in db.query(BlogPost):
-        compile_post(blog_post)
+    compile_all_blog_posts()
+    compile_all_graph_pages()
 
 
 def main() -> None:
@@ -361,7 +364,9 @@ def main() -> None:
 
         "compile": {
             "all": recompile_all_posts,
-            "post": compile_post_by_id,
+            "id": compile_post_by_id,
+            "graph": compile_all_graph_pages,
+            "posts": compile_all_blog_posts,
         },
 
         "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},

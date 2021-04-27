@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
-from compiler import in_res_path
+from compiler_blog import in_res_path
 from forms import CommentForm
 from main import cache
 from misc import FileCache, static_vars, IPTracker

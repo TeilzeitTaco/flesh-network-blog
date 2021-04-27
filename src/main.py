@@ -9,7 +9,7 @@ from flask_assets import Environment, Bundle
 from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 
-from compiler import in_res_path
+from misc import in_res_path
 
 BLOG_NAME = "Flesh-Network"
 cache = Cache()

@@ -8,7 +8,6 @@ from sqlalchemy import create_engine, Integer, Column, String, ForeignKey, DateT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
-
 Base = declarative_base()
 
 
@@ -190,9 +189,17 @@ class BlogPost(Base, Nameable):
 
     id = Column(Integer, primary_key=True)
     hits = Column(Integer, default=0)
-    name = Column(String, unique=True, index=True, nullable=False, default="")  # Title but called "name" for reflection
+    name = Column(String, unique=True, index=True, nullable=False, default="")  # Title but called "name" for interface
     timestamp = Column(DateTime, default=datetime.now())
+
+    # defaults for     | graph pages | blog posts
+    # include_in_graph |      x      |
+    # allow_comments   |             |     x
+    # hidden           |      x      |
+
+    include_in_graph = Column(Boolean, default=False)
     allow_comments = Column(Boolean, default=True)
+    hidden = Column(Boolean, default=False)
 
     tags = relationship("Tag", secondary="tag_associations")
 
@@ -212,6 +219,12 @@ class BlogPost(Base, Nameable):
     @property
     def markdown_path(self) -> str:
         return f"{self.slug_path}/post.md"
+
+    @property
+    def interstage_path(self) -> str:
+        if self.include_in_graph:
+            return f"{self.slug_path}/interstage.md"
+        return self.markdown_path
 
     @property
     def resources_path(self) -> str:
