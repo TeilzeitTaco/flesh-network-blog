@@ -12,7 +12,7 @@ def main(file_name: str, out_file_name: str) -> None:
     with open(out_file_name, "w") as f:
         was_whitespace = False
         for line in lines:
-            for sym, rep in [("“", "\""), ("”", "\""), ("„", "\""), ("’", "'"), ("–", "-")]:
+            for sym, rep in [("“", "\""), ("”", "\""), ("„", "\""), ("’", "'"), ("–", "-"), ("…", "...")]:
                 line = line.replace(sym, rep)
 
             if line.startswith("#"):
