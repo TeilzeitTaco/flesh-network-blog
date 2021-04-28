@@ -114,10 +114,14 @@ def x_if_true(value: bool) -> str:
 def show_posts() -> None:
     if posts := db.query(BlogPost).all():
         longest_title = max(len(post.name) for post in posts)
-        print(f"|  ID | {'Title'.rjust(longest_title)} | Commentable | In Graph | Hidden |")
-        print(f"|-----|-{'-' * longest_title}-|-------------|----------|--------|")
+        longest_author = max(len(post.author.name) for post in posts)
+        print(f"|  ID | {'Title'.rjust(longest_title)} | {'Author'.rjust(longest_author)} | "
+              f"Commentable | In Graph | Hidden |")
+
+        print(f"|-----|-{'-' * longest_title}-|-{'-' * longest_author}-|-------------|----------|--------|")
         for post in posts:
             print(f"| {str(post.id).rjust(3)} | {post.name.rjust(longest_title)} | "
+                  f"{post.author.name.rjust(longest_author)} | "
                   f"     {x_if_true(post.allow_comments)}      | "
                   f"    {x_if_true(post.include_in_graph)}    | "
                   f"   {x_if_true(post.hidden)}   |")
