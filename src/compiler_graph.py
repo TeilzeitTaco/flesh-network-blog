@@ -36,7 +36,7 @@ def compile_all_graph_pages() -> None:
     definitions = create_node_definitions()
     if nodes := get_all_nodes().all():
         for node in nodes:
-            print(f"Compiling graph post \"{node.name}\"... ", end="", flush=True)
+            print(f"Compiling graph page \"{node.name}\"... ", end="", flush=True)
             create_node_interstage(definitions, node)
             compile_post(node)
             done()
