@@ -99,13 +99,31 @@ def select_object(row_class: type) -> None:
 
 
 def show_rows(row_class: type) -> None:
-    rows = db.query(row_class).all()
-    if rows:
+    if rows := db.query(row_class).all():
         print(f"Currently registered {row_class.__name__}s:")
         for row in rows:
             print(f" * {str(row.id).rjust(3)} - \"{row.name}\"")
     else:
         print(f"There are currently no registered {row_class.__name__}s.")
+
+
+def x_if_true(value: bool) -> str:
+    return "x" if value else " "
+
+
+def show_posts() -> None:
+    if posts := db.query(BlogPost).all():
+        longest_title = max(len(post.name) for post in posts)
+        print(f"|  ID | {'Title'.rjust(longest_title)} | Commentable | In Graph | Hidden |")
+        print(f"|-----|-{'-' * longest_title}-|-------------|----------|--------|")
+        for post in posts:
+            print(f"| {str(post.id).rjust(3)} | {post.name.rjust(longest_title)} | "
+                  f"     {x_if_true(post.allow_comments)}      | "
+                  f"    {x_if_true(post.include_in_graph)}    | "
+                  f"   {x_if_true(post.hidden)}   |")
+
+    else:
+        print("There are currently no posts.")
 
 
 def show_help(commands: any) -> None:
@@ -359,7 +377,7 @@ def main() -> None:
 
         "show": {
             "author": partial(show_rows, Author),
-            "post": partial(show_rows, BlogPost),
+            "post": show_posts,
             "friend": partial(show_rows, Friend),
             "tag": partial(show_rows, Tag),
             "hostname": partial(show_rows, ReferrerHostname),
