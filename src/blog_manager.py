@@ -368,7 +368,7 @@ def spellcheck() -> None:
     for post in db.query(BlogPost):
         markdown = read_file(post.markdown_path)
         for i, line in enumerate(markdown.splitlines()):
-            words = [re.sub(r"[^a-zA-Z ]", " ", word) for word in line.split()]
+            words = [re.sub(r"[^a-zA-Z ]", " ", word).strip() for word in line.split()]
             words = [word for word in words if word]
 
             unknown_en_words = en_checker.unknown(words)
