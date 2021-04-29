@@ -372,7 +372,7 @@ def spellcheck() -> None:
             unknown_en_words = en_checker.unknown(words)
             unknown_de_words = de_checker.unknown(words)
 
-            unknown_words = [word for word in unknown_en_words if word not in unknown_de_words]
+            unknown_words = [word for word in unknown_en_words if word in unknown_de_words]
 
             for unknown_word in unknown_words:
                 print(f"In \"{post.name}\" (line {i + 1}): Unknown word \"{unknown_word}\".")
