@@ -193,6 +193,11 @@ def create_blog_post() -> None:
     save_tip()
 
 
+def restart_server() -> None:
+    print("Restarting server...")
+    os.system("supervisorctl restart flesh-network-blog")
+
+
 def mark_post_as_graph_page() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     if blog_post := db.query(BlogPost).get(blog_post_id):
@@ -310,6 +315,11 @@ def exit_program() -> None:
     sys.exit(-1)
 
 
+def apply_changes() -> None:
+    save_changes()
+    restart_server()
+
+
 def save_changes() -> None:
     print("Saving changes... ", end="")
 
@@ -410,15 +420,19 @@ def main() -> None:
             "blog": compile_all_blog_posts,
         },
 
-        "mark": {None: mark_post_as_graph_page},
-        "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},
         "get": {None: get_selected_object_attribute},
         "set": {None: set_selected_object_attribute},
-        "help": {None: lambda: show_help(commands)},
         "attributes": {None: attributes},
-        "backup": {None: make_backup},
-        "exit": {None: exit_program},
+        "mark": {None: mark_post_as_graph_page},
+
+        "restart": {None: restart_server},
+        "apply": {None: apply_changes},
         "save": {None: save_changes},
+        "exit": {None: exit_program},
+
+        "backup": {None: make_backup},
+        "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},
+        "help": {None: lambda: show_help(commands)},
     }
 
     while True:
