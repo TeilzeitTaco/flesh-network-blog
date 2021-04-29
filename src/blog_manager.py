@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import sys
 import shutil
 from zipfile import ZipFile, ZIP_LZMA
 
+from compiler_blog import compile_all_blog_posts, compile_blog_post
 from compiler_core import clean_compiler_output
 from compiler_graph import compile_all_graph_pages
+from misc import read_file
 
 if os.name != "nt":
     import readline
@@ -16,9 +19,9 @@ from functools import partial
 from typing import Optional, Callable
 
 from sqlalchemy.exc import IntegrityError
+from spellchecker.spellchecker import SpellChecker
 
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
-from compiler_blog import compile_blog_post, compile_all_blog_posts
 
 BACKUP_FILE_NAME = "backup.zip"
 
@@ -193,11 +196,6 @@ def create_blog_post() -> None:
     save_tip()
 
 
-def restart_server() -> None:
-    print("Restarting server...")
-    os.system("supervisorctl restart flesh-network-blog")
-
-
 def mark_post_as_graph_page() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     if blog_post := db.query(BlogPost).get(blog_post_id):
@@ -315,11 +313,6 @@ def exit_program() -> None:
     sys.exit(-1)
 
 
-def apply_changes() -> None:
-    save_changes()
-    restart_server()
-
-
 def save_changes() -> None:
     print("Saving changes... ", end="")
 
@@ -367,6 +360,19 @@ def recompile_all_posts() -> None:
     clean_compiler_output()
     compile_all_blog_posts()
     compile_all_graph_pages()
+
+
+def spellcheck() -> None:
+    checker = SpellChecker()
+    for post in db.query(BlogPost):
+        markdown = read_file(post.markdown_path)
+        for i, line in enumerate(markdown.splitlines()):
+            words = [re.sub(r"[^a-zA-Z ]", "", word) for word in line.split()]
+            unknown_words = checker.unknown(words)
+            for unknown_word in unknown_words:
+                print(f"In \"{post.name}\" (line {i + 1}): Unknown word \"{unknown_word}\".")
+
+    print("Done!")
 
 
 def main() -> None:
@@ -425,11 +431,10 @@ def main() -> None:
         "attributes": {None: attributes},
         "mark": {None: mark_post_as_graph_page},
 
-        "restart": {None: restart_server},
-        "apply": {None: apply_changes},
         "save": {None: save_changes},
         "exit": {None: exit_program},
 
+        "spellcheck": {None: spellcheck},
         "backup": {None: make_backup},
         "clear": {None: lambda: os.system("cls") if os.name == "nt" else os.system("clear")},
         "help": {None: lambda: show_help(commands)},
