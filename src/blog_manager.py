@@ -369,6 +369,8 @@ def spellcheck() -> None:
         markdown = read_file(post.markdown_path)
         for i, line in enumerate(markdown.splitlines()):
             words = [re.sub(r"[^a-zA-Z ]", "", word) for word in line.split()]
+            words = [word for word in words if word]
+
             unknown_en_words = en_checker.unknown(words)
             unknown_de_words = de_checker.unknown(words)
 
