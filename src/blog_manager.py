@@ -363,12 +363,17 @@ def recompile_all_posts() -> None:
 
 
 def spellcheck() -> None:
-    checker = SpellChecker()
+    en_checker = SpellChecker(language="en")
+    de_checker = SpellChecker(language="de")
     for post in db.query(BlogPost):
         markdown = read_file(post.markdown_path)
         for i, line in enumerate(markdown.splitlines()):
             words = [re.sub(r"[^a-zA-Z ]", "", word) for word in line.split()]
-            unknown_words = checker.unknown(words)
+            unknown_en_words = en_checker.unknown(words)
+            unknown_de_words = de_checker.unknown(words)
+
+            unknown_words = [word for word in unknown_en_words if word not in unknown_de_words]
+
             for unknown_word in unknown_words:
                 print(f"In \"{post.name}\" (line {i + 1}): Unknown word \"{unknown_word}\".")
 
