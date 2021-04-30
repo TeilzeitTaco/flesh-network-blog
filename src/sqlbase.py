@@ -218,7 +218,7 @@ class BlogPost(Base, Nameable):
 
     @property
     def slug_path(self) -> str:
-        return f"blogposts/{self.slug}"
+        return f"blogposts/{self.author.slug}/{self.slug}"
 
     @property
     def markdown_path(self) -> str:

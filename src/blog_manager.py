@@ -9,7 +9,7 @@ from zipfile import ZipFile, ZIP_LZMA
 from compiler_blog import compile_all_blog_posts, compile_blog_post
 from compiler_core import clean_compiler_output
 from compiler_graph import compile_all_graph_pages
-from misc import read_file
+from misc import read_file, done
 
 if os.name != "nt":
     import readline
@@ -187,16 +187,16 @@ def create_blog_post() -> None:
         exit()
 
     title = input("Blog Post Title: ")
-
     blog_post = BlogPost(title, author)
-    os.makedirs(blog_post.resources_path)
-
-    open(blog_post.markdown_path, "w").close()
     db.add(blog_post)
+
+    os.makedirs(blog_post.resources_path)
+    open(blog_post.markdown_path, "w").close()
+
     save_tip()
 
 
-def mark_post_as_graph_page() -> None:
+def set_post_flags() -> None:
     blog_post_id = int(input("Blog Post ID: "))
     if blog_post := db.query(BlogPost).get(blog_post_id):
         blog_post.include_in_graph = yes_or_no("Enable graph annotations")
@@ -318,7 +318,8 @@ def save_changes() -> None:
 
     try:
         db.commit()
-        print("Done!")
+        done()
+
     except IntegrityError:
         print("Error!\n\n" +
               "This error was caused by invalid data.\n" +
@@ -379,7 +380,20 @@ def spellcheck() -> None:
             for unknown_word in unknown_words:
                 print(f"In \"{post.name}\" (line {i + 1}): Unknown word \"{unknown_word}\".")
 
-    print("Done!")
+    done()
+
+
+def rename_post() -> None:
+    blog_post_id = int(input("Blog Post ID: "))
+    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
+        print("Post not found!")
+        return
+
+    old_slug_path = blog_post.slug_path
+    blog_post.name = input(f"Rename post \"{blog_post.name}\" to: ")
+    os.rename(old_slug_path, blog_post.slug_path)
+    db.commit()
+    done()
 
 
 def main() -> None:
@@ -436,7 +450,8 @@ def main() -> None:
         "get": {None: get_selected_object_attribute},
         "set": {None: set_selected_object_attribute},
         "attributes": {None: attributes},
-        "mark": {None: mark_post_as_graph_page},
+        "flags": {None: set_post_flags},
+        "rename": {None: rename_post},
 
         "save": {None: save_changes},
         "exit": {None: exit_program},
