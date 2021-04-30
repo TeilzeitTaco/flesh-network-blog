@@ -12,7 +12,7 @@ from sqlalchemy.sql.expression import func
 def create_node_definitions() -> dict:
     regexes_and_corresponding_ids = dict()
 
-    # Apply longest term first: Prefer "world spirit" over "spirit"
+    # Apply longest term first: Prefer "world spirit" over "spirit".
     for node in get_all_nodes().order_by(desc(func.length(BlogPost.name))):
         regex = re.compile(re.escape(node.name), flags=re.IGNORECASE)
         regexes_and_corresponding_ids[node.name] = (regex, node.id)
