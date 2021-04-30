@@ -1,5 +1,6 @@
 import functools
 import logging
+import random
 import os
 
 from urllib.parse import urlparse
@@ -10,9 +11,14 @@ from flask_caching import Cache
 from werkzeug.exceptions import HTTPException
 
 from misc import in_res_path
+from sqlbase import db, BlogPost
 
 BLOG_NAME = "Flesh-Network"
 cache = Cache()
+
+
+def format_exception(exception: HTTPException) -> str:
+    return f"Error {exception.code}: {exception.name}"
 
 
 def create_app() -> Flask:
@@ -56,9 +62,15 @@ def create_app() -> Flask:
     from blueprints.home import bp as home_bp
     app.register_blueprint(home_bp)
 
+    @app.errorhandler(404)
+    def handle_404_error(exception: HTTPException) -> any:
+        random_blog_posts = random.sample(db.query(BlogPost).all(), 5)
+        return render_template("error_404.html", title=format_exception(exception), blog_posts=random_blog_posts,
+                               exception=exception, return_to_root=True), exception.code
+
     @app.errorhandler(HTTPException)
-    def handle_error(exception):
-        return render_template("error.html", title=f"Error {exception.code}: {exception.name}",
+    def handle_generic_error(exception: HTTPException) -> any:
+        return render_template("error.html", title=format_exception(exception),
                                exception=exception, return_to_root=True), exception.code
 
     return app
