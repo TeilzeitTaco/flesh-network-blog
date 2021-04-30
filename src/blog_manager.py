@@ -9,6 +9,7 @@ from zipfile import ZipFile, ZIP_LZMA
 from compiler_blog import compile_all_blog_posts, compile_blog_post
 from compiler_core import clean_compiler_output
 from compiler_graph import compile_all_graph_pages
+from exceptions import BlogManagerException, PostNotFoundException, CancelledException
 from misc import read_file, done
 
 if os.name != "nt":
@@ -35,12 +36,12 @@ BANNER = """\
 selected_object: Optional[Nameable] = None
 
 
-class PostNotFoundException(Exception):
-    pass
-
-
 def yes_or_no(message: str) -> bool:
-    return input(f"{message} (y/n)? ").lower().startswith("y")
+    user_input = input(f"{message} (y/n/c)? ").lower()
+    if user_input.startswith("c"):
+        raise CancelledException
+
+    return user_input.startswith("y")
 
 
 def save_tip() -> None:
@@ -467,7 +468,7 @@ def main() -> None:
 
         try:
             base_command[sub_command_key]()
-        except PostNotFoundException:
+        except BlogManagerException:
             pass
 
         print()
