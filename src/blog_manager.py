@@ -39,7 +39,7 @@ selected_object: Optional[Nameable] = None
 def yes_or_no(message: str) -> bool:
     user_input = input(f"{message} (yes/no/cancel)? ").lower()
     if user_input.startswith("c"):
-        raise CancelledException
+        raise CancelledException()
 
     return user_input.startswith("y")
 
@@ -49,7 +49,11 @@ def save_tip() -> None:
 
 
 def get_blog_post_by_id() -> BlogPost:
-    blog_post_id = int(input("Blog Post ID: "))
+    try:
+        blog_post_id = int(input("Blog Post ID: "))
+    except ValueError:
+        raise PostNotFoundException()
+
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         print(f"No post with ID {blog_post_id}!")
         raise PostNotFoundException()
