@@ -37,7 +37,7 @@ selected_object: Optional[Nameable] = None
 
 
 def yes_or_no(message: str) -> bool:
-    user_input = input(f"{message} (y/n/c)? ").lower()
+    user_input = input(f"{message} (yes/no/cancel)? ").lower()
     if user_input.startswith("c"):
         raise CancelledException
 
