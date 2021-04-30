@@ -5,10 +5,15 @@ from misc import read_file, write_file, done, nothing_to_do
 from readable_queries import get_all_nodes
 from sqlbase import BlogPost
 
+from sqlalchemy import desc
+from sqlalchemy.sql.expression import func
+
 
 def create_node_definitions() -> dict:
     regexes_and_corresponding_ids = dict()
-    for node in get_all_nodes():
+
+    # Apply longest term first: Prefer "world spirit" over "spirit"
+    for node in get_all_nodes().order_by(desc(func.lenth(BlogPost.name))):
         regex = re.compile(re.escape(node.name), flags=re.IGNORECASE)
         regexes_and_corresponding_ids[node.name] = (regex, node.id)
 
