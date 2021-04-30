@@ -52,6 +52,7 @@ def get_blog_post_by_id() -> BlogPost:
     try:
         blog_post_id = int(input("Blog Post ID: "))
     except ValueError:
+        print("Invalid ID!")
         raise PostNotFoundException()
 
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
