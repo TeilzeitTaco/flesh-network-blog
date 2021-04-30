@@ -35,12 +35,25 @@ BANNER = """\
 selected_object: Optional[Nameable] = None
 
 
+class PostNotFoundException(Exception):
+    pass
+
+
 def yes_or_no(message: str) -> bool:
     return input(f"{message} (y/n)? ").lower().startswith("y")
 
 
 def save_tip() -> None:
     print("You probably want to save.")
+
+
+def get_blog_post_by_id() -> BlogPost:
+    blog_post_id = int(input("Blog Post ID: "))
+    if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
+        print(f"No post with ID {blog_post_id}!")
+        raise PostNotFoundException()
+
+    return blog_post
 
 
 def get_selected_object_attribute() -> None:
@@ -197,31 +210,23 @@ def create_blog_post() -> None:
 
 
 def set_post_flags() -> None:
-    blog_post_id = int(input("Blog Post ID: "))
-    if blog_post := db.query(BlogPost).get(blog_post_id):
-        blog_post.include_in_graph = yes_or_no("Enable graph annotations")
-        blog_post.allow_comments = yes_or_no("Allow comments")
-        blog_post.hidden = yes_or_no("Hide post")
+    blog_post = get_blog_post_by_id()
+    blog_post.include_in_graph = yes_or_no("Enable graph annotations")
+    blog_post.allow_comments = yes_or_no("Allow comments")
+    blog_post.hidden = yes_or_no("Hide post")
 
-        print(f"Changed flags of \"{blog_post.name}\".")
-        save_tip()
-        return
-
-    print(f"No blog post with ID: {blog_post_id}.")
+    print(f"Changed flags of \"{blog_post.name}\".")
+    save_tip()
 
 
 def delete_blog_post() -> None:
-    blog_post_id = int(input("Blog Post ID: "))
-    if blog_post := db.query(BlogPost).get(blog_post_id):
-        if os.path.exists(blog_post.slug_path):
-            shutil.rmtree(blog_post.slug_path)
+    blog_post = get_blog_post_by_id()
+    if os.path.exists(blog_post.slug_path):
+        shutil.rmtree(blog_post.slug_path)
 
-        db.delete(blog_post)
-        print(f"Deleted blog post \"{blog_post.name}\".")
-        save_tip()
-        return
-
-    print(f"No blog post with ID: {blog_post_id}.")
+    db.delete(blog_post)
+    print(f"Deleted blog post \"{blog_post.name}\".")
+    save_tip()
 
 
 def create_friend() -> None:
@@ -270,35 +275,27 @@ def delete_selected() -> None:
 
 def attach_tag() -> None:
     tag_name = input("Tag Name: ")
-    blog_post_id = int(input("Blog Post ID: "))
-
     if not (tag := db.query(Tag).filter_by(name=tag_name).first()):
         print("Tag not found!")
         return
 
-    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
-        print("Post not found!")
-        return
+    blog_post = get_blog_post_by_id()
 
     print(f"Attached tag \"{tag.name}\" to post \"{blog_post.name}\"!")
-    tag_association = TagAssociation(blog_post_id, tag.id)
+    tag_association = TagAssociation(blog_post.id, tag.id)
     db.add(tag_association)
     save_tip()
 
 
 def detach_tag() -> None:
     tag_name = input("Tag Name: ")
-    blog_post_id = int(input("Blog Post ID: "))
-
     if not (tag := db.query(Tag).filter_by(name=tag_name).first()):
         print("Tag not found!")
         return
 
-    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
-        print("Post not found!")
-        return
+    blog_post = get_blog_post_by_id()
 
-    if (tag_association := db.query(TagAssociation).filter_by(blog_post_id=blog_post_id, tag_id=tag.id)
+    if (tag_association := db.query(TagAssociation).filter_by(blog_post_id=blog_post.id, tag_id=tag.id)
             .first()) is None:
         print("Tag is not attached to post!")
         return
@@ -349,11 +346,7 @@ def make_backup() -> None:
 
 
 def compile_post_by_id() -> None:
-    blog_post_id = int(input("Blog Post ID: "))
-    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
-        print("Post not found!")
-        return
-
+    blog_post = get_blog_post_by_id()
     compile_blog_post(blog_post)
 
 
@@ -384,11 +377,7 @@ def spellcheck() -> None:
 
 
 def rename_post() -> None:
-    blog_post_id = int(input("Blog Post ID: "))
-    if not (blog_post := db.query(BlogPost).get(blog_post_id)):
-        print("Post not found!")
-        return
-
+    blog_post = get_blog_post_by_id()
     old_slug_path = blog_post.slug_path
     blog_post.name = input(f"Rename post \"{blog_post.name}\" to: ")
     os.rename(old_slug_path, blog_post.slug_path)
@@ -476,7 +465,11 @@ def main() -> None:
             print("Invalid sub-command!\n")
             continue
 
-        base_command[sub_command_key]()
+        try:
+            base_command[sub_command_key]()
+        except PostNotFoundException:
+            pass
+
         print()
 
 
