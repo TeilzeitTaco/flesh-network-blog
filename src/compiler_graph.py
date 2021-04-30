@@ -14,7 +14,8 @@ def create_node_definitions() -> dict:
 
     # Apply longest term first: Prefer "world spirit" over "spirit".
     for node in get_all_nodes().order_by(desc(func.length(BlogPost.name))):
-        regex = re.compile(re.escape(node.name), flags=re.IGNORECASE)
+        regex_source = rf"\[.*?\]|({re.escape(node.name)})"
+        regex = re.compile(regex_source, flags=re.IGNORECASE)
         regexes_and_corresponding_ids[node.name] = (regex, node.id)
 
     return regexes_and_corresponding_ids
@@ -31,7 +32,9 @@ def create_node_interstage(definitions: dict, node: BlogPost) -> None:
             continue
 
         # Turn word into syntax [word]({{ post: X }})
-        markdown = regex.sub(rf"[\g<0>]({{{{ post: {target_node_id} }}}})", markdown)
+        markdown = regex.sub(
+            lambda match: rf"[{match.group(1)}]({{{{ post: {target_node_id} }}}})"
+            if match.group(1) else match.group(0), markdown)
 
     write_file(node.interstage_path, markdown)
 
