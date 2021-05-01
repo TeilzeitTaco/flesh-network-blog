@@ -162,9 +162,9 @@ def show_help(commands: any) -> None:
             print(f" ({sub_commands_string})", end="")
         print()
 
+    print()
     print("No command arguments, entered command invocation.")
     print("Commands are combinable using the \",\" symbol.")
-    print()
 
 
 def delete_comment() -> None:
