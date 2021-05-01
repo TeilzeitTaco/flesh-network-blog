@@ -313,7 +313,7 @@ def detach_tag() -> None:
 
 def exit_program() -> None:
     print("Exiting...\n")
-    sys.exit(-1)
+    sys.exit(0)
 
 
 def save_changes() -> None:
