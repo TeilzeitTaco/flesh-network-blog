@@ -458,25 +458,27 @@ def main() -> None:
     }
 
     while True:
-        if not (command_list := [command.lower() for command in input("> ").split()]):
-            continue
+        command_str = input("> ")
+        for command in command_str.split(","):
+            if not (command_tokens := [command.lower() for command in command.strip().split()]):
+                break
 
-        if len(command_list) not in [1, 2] or command_list[0] not in commands.keys():
-            print("Invalid command!\n")
-            continue
+            if len(command_tokens) not in [1, 2] or command_tokens[0] not in commands.keys():
+                print("Invalid command!\n")
+                break
 
-        base_command = commands[command_list[0]]
-        sub_command_key = command_list[1].rstrip("s") if 1 < len(command_list) else None  # Allow "post" and "posts"
-        if sub_command_key not in base_command.keys():
-            print("Invalid sub-command!\n")
-            continue
+            base_command = commands[command_tokens[0]]
+            sub_command_key = command_tokens[1].rstrip("s") if 1 < len(
+                command_tokens) else None  # Allow "post" and "posts"
+            if sub_command_key not in base_command.keys():
+                print("Invalid sub-command!\n")
+                break
 
-        try:
-            base_command[sub_command_key]()
-        except BlogManagerException:
-            pass
-
-        print()
+            try:
+                base_command[sub_command_key]()
+            except BlogManagerException:
+                pass
+            print()
 
 
 if __name__ == "__main__":
