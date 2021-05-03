@@ -396,7 +396,7 @@ def rename_post() -> None:
 
 
 def main() -> None:
-    print(BANNER)
+    print(BANNER, flush=True)
 
     commands = {
         "create": {
