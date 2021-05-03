@@ -57,6 +57,7 @@ def sitemap_route() -> Response:
 @static_vars(quotes=[
     # Caching these doesn't matter, its okay if these only change occasionally.
     "Increasingly decreasing in all things.",
+    "Increasingly afraid it's gonna rain",
     "Abgedroschene Gesellschaftskritik",
     "Watch the turtle cross the road.",
     "Total Inexcusable Obscurantism.",
