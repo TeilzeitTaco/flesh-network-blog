@@ -155,3 +155,7 @@ fieldset {
 .author_biography {
     display: block;
 }
+
+.globe {
+    float: right;
+}
