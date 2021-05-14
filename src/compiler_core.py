@@ -23,7 +23,7 @@ def compile_post(post: BlogPost) -> None:
 def convert_markdown_for_post(post: BlogPost) -> None:
     markdown_src = read_file(post.interstage_path)
     markdown_src = pre_process_markdown(markdown_src, post)
-    html_src = markdown.markdown(markdown_src)
+    html_src = markdown.markdown(markdown_src, extensions=["sane_lists", "md_in_html", "extra"])
     write_file(post.html_path, html_src)
 
 
