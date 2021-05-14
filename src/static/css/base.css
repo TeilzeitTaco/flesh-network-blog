@@ -161,6 +161,8 @@ fieldset {
     float: right;
 }
 
-.float_right {
+.side_image {
+    display: inline-block;
     float: right;
+    max-height: 75vh;
 }
