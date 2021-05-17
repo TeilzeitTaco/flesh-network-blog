@@ -27,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ocdm/other/shell_scripts/make_playlist.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -84,10 +84,10 @@
       <screen x="0" y="0" width="1437" height="864" />
     </state>
     <state x="562" y="323" key="#com.jetbrains.python.refactoring.move.PyMoveModuleMembersDialog/0.0.1437.864@0.0.1437.864" timestamp="1619808174390" />
-    <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1621199672395">
+    <state x="499" y="187" key="FileChooserDialogImpl" timestamp="1621284448674">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
-    <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864@0.0.1437.864" timestamp="1621199672395" />
+    <state x="499" y="187" key="FileChooserDialogImpl/0.0.1437.864@0.0.1437.864" timestamp="1621284448674" />
     <state width="1416" height="224" key="GridCell.Tab.0.bottom" timestamp="1612880192373">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
