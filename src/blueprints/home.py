@@ -60,6 +60,7 @@ def sitemap_route() -> Response:
     "Increasingly afraid it's gonna rain",
     "Abgedroschene Gesellschaftskritik",
     "Watch the turtle cross the road.",
+    "The flesh suffers just the same",
     "Total Inexcusable Obscurantism.",
     "Because we are all connected.",
     "You'll be walking on air~",
