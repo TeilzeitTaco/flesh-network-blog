@@ -4,6 +4,12 @@ import sys
 # Program to convert MS-Word pastes into a less
 # annoying text file layout.
 
+translation_table = [
+    ("“", "\""), ("”", "\""), ("„", "\""),
+    ("’", "'"), ("–", "-"), ("…", "..."),
+    ("•", "*"),
+]
+
 
 def main(file_name: str, out_file_name: str) -> None:
     with open(file_name, "r", encoding="utf-8") as f:
@@ -11,19 +17,37 @@ def main(file_name: str, out_file_name: str) -> None:
 
     with open(out_file_name, "w") as f:
         was_whitespace = False
+        in_preformatted_block = False
+
         for line in lines:
-            for sym, rep in [("“", "\""), ("”", "\""), ("„", "\""), ("’", "'"), ("–", "-"), ("…", "...")]:
+            # Handle HTML <pre> blocks
+            if "<pre>" in line or in_preformatted_block:
+                in_preformatted_block = True
+
+            if in_preformatted_block:
+                f.write(line)
+                if "</pre>" in line:
+                    in_preformatted_block = False
+                    was_whitespace = False
+
+                continue
+
+            # Convert unicode symbols
+            for sym, rep in translation_table:
                 line = line.replace(sym, rep)
 
+            # Header
             if line.startswith("#"):
                 was_whitespace = False
                 f.write(line + "\n")
 
+            # Whitespace
             elif not line.strip():
                 if not was_whitespace:
                     was_whitespace = True
                     f.write("\n")
 
+            # Normal text
             else:
                 was_whitespace = False
                 buffer = str()
