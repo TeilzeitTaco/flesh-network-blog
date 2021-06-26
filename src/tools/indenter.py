@@ -65,7 +65,7 @@ def write_output(lines: list, out_file_name: str) -> None:
 
                 f.write(buffer + "\n\n")
 
-            print("OK")
+        print("OK")
 
 
 def process_file(input_name: str) -> None:
