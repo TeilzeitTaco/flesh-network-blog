@@ -139,7 +139,7 @@ class Tag(Base, Nameable):
     # category on the root page.
     main_section = Column(Boolean, default=True)
 
-    blog_posts = relationship("BlogPost", secondary="tag_associations", order_by="desc(BlogPost.name)")
+    blog_posts = relationship("BlogPost", secondary="tag_associations", order_by="BlogPost.name")
 
     @property
     def slug(self) -> str:
@@ -205,7 +205,7 @@ class BlogPost(Base, Nameable):
     allow_comments = Column(Boolean, default=True)
     hidden = Column(Boolean, default=False)
 
-    tags = relationship("Tag", secondary="tag_associations", order_by="desc(Tag.name)")
+    tags = relationship("Tag", secondary="tag_associations", order_by="Tag.name")
 
     author_id = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", back_populates="blog_posts")
