@@ -181,8 +181,10 @@ def show_help(commands: any) -> None:
         print()
 
     print()
-    print("No command arguments, entered command invocation.")
-    print("Commands are combinable using the \",\" symbol.")
+    print("No command arguments, entered command invocation.\n" +
+          "Commands are combinable using the \",\" symbol.\n\n" +
+          "Multiple blog posts can be selected using range expressions:\n" +
+          "\"1, 2, 4 - 7\" will select posts [1, 2, 4, 5, 6, 7]")
 
 
 def delete_comment() -> None:
