@@ -205,7 +205,7 @@ class BlogPost(Base, Nameable):
     allow_comments = Column(Boolean, default=True)
     hidden = Column(Boolean, default=False)
 
-    tags = relationship("Tag", secondary="tag_associations")
+    tags = relationship("Tag", secondary="tag_associations", order_by="desc(Tag.name)")
 
     author_id = Column(Integer, ForeignKey("authors.id"))
     author = relationship("Author", back_populates="blog_posts")
