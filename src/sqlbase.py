@@ -139,7 +139,7 @@ class Tag(Base, Nameable):
     # category on the root page.
     main_section = Column(Boolean, default=True)
 
-    blog_posts = relationship("BlogPost", secondary="tag_associations")
+    blog_posts = relationship("BlogPost", secondary="tag_associations", order_by="desc(BlogPost.name)")
 
     @property
     def slug(self) -> str:
