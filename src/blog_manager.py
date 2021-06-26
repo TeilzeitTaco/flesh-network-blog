@@ -59,6 +59,12 @@ def save_tip() -> None:
     print("You probably want to save.")
 
 
+def for_name(question: str, handler: Callable) -> None:
+    names = {e.strip() for e in input(question).split(";;")}
+    for name in names:
+        handler(name)
+
+
 def for_blog_posts(handler: Callable) -> None:
     try:
         blog_post_ids = parse_range_expression(input("Blog Post IDs: "))
@@ -181,10 +187,12 @@ def show_help(commands: any) -> None:
         print()
 
     print()
-    print("No command arguments, entered command invocation.\n" +
+    print("No command arguments, arguments entered at command invocation.\n" +
           "Commands are combinable using the \",\" symbol.\n\n" +
           "Multiple blog posts can be selected using range expressions:\n" +
-          "\"1, 2, 4 - 7\" will select posts [1, 2, 4, 5, 6, 7]")
+          "\"1, 2, 4 - 7\" will select posts [1, 2, 4, 5, 6, 7]\n\n" +
+          "Multiple strings can be entered in several places by separating them:\n" +
+          "\"Title 1 ;; Title 2\" will be parsed as [\"Title 1\", \"Title 2\"]")
 
 
 def delete_comment() -> None:
@@ -227,15 +235,16 @@ def create_blog_post() -> None:
     author_name = input("Author Name: ")
     if not (author := db.query(Author).filter_by(name=author_name).first()):
         print(f"No author with name: \"{author_name}\".")
-        exit()
+        return
 
-    title = input("Blog Post Title: ")
-    blog_post = BlogPost(title, author)
-    db.add(blog_post)
+    def handler(name: str) -> None:
+        blog_post = BlogPost(name, author)
+        db.add(blog_post)
 
-    os.makedirs(blog_post.resources_path)
-    open(blog_post.markdown_path, "w").close()
+        os.makedirs(blog_post.resources_path)
+        open(blog_post.markdown_path, "w").close()
 
+    for_name("Blog Post Titles: ", handler)
     save_tip()
 
 
@@ -353,6 +362,7 @@ def save_changes() -> None:
         done()
 
     except IntegrityError:
+        db.rollback()
         print("Error!\n\n" +
               "This error was caused by invalid data.\n" +
               "You probably created multiple records with non-unique names.")
