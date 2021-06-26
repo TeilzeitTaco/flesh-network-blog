@@ -237,22 +237,26 @@ def create_blog_post() -> None:
         print(f"No author with name: \"{author_name}\".")
         return
 
-    def handler(name: str) -> None:
+    def handle(name: str) -> None:
         blog_post = BlogPost(name, author)
         db.add(blog_post)
 
         os.makedirs(blog_post.resources_path)
         open(blog_post.markdown_path, "w").close()
 
-    for_name("Blog Post Titles: ", handler)
+    for_name("Blog Post Titles: ", handle)
     save_tip()
 
 
 def set_post_flags() -> None:
+    include_in_graph = yes_or_no("Enable graph annotations")
+    allow_comments = yes_or_no("Allow comments")
+    hidden = yes_or_no("Hide post")
+
     def handle(blog_post: BlogPost) -> None:
-        blog_post.include_in_graph = yes_or_no("Enable graph annotations")
-        blog_post.allow_comments = yes_or_no("Allow comments")
-        blog_post.hidden = yes_or_no("Hide post")
+        blog_post.include_in_graph = include_in_graph
+        blog_post.allow_comments = allow_comments
+        blog_post.hidden = hidden
         print(f"Changed flags of \"{blog_post.name}\".")
 
     for_blog_posts(handle)
@@ -423,9 +427,10 @@ def spellcheck() -> None:
 def rename_post() -> None:
     def handle(blog_post: BlogPost) -> None:
         old_slug_path = blog_post.slug_path
-        blog_post.name = input(f"Rename post \"{blog_post.name}\" to: ")
+        blog_post.name = new_name
         os.rename(old_slug_path, blog_post.slug_path)
 
+    new_name = input(f"Rename post \"{blog_post.name}\" to: ")
     for_blog_posts(handle)
     db.commit()
     done()
