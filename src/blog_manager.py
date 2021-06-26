@@ -25,15 +25,26 @@ from spellchecker.spellchecker import SpellChecker
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
 
 BACKUP_FILE_NAME = "backup.zip"
-
+BANNER = "-=[ Blog Manager ]=-\n"
 ERROR_NO_OBJECT_SELECTED = "No object selected!"
 ERROR_ATTRIBUTE_DOES_NOT_EXIST = "Attribute does not exist!"
 
-BANNER = """\
--=[ Blog Manager ]=-
-"""
-
 selected_object: Optional[Nameable] = None
+
+
+# Parse expressions like "1 - 5, 8, 10" into [1, 2, 3, 4, 5, 8, 10]
+def parse_range_expression(exp: str) -> set:
+    result = set()
+    for section in exp.split(","):
+        if section.count("-") == 1:
+            start, end = section.split("-")
+            for x in range(int(start), int(end) + 1):
+                result.add(x)
+
+        else:
+            result.add(int(section))
+
+    return result
 
 
 def yes_or_no(message: str) -> bool:
@@ -48,18 +59,25 @@ def save_tip() -> None:
     print("You probably want to save.")
 
 
-def get_blog_post_by_id() -> BlogPost:
+def for_blog_posts(handler: Callable) -> None:
     try:
-        blog_post_id = int(input("Blog Post ID: "))
+        blog_post_ids = parse_range_expression(input("Blog Post IDs: "))
     except ValueError:
-        print("Invalid ID!")
+        print("Invalid expression!")
         raise PostNotFoundException()
 
-    if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
-        print(f"No post with ID {blog_post_id}!")
-        raise PostNotFoundException()
+    # Get posts, verify that all exist
+    blog_posts = list()
+    for blog_post_id in blog_post_ids:
+        if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
+            print(f"No post with ID {blog_post_id}!")
+            raise PostNotFoundException()
 
-    return blog_post
+        blog_posts.append(blog_post)
+
+    # Process all
+    for blog_post in blog_posts:
+        handler(blog_post)
 
 
 def get_selected_object_attribute() -> None:
@@ -220,22 +238,25 @@ def create_blog_post() -> None:
 
 
 def set_post_flags() -> None:
-    blog_post = get_blog_post_by_id()
-    blog_post.include_in_graph = yes_or_no("Enable graph annotations")
-    blog_post.allow_comments = yes_or_no("Allow comments")
-    blog_post.hidden = yes_or_no("Hide post")
+    def handle(blog_post: BlogPost) -> None:
+        blog_post.include_in_graph = yes_or_no("Enable graph annotations")
+        blog_post.allow_comments = yes_or_no("Allow comments")
+        blog_post.hidden = yes_or_no("Hide post")
+        print(f"Changed flags of \"{blog_post.name}\".")
 
-    print(f"Changed flags of \"{blog_post.name}\".")
+    for_blog_posts(handle)
     save_tip()
 
 
 def delete_blog_post() -> None:
-    blog_post = get_blog_post_by_id()
-    if os.path.exists(blog_post.slug_path):
-        shutil.rmtree(blog_post.slug_path)
+    def handle(blog_post: BlogPost) -> None:
+        if os.path.exists(blog_post.slug_path):
+            shutil.rmtree(blog_post.slug_path)
 
-    db.delete(blog_post)
-    print(f"Deleted blog post \"{blog_post.name}\".")
+        db.delete(blog_post)
+        print(f"Deleted blog post \"{blog_post.name}\".")
+
+    for_blog_posts(handle)
     save_tip()
 
 
@@ -289,11 +310,12 @@ def attach_tag() -> None:
         print("Tag not found!")
         return
 
-    blog_post = get_blog_post_by_id()
+    def handle(blog_post: BlogPost) -> None:
+        print(f"Attached tag \"{tag.name}\" to post \"{blog_post.name}\"!")
+        tag_association = TagAssociation(blog_post.id, tag.id)
+        db.add(tag_association)
 
-    print(f"Attached tag \"{tag.name}\" to post \"{blog_post.name}\"!")
-    tag_association = TagAssociation(blog_post.id, tag.id)
-    db.add(tag_association)
+    for_blog_posts(handle)
     save_tip()
 
 
@@ -303,15 +325,16 @@ def detach_tag() -> None:
         print("Tag not found!")
         return
 
-    blog_post = get_blog_post_by_id()
+    def handle(blog_post: BlogPost) -> None:
+        if (tag_association := db.query(TagAssociation).filter_by(blog_post_id=blog_post.id, tag_id=tag.id)
+                .first()) is None:
+            print("Tag is not attached to post!")
+            return
 
-    if (tag_association := db.query(TagAssociation).filter_by(blog_post_id=blog_post.id, tag_id=tag.id)
-            .first()) is None:
-        print("Tag is not attached to post!")
-        return
+        print(f"Detached tag \"{tag.name}\" from post \"{blog_post.name}\"!")
+        db.delete(tag_association)
 
-    print(f"Detached tag \"{tag.name}\" from post \"{blog_post.name}\"!")
-    db.delete(tag_association)
+    for_blog_posts(handle)
     save_tip()
 
 
@@ -356,8 +379,7 @@ def make_backup() -> None:
 
 
 def compile_post_by_id() -> None:
-    blog_post = get_blog_post_by_id()
-    compile_blog_post(blog_post)
+    for_blog_posts(compile_blog_post)
 
 
 def recompile_all_posts() -> None:
@@ -387,10 +409,12 @@ def spellcheck() -> None:
 
 
 def rename_post() -> None:
-    blog_post = get_blog_post_by_id()
-    old_slug_path = blog_post.slug_path
-    blog_post.name = input(f"Rename post \"{blog_post.name}\" to: ")
-    os.rename(old_slug_path, blog_post.slug_path)
+    def handle(blog_post: BlogPost) -> None:
+        old_slug_path = blog_post.slug_path
+        blog_post.name = input(f"Rename post \"{blog_post.name}\" to: ")
+        os.rename(old_slug_path, blog_post.slug_path)
+
+    for_blog_posts(handle)
     db.commit()
     done()
 
