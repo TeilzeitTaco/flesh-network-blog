@@ -241,8 +241,9 @@ def create_blog_post() -> None:
         blog_post = BlogPost(name, author)
         db.add(blog_post)
 
-        os.makedirs(blog_post.resources_path)
-        open(blog_post.markdown_path, "w").close()
+        if not os.path.exists(blog_post.resources_path):
+            os.makedirs(blog_post.resources_path)
+            open(blog_post.markdown_path, "w").close()
 
     for_name("Blog Post Titles: ", handle)
     save_tip()
