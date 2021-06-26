@@ -427,11 +427,12 @@ def spellcheck() -> None:
 
 def rename_post() -> None:
     def handle(blog_post: BlogPost) -> None:
+        print(f"Renaming post \"{blog_post.name}\" to \"{new_name}\"...")
         old_slug_path = blog_post.slug_path
         blog_post.name = new_name
         os.rename(old_slug_path, blog_post.slug_path)
 
-    new_name = input(f"Rename post \"{blog_post.name}\" to: ")
+    new_name = input(f"Rename post to: ")
     for_blog_posts(handle)
     db.commit()
     done()
