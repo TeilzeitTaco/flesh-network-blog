@@ -82,7 +82,7 @@ def process_file(input_name: str) -> None:
     elif lower_file_name.endswith(".docx"):
         print(f"Reading .docx file: \"{input_name}\"... ", end="")
         text = docx2python.docx2python(input_name).text.replace("--", "*")
-        lines = text.splitlines()
+        lines = [e + "\n" for e in text.splitlines() if e]
         write_output(lines, output_name)
 
 
