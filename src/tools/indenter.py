@@ -15,10 +15,6 @@ TRANSLATION_TABLE = [
 
 
 def write_output(lines: list, out_file_name: str) -> None:
-    if os.path.exists(out_file_name):
-        print("Already exists!")
-        return
-
     with open(out_file_name, "w") as f:
         was_whitespace = False
         in_preformatted_block = False
@@ -53,6 +49,10 @@ def write_output(lines: list, out_file_name: str) -> None:
 
             # Normal text
             else:
+                # Docx extraction artifact
+                if line.strip() == "*-":
+                    line = "---"
+
                 was_whitespace = False
                 buffer = str()
                 for word in line.split():
@@ -68,11 +68,44 @@ def write_output(lines: list, out_file_name: str) -> None:
         print("OK")
 
 
+def process_md_file(input_name: str, out_file_name: str) -> None:
+    print(f"Reading .md file: \"{input_name}\"... ", end="")
+    with open(input_name, "r", encoding="utf-8") as f:
+        lines = [e.strip() for e in f.readlines()]
+
+    text = str()
+    new_line = True
+    for line in lines:
+        if not line or any([line.startswith(c) for c in "*#"]):
+            new_line = True
+            text += "\n\n"
+
+        if line:
+            if new_line:
+                new_line = False
+            else:
+                text += " "
+            text += line
+
+    print("OK")
+    with open(out_file_name, "w") as f:
+        f.write(text)
+
+
+def verify_file_does_not_exist_and_get_output_name(input_file_name: str, extension: str) -> str:
+    output_name = input_file_name.rsplit(".", 1)[0] + extension
+    if os.path.exists(output_name):
+        print("Output file already exists!")
+        sys.exit(-1)
+
+    return output_name
+
+
 def process_file(input_name: str) -> None:
-    output_name = input_name.rsplit(".", 1)[0] + ".md"
     lower_file_name = input_name.lower().strip()
 
     if lower_file_name.endswith(".txt"):
+        output_name = verify_file_does_not_exist_and_get_output_name(input_name, ".md")
         print(f"Reading .txt file: \"{input_name}\"... ", end="")
         with open(input_name, "r", encoding="utf-8") as f:
             lines = f.readlines()
@@ -80,10 +113,16 @@ def process_file(input_name: str) -> None:
 
     # docx files need some more handling
     elif lower_file_name.endswith(".docx"):
+        output_name = verify_file_does_not_exist_and_get_output_name(input_name, ".md")
         print(f"Reading .docx file: \"{input_name}\"... ", end="")
         text = docx2python.docx2python(input_name).text.replace("--", "*")
         lines = [e + "\n" for e in text.splitlines() if e]
         write_output(lines, output_name)
+
+    # convert .md files back to a format paste-able into Word
+    elif lower_file_name.endswith(".md"):
+        output_name = verify_file_does_not_exist_and_get_output_name(input_name, ".txt")
+        process_md_file(input_name, output_name)
 
 
 def main() -> None:
