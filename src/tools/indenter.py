@@ -70,7 +70,7 @@ def write_output(lines: list, out_file_name: str) -> None:
 
 def process_md_file(input_name: str, out_file_name: str) -> None:
     print(f"Reading .md file: \"{input_name}\"... ", end="")
-    with open(input_name, "r", encoding="utf-8") as f:
+    with open(input_name, "r", encoding="utf-8", errors="replace") as f:
         lines = [e.strip() for e in f.readlines()]
 
     text = str()
@@ -88,7 +88,7 @@ def process_md_file(input_name: str, out_file_name: str) -> None:
             text += line
 
     print("OK")
-    with open(out_file_name, "w") as f:
+    with open(out_file_name, "w", encoding="utf-8", errors="replace") as f:
         f.write(text)
 
 
@@ -125,14 +125,11 @@ def process_file(input_name: str) -> None:
         process_md_file(input_name, output_name)
 
 
-def main() -> None:
-    print("Flesh-Network Blog Post Indenting Tool (2021)")
-    print("-> Convert .txt and .docx files into properly formatted blog posts!\n")
-    if len(sys.argv) != 2:
-        print("Please supply a file name!")
-        sys.exit(-1)
+def process(input_name: str) -> None:
+    if not os.path.exists(input_name):
+        print(f"No file with name \"{input_name}\"!")
+        return
 
-    input_name = sys.argv[1]
     if os.path.isdir(input_name):
         print(f"Converting directory \"{input_name}\"...")
         entries = os.listdir(input_name)
@@ -144,6 +141,17 @@ def main() -> None:
 
     else:
         process_file(input_name)
+
+
+def main() -> None:
+    print("Flesh-Network Blog Post Indenting Tool (2021)")
+    print("-> Convert .txt and .docx files into properly formatted blog posts!\n")
+    if len(sys.argv) != 2:
+        print("Please supply a file name!")
+        sys.exit(-1)
+
+    input_name = sys.argv[1]
+    process(input_name)
 
 
 if __name__ == "__main__":
