@@ -102,7 +102,7 @@ def verify_file_does_not_exist_and_get_output_name(input_file_name: str, extensi
 
 
 def process_file(input_name: str) -> None:
-    lower_file_name = input_name.lower().strip()
+    lower_file_name = input_name.lower().strip().rsplit(os.path.sep, 1)[-1]
 
     if lower_file_name.endswith(".txt"):
         output_name = verify_file_does_not_exist_and_get_output_name(input_name, ".md")
@@ -112,7 +112,7 @@ def process_file(input_name: str) -> None:
             write_output(lines, output_name)
 
     # docx files need some more handling
-    elif lower_file_name.endswith(".docx"):
+    elif lower_file_name.endswith(".docx") and not lower_file_name.startswith("~$"):
         output_name = verify_file_does_not_exist_and_get_output_name(input_name, ".md")
         print(f"Reading .docx file: \"{input_name}\"... ", end="")
         text = docx2python.docx2python(input_name).text.replace("--", "*")
