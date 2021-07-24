@@ -69,6 +69,7 @@ def sitemap_route() -> Response:
     "What are you afraid of?",
     "Do bats eat cats?",
     "Online Doom Cult.",
+    "Antimon Antinomy",
     "Please be nice.",
     "Enter, Exit.",
 ])
