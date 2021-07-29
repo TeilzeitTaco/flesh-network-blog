@@ -1,0 +1,27 @@
+<div class="title-header">
+  <div class="main-header">Fleischchan</div>
+  <div class="side-header">Totally Rotten Underbelly</div>
+</div>
+
+<div class="main-letter-box">
+  <app-letter-icon-grid #letterIconGridComponent
+    (newLetterClicked)="onNewLetterButtonClicked()"
+    (viewLetterClicked)="onViewLetterClicked($event)">
+  </app-letter-icon-grid>
+</div>
+
+<app-dialog-frame #dialogComponent>
+  <ng-container [ngSwitch]="dialogType">
+    <app-new-letter-dialog
+      *ngSwitchCase="1"
+      (newLetterCreated)="onNewLetterCreated($event)"
+      (newLetterPosted)="fetchPosts()">
+    </app-new-letter-dialog>
+
+    <app-letter-detailed-view
+      [letter]="selectedLetter!"
+      *ngSwitchCase="2">
+    </app-letter-detailed-view>
+
+  </ng-container>
+</app-dialog-frame>

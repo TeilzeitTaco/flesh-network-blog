@@ -1,0 +1,8 @@
+<div class="letter-container">
+  <app-letter-icon *ngFor="let letter of letters" [letter]="letter" (clicked)="onViewLetter(letter)"></app-letter-icon>
+</div>
+<div class="below-letters-container">
+  <button class="btn-circle btn-primary" (click)="onNewLetter()">
+    <i class="glyphicon glyphicon-plus"></i>
+  </button>
+</div>

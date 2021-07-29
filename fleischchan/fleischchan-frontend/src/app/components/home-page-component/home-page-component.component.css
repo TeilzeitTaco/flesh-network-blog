@@ -1,0 +1,21 @@
+.main-letter-box {
+  margin: 1em;
+}
+
+.title-header {
+  margin: 1em;
+}
+
+.main-header {
+  font-family: "Times New Roman", serif;
+  font-size: 5em;
+  text-align: center;
+  line-height: 0.8;
+}
+
+.side-header {
+  font-family: "Times New Roman", serif;
+  font-style: italic;
+  font-size: 2em;
+  text-align: center;
+}

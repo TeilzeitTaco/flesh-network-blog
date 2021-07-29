@@ -1,0 +1,31 @@
+<div>
+  <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+    <table>
+      <tbody>
+      <tr>
+        <td><label for="author">Author</label></td>
+        <td><input type="text" id="author" ngModel name="author" required></td>
+      </tr>
+
+      <tr>
+        <td><label for="title">Title</label></td>
+        <td><input type="text" id="title" ngModel name="title" required></td>
+      </tr>
+
+      <tr>
+        <td><label for="content">Letter</label></td>
+        <td><textarea type="text" id="content" ngModel name="content" required></textarea></td>
+      </tr>
+
+      <tr>
+        <td><label for="file">Image</label></td>
+        <td><input type="file" id="file" ngModel name="file" accept="image/*" (change)="onFileSelected($event.target)"></td>
+      </tr>
+
+      <tr>
+        <td colspan="2"><button type="submit" id="submit" [disabled]="!form.valid">Send Letter</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </form>
+</div>

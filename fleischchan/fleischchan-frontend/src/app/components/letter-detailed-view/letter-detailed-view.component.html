@@ -1,0 +1,8 @@
+<div class="letter-content-container">
+  <div>
+    <img *ngIf="letter?.fileModel" src="{{ letter?.fileModel?.getResourceUrl() }}" alt="Cover Image">
+    <h1>{{ letter.title }}</h1>
+    <h3>{{ letter.author }}</h3>
+  </div>
+  <markdown [data]="letter?.content" katex></markdown>
+</div>

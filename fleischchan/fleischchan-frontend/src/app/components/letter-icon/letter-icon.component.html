@@ -1,0 +1,10 @@
+<div class="letter-icon" (click)="onClick()" [ngClass]="{ephemeral: letter?.isEphemeral}">
+  <div>
+    <img *ngIf="letter?.fileModel" src="{{ letter?.fileModel?.getResourceUrl() }}" alt="Cover Image">
+    <div *ngIf="letter?.isEphemeral && letter?.willHaveImage" class="lds-ring"><div></div><div></div><div></div><div></div></div>
+  </div>
+
+  <a class="letter-title text-center" [routerLink]="['/posts', letter.id]">{{ letter?.title }}</a>
+  <markdown katex class="letter-sample" [data]="letter?.sample()"></markdown>
+  <div class="author-line">~ Written by {{ letter?.author }}</div>
+</div>

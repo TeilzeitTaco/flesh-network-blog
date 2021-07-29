@@ -1,0 +1,34 @@
+PUT http://localhost:8080/api/v1/letters/1/attachedImage
+Content-Type: application/json
+
+{
+  "id":1,
+  "hashOfContents":"TEST TEST=",
+  "originalName":"Speiseplan_POS_29.pdf"
+}
+
+###
+
+POST http://localhost:8080/api/v1/letters
+Content-Type: application/json
+
+{
+  "title": "TEST TITLE",
+  "author": "TEST AUTHOR",
+  "content": "TEST CONTENT"
+}
+
+###
+
+GET http://localhost:8080/api/v1/letters/1
+
+###
+
+PUT http://localhost:8080/api/v1/letters/1/attachedImage
+Content-Type: application/json
+
+{
+  "id":2,
+  "hashOfContents":"i6sYSawh3YdsADB09aq8sNGa5cFvHPAeOUgVN7WV9wo=",
+  "originalName":"cat.jpg"
+}
