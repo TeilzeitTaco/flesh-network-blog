@@ -240,10 +240,9 @@ class BlogPost(Base, Nameable):
 
     @property
     def formatted_timestamp(self) -> str:
-        return (self.timestamp.strftime(f"%A, the %d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
+        return (self.timestamp.strftime(f"%A, the %-d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
                 .replace("12 AM", "midnight")  # Imagine being british
-                .replace("12 PM", "noon")
-                .strip("0"))
+                .replace("12 PM", "noon"))
 
     def __init__(self, name: str, author: Author) -> None:
         self.author = author
