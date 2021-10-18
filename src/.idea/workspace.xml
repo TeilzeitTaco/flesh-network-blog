@@ -72,9 +72,17 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="429" y="165" width="578" height="534" key="find.popup" timestamp="1634582312384">
+    <state x="323" y="43" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1634584072745">
       <screen x="0" y="0" width="1437" height="864" />
     </state>
-    <state x="429" y="165" width="578" height="534" key="find.popup/0.0.1437.864@0.0.1437.864" timestamp="1634582312384" />
+    <state x="323" y="43" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1437.864@0.0.1437.864" timestamp="1634584072745" />
+    <state x="537" y="346" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1634584892870">
+      <screen x="0" y="0" width="1437" height="864" />
+    </state>
+    <state x="537" y="346" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1437.864@0.0.1437.864" timestamp="1634584892870" />
+    <state x="429" y="165" width="578" height="534" key="find.popup" timestamp="1634586419928">
+      <screen x="0" y="0" width="1437" height="864" />
+    </state>
+    <state x="429" y="165" width="578" height="534" key="find.popup/0.0.1437.864@0.0.1437.864" timestamp="1634586419928" />
   </component>
 </project>

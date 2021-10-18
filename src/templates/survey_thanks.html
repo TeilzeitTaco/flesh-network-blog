@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p>
+    Thank you for submitting content regarding "{{ blog_post.name }}"!<br>
+    Your submission will be processed shortly.
+</p>
+<p>
+    The file, and your hashed and salted IP address will be retained until the
+    content submission phase for this project ends.
+    If you seek to delete your data before then, please request so
+    in the comments mentioning this tag: <b>{{ hashed_ip }}</b>
+</p>
+{% endblock %}

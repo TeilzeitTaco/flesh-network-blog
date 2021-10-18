@@ -1,17 +1,20 @@
+import os
 import random
+from datetime import datetime
 from typing import Callable
 from urllib.parse import urlparse
 
-from flask import render_template, request, send_from_directory, current_app, Response, url_for
+from flask import current_app
+from flask import render_template, request, send_from_directory, Response, url_for
 from flask.blueprints import Blueprint
 from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import abort
-from werkzeug.utils import redirect
+from werkzeug.utils import redirect, secure_filename
 
-from readable_queries import get_all_visible_blog_posts
 from forms import CommentForm
 from main import cache
-from misc import FileCache, static_vars, IPTracker, in_res_path
+from misc import FileCache, static_vars, IPTracker, in_res_path, hash_string
+from readable_queries import get_all_visible_blog_posts
 from sitemap import generate_sitemap
 from sqlbase import db, BlogPost, Author, Tag, Friend, ReferrerHostname
 
@@ -91,6 +94,32 @@ def route_posts() -> any:
     blog_posts = get_all_visible_blog_posts().order_by(BlogPost.timestamp.desc()).all()
     return render_template("posts.html", title="All Writings", return_to_root=True,
                            blog_posts=blog_posts)
+
+
+@bp.route("/posts/<int:blog_post_id>/survey", methods=["POST"])
+def route_survey_submit(blog_post_id: int) -> any:
+    if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
+        abort(404)
+
+    if not blog_post.allow_file_upload:
+        abort(403)
+
+    # check if the post request has the file part
+    if "file" not in request.files:
+        abort(422)
+
+    file = request.files["file"]
+    if file.filename == "":
+        abort(422)
+
+    hashed_ip = hash_string(current_app.config["SECRET_KEY"] + request.remote_addr, 8)
+    file_name = f"{hashed_ip}-{datetime.now().timestamp()}-{secure_filename(file.filename)}"
+    file_path = os.path.join(blog_post.uploaded_files_path, file_name)
+    file.save(file_path)
+
+    return render_template("survey_thanks.html", return_to_root=True,
+                           title=f"Content Submission for \"{blog_post.name}\"",
+                           blog_post=blog_post, hashed_ip=hashed_ip)
 
 
 @bp.route("/posts/<int:blog_post_id>/", methods=["GET", "POST"])

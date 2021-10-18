@@ -64,5 +64,24 @@
         </form>
     </div>
     {% endif %}
+
+    {% if blog_post.allow_file_upload %}
+    <hr>
+    <div>
+        <form action="../survey" method="post" enctype="multipart/form-data">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>Survey File: </td>
+                        <td><input type="file" name="file"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="submit" value="Upload Survey File"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

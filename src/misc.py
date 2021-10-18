@@ -26,7 +26,7 @@ class FileCache:
 
 
 class IPTracker:
-    """Keeps track of recent (IP address, post id) tuples to make hit counting a bit less wonky"""
+    """Keeps track of recent (IP address hash, post id) tuples to make hit counting a bit less wonky"""
     __recorded_hits = dict()
 
     def remove_expired(self) -> None:
@@ -37,12 +37,11 @@ class IPTracker:
 
         # Alter dict afterwards to avoid a RuntimeError
         if to_pop:
-            logging.debug(f"IPTracker: Purging records {to_pop}...")
             for pop in to_pop:
                 self.__recorded_hits.pop(pop)
 
-    def should_count_request(self, ip: str, post_id: int) -> bool:
-        key = (ip, post_id)
+    def should_count_request(self, clear_ip: str, post_id: int) -> bool:
+        key = (hash_string(clear_ip), post_id)
         was_not_in_hits_previously = key not in self.__recorded_hits
         self.__recorded_hits[key] = datetime.now()
         return was_not_in_hits_previously
@@ -88,12 +87,18 @@ def write_file(path: str, content: str) -> None:
         f.write(content)
 
 
-def hash_file(path: str) -> str:
+def hash_file(path: str, length: int = 32) -> str:
     with open(path, "rb") as f:
         hash_sum = hashlib.shake_256()
         hash_sum.update(f.read())
 
-    return hash_sum.hexdigest(32)
+    return hash_sum.hexdigest(length)
+
+
+def hash_string(string: str, length: int = 32) -> str:
+    hash_sum = hashlib.shake_256()
+    hash_sum.update(string.encode())
+    return hash_sum.hexdigest(length)
 
 
 def has_prefix(string: str, prefix: str) -> Optional[str]:

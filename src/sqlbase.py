@@ -1,3 +1,4 @@
+import os
 import re
 
 from abc import abstractmethod
@@ -203,6 +204,7 @@ class BlogPost(Base, Nameable):
 
     include_in_graph = Column(Boolean, default=False)
     allow_comments = Column(Boolean, default=True)
+    allow_file_upload = Column(Boolean, default=False)
     hidden = Column(Boolean, default=False)
 
     tags = relationship("Tag", secondary="tag_associations", order_by="Tag.name")
@@ -214,25 +216,37 @@ class BlogPost(Base, Nameable):
 
     @property
     def slug(self) -> str:
+
         return slugify(self.name)
 
     @property
     def slug_path(self) -> str:
-        return f"blogposts/{self.author.slug}/{self.slug}"
+        return os.path.join("blogposts", self.author.slug, self.slug)
+
+    def __slug_path_with(self, with_string: str) -> str:
+        return os.path.join(self.slug_path, with_string)
 
     @property
     def markdown_path(self) -> str:
-        return f"{self.slug_path}/post.md"
+        return self.__slug_path_with("post.md")
 
     @property
     def interstage_path(self) -> str:
         if self.include_in_graph:
-            return f"{self.slug_path}/interstage.md"
+            return self.__slug_path_with("interstage.md")
         return self.markdown_path
 
     @property
     def resources_path(self) -> str:
-        return f"{self.slug_path}/res"
+        return self.__slug_path_with("res")
+
+    @property
+    def uploaded_files_path(self) -> str:
+        path = self.__slug_path_with("upload")
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        return path
 
     @property
     def html_path(self) -> str:
@@ -240,7 +254,7 @@ class BlogPost(Base, Nameable):
 
     @property
     def formatted_timestamp(self) -> str:
-        return (self.timestamp.strftime(f"%A, the %-d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
+        return (self.timestamp.strftime(f"%A, the %d{get_date_suffix(self.timestamp.day)} of %B, %Y, around %I %p")
                 .replace("12 AM", "midnight")  # Imagine being british
                 .replace("12 PM", "noon"))
 
