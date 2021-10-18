@@ -68,7 +68,7 @@
     {% if blog_post.allow_file_upload %}
     <hr>
     <div>
-        <form action="../survey" method="post" enctype="multipart/form-data">
+        <form action="{{ url_for('home.route_survey_submit', blog_post_id=blog_post.id) }}" method="post" enctype="multipart/form-data">
             <table>
                 <tbody>
                     <tr>
