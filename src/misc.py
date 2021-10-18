@@ -14,24 +14,24 @@ MAX_IP_RETENTION_TIME = timedelta(hours=24)
 
 class FileCache:
     """Keep file contents in memory to avoid file system slowness."""
-    cache = dict()
+    __cache = dict()
 
     def get_contents(self, path: str) -> str:
-        if path in self.cache:
-            return self.cache[path]
+        if path in self.__cache:
+            return self.__cache[path]
 
         logging.debug(f"FileCache: Reading file \"{path}\"...")
         with open(path, "r") as f:
-            return self.cache.setdefault(path, f.read())
+            return self.__cache.setdefault(path, f.read())
 
 
 class IPTracker:
     """Keeps track of recent (IP address, post id) tuples to make hit counting a bit less wonky"""
-    recorded_hits = dict()
+    __recorded_hits = dict()
 
     def remove_expired(self) -> None:
         to_pop = list()
-        for key, timestamp in self.recorded_hits.items():
+        for key, timestamp in self.__recorded_hits.items():
             if datetime.now() - timestamp > MAX_IP_RETENTION_TIME:
                 to_pop.append(key)
 
@@ -39,12 +39,12 @@ class IPTracker:
         if to_pop:
             logging.debug(f"IPTracker: Purging records {to_pop}...")
             for pop in to_pop:
-                self.recorded_hits.pop(pop)
+                self.__recorded_hits.pop(pop)
 
     def should_count_request(self, ip: str, post_id: int) -> bool:
         key = (ip, post_id)
-        was_not_in_hits_previously = key not in self.recorded_hits
-        self.recorded_hits[key] = datetime.now()
+        was_not_in_hits_previously = key not in self.__recorded_hits
+        self.__recorded_hits[key] = datetime.now()
         return was_not_in_hits_previously
 
 

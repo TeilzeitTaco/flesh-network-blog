@@ -72,6 +72,7 @@ def sitemap_route() -> Response:
     "Antimon Antinomy",
     "Please be nice.",
     "Enter, Exit.",
+    "Silly HQ",
 ])
 def route_root() -> any:
     quote = random.choice(route_root.quotes)
