@@ -251,10 +251,12 @@ def create_blog_post() -> None:
 
 def set_post_flags() -> None:
     include_in_graph = yes_or_no("Enable graph annotations")
+    allow_file_upload = yes_or_no("Allow file upload")
     allow_comments = yes_or_no("Allow comments")
     hidden = yes_or_no("Hide post")
 
     def handle(blog_post: BlogPost) -> None:
+        blog_post.allow_file_upload = allow_file_upload
         blog_post.include_in_graph = include_in_graph
         blog_post.allow_comments = allow_comments
         blog_post.hidden = hidden
