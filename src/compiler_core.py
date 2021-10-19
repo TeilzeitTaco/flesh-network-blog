@@ -29,10 +29,11 @@ def convert_markdown_for_post(post: BlogPost) -> None:
 
 
 class MarkupReference:
-    def __init__(self, object_class: type, resolve_by_name: bool):
+    def __init__(self, object_class: type, resolve_by_name: bool, keyword: str = None):
         self.__resolve_by_name = resolve_by_name
         self.__object_class = object_class
-        self.__keyword = object_class.__name__.lower()
+        self.__url_part = object_class.__name__.lower()
+        self.__keyword = keyword or self.__url_part
 
     def __produce_value_string(self, value: any) -> str:
         return f"\"{value}\"" if self.__resolve_by_name else value
@@ -52,13 +53,14 @@ class MarkupReference:
             else:
                 found_object = db.query(self.__object_class).get(int(decoded_reference))
             if found_object:
-                return f"/{self.__keyword}s/{found_object.id}/{found_object.slug}/"
+                return f"/{self.__url_part}s/{found_object.id}/{found_object.slug}/"
 
             user_provided_value = self.__produce_value_string(decoded_reference)
             critical_error(f"Missing {self.__keyword} {user_provided_value}!")
 
 
 BLOGPOST_MARKUP_REFERENCE = MarkupReference(BlogPost, False)
+POST_MARKUP_REFERENCE = MarkupReference(BlogPost, False, "post")
 AUTHOR_MARKUP_REFERENCE = MarkupReference(Author, True)
 TAG_MARKUP_REFERENCE = MarkupReference(Tag, True)
 
