@@ -37,14 +37,15 @@ def create_node_interstage(reference_table: dict, node: BlogPost) -> None:
 
     markdown = read_file(node.markdown_path)
     for word, (regex, reference) in reference_table.items():
+        # ...stop a page from referencing itself.
         if word == node.name:
             continue
 
         # Turn word into syntax [word]({{ post: X }}).
         # We have to do some lambda magic to avoid silly overlapping issues.
         markdown = regex.sub(
-            lambda match: rf"[{match.group(1)}]({reference})"
-            if match.group(1) else match.group(0), markdown)
+            lambda match: rf"[{match.group(1)}]({reference})" if match.group(1) else match.group(0),
+            markdown)
 
     write_file(node.interstage_path, markdown)
 
