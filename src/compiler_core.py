@@ -80,7 +80,8 @@ def pre_process_markdown(markdown_src: str, blog_post: BlogPost) -> str:
             critical_error(f"Missing resource \"{decoded_reference}\"!")
 
         # Simple references
-        for possible_reference in [BLOGPOST_MARKUP_REFERENCE, AUTHOR_MARKUP_REFERENCE, TAG_MARKUP_REFERENCE]:
+        for possible_reference in [BLOGPOST_MARKUP_REFERENCE, POST_MARKUP_REFERENCE,
+                                   AUTHOR_MARKUP_REFERENCE, TAG_MARKUP_REFERENCE]:
             if result := possible_reference.maybe_match(reference):
                 return result
 
