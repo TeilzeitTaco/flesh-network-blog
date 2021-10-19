@@ -89,14 +89,14 @@ def route_root() -> any:
                            quote=quote)
 
 
-@bp.route("/posts/")
+@bp.route("/blogposts/")
 def route_posts() -> any:
     blog_posts = get_all_visible_blog_posts().order_by(BlogPost.timestamp.desc()).all()
     return render_template("posts.html", title="All Writings", return_to_root=True,
                            blog_posts=blog_posts)
 
 
-@bp.route("/posts/<int:blog_post_id>/survey", methods=["POST"])
+@bp.route("/blogposts/<int:blog_post_id>/survey", methods=["POST"])
 def route_survey_submit(blog_post_id: int) -> any:
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
         abort(404)
@@ -122,8 +122,8 @@ def route_survey_submit(blog_post_id: int) -> any:
                            blog_post=blog_post, hashed_ip=hashed_ip)
 
 
-@bp.route("/posts/<int:blog_post_id>/", methods=["GET", "POST"])
-@bp.route("/posts/<int:blog_post_id>/<string:_name>/", methods=["GET", "POST"])
+@bp.route("/blogposts/<int:blog_post_id>/", methods=["GET", "POST"])
+@bp.route("/blogposts/<int:blog_post_id>/<string:_name>/", methods=["GET", "POST"])
 @static_vars(file_cache=FileCache(), ip_tracker=IPTracker())
 def route_blog_post(blog_post_id: int, _name: str = "") -> any:
     if (blog_post := db.query(BlogPost).get(blog_post_id)) is None:
