@@ -15,10 +15,12 @@ def create_reference_table() -> dict:
     # The word is kept so that we can stop a page from referencing itself.
     word_regex_reference_triples = dict()
     node_sets = {
-        # Apply longest term first: Prefer "world spirit" over "spirit".
-        BLOGPOST_MARKUP_REFERENCE: get_all_nodes().order_by(desc(func.length(BlogPost.name))),
         AUTHOR_MARKUP_REFERENCE: db.query(Author).all(),
         TAG_MARKUP_REFERENCE: db.query(Tag).all(),
+
+        # Apply longest term first: Prefer "world spirit" over "spirit".
+        # Also last so blogposts tage precedence over author and tag names.
+        BLOGPOST_MARKUP_REFERENCE: get_all_nodes().order_by(desc(func.length(BlogPost.name))),
     }
 
     for reference_type, nodes in node_sets.items():
@@ -27,6 +29,7 @@ def create_reference_table() -> dict:
             regex = re.compile(regex_source, flags=re.IGNORECASE)
             word_regex_reference_triples[node.name] = (regex, reference_type.produce_reference(node.id))
 
+    print(f"Generated {len(word_regex_reference_triples)} referencable terms.")
     return word_regex_reference_triples
 
 
