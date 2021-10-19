@@ -14,13 +14,14 @@ def create_reference_table() -> dict:
     # So for example for the blogpost "spirit" -> "\[.*?\]|(spirit)", "{{ blogpost: 13 }}"
     # The word is kept so that we can stop a page from referencing itself.
     word_regex_reference_triples = dict()
+    graph_pages = get_all_nodes().order_by(desc(func.length(BlogPost.name))).all()
     node_sets = {
         AUTHOR_MARKUP_REFERENCE: db.query(Author).all(),
         TAG_MARKUP_REFERENCE: db.query(Tag).all(),
 
         # Apply longest term first: Prefer "world spirit" over "spirit".
         # Also last so blogposts tage precedence over author and tag names.
-        BLOGPOST_MARKUP_REFERENCE: get_all_nodes().order_by(desc(func.length(BlogPost.name))),
+        BLOGPOST_MARKUP_REFERENCE: graph_pages,
     }
 
     for reference_type, nodes in node_sets.items():
@@ -29,7 +30,10 @@ def create_reference_table() -> dict:
             regex = re.compile(regex_source, flags=re.IGNORECASE)
             word_regex_reference_triples[node.name] = (regex, reference_type.produce_reference(node.id))
 
-    print(f"Generated {len(word_regex_reference_triples)} referencable terms.")
+    triples_count = len(word_regex_reference_triples)
+    graph_pages_count = len(graph_pages)
+    print(f"Generated {triples_count} referencable terms for {graph_pages_count} pages.")
+    print(f"Complexity: {triples_count * graph_pages_count} regex applications.")
     return word_regex_reference_triples
 
 
