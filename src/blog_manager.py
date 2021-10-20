@@ -20,7 +20,12 @@ from functools import partial
 from typing import Optional, Callable
 
 from sqlalchemy.exc import IntegrityError
-from spellchecker.spellchecker import SpellChecker
+
+try:
+    from spellchecker.spellchecker import SpellChecker
+except ModuleNotFoundError:
+    # Windows things...
+    pass
 
 from sqlbase import db, Author, BlogPost, Tag, TagAssociation, Friend, Nameable, ReferrerHostname, Comment
 

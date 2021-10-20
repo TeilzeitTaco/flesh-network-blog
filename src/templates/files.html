@@ -2,20 +2,20 @@
 
 {% block content %}
 <p>
-    Files hosted on the Flesh-Network:
-    <ul>
-        {% for blog_post in blog_posts %}
-        {% if blog_post.file_resources %}
-        <li>{{ blog_post.name }}
-            <ul>
-                {% for file_resource in blog_post.file_resources %}
-                <li><a href="{{ in_res_path(file_resource.name) }}">{{ file_resource.title }}</a></li>
-                {% endfor %}
-            </ul>
-            <br>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
+    The Flesh-Network currently hosts {{ file_count }} files:
 </p>
+<ul>
+    {% for blog_post in blog_posts %}
+    {% if blog_post.file_resources %}
+    <li>{{ blog_post.name }}
+        <ul>
+            {% for file_resource in blog_post.file_resources %}
+            <li><a href="{{ in_res_path(file_resource.name) }}">{{ file_resource.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <br>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
 {% endblock %}

@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if tag.long_description %}
 <p>
     {{ tag.long_description | safe }}
-    <ul>
-        {% for blog_post in tag.blog_posts %}
-        {% include "post_link.html" %}
-        {% endfor %}
-    </ul>
 </p>
+{% endif %}
+
+{% if tag.blog_posts %}
+<ul>
+    {% for blog_post in tag.blog_posts %}
+    {% include "post_link.html" %}
+    {% endfor %}
+</ul>
+{% else %}
+<p>
+    There are currently no posts with this tag.
+</p>
+{% endif %}
 {% endblock %}

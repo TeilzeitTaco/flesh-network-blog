@@ -3,11 +3,11 @@
 {% block content %}
 <p>
     Posts written by "{{ author.name }}":
-    {% set no_author = True %}
-    <ul>
-        {% for blog_post in author.blog_posts %}
-        {% include "post_link.html" %}
-        {% endfor %}
-    </ul>
 </p>
+{% set no_author = True %}
+<ul>
+    {% for blog_post in author.blog_posts %}
+    {% include "post_link.html" %}
+    {% endfor %}
+</ul>
 {% endblock %}

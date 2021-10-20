@@ -3,10 +3,10 @@
 {% block content %}
 <p>
     Domains which were found to link to the Flesh-Network:
-    <ul>
-        {% for hostname in hostnames %}
-        <li>{{ hostname.name }}</li>
-        {% endfor %}
-    </ul>
 </p>
+<ul>
+    {% for hostname in hostnames %}
+    <li>{{ hostname.name }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}

@@ -183,5 +183,6 @@ def route_tag(tag_id: int, _name: str = "") -> any:
 @cache.cached()
 def route_files() -> any:
     blog_posts = get_all_visible_blog_posts().order_by(BlogPost.timestamp.desc()).all()
+    file_count = sum(len(blog_post.file_resources) for blog_post in blog_posts)
     return render_template("files.html", title="File Index", return_to_root=True,
-                           blog_posts=blog_posts)
+                           blog_posts=blog_posts, file_count=file_count)
