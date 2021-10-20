@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+<p>
+    The Flesh-Network currently hosts {{ blog_posts | length }} posts:
+</p>
 <ul>
     {% for blog_post in blog_posts %}
     {% include "post_link.html" %}
