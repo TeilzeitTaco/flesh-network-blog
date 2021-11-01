@@ -166,7 +166,7 @@ def show_posts() -> None:
     if posts := db.query(BlogPost).all():
         longest_title = max(len(post.name) for post in posts)
         longest_author = max(len(post.author.name) for post in posts)
-        print(f"|  ID | {'Title'.rjust(longest_title)} | {'Author'.rjust(longest_author)} | "
+        print(f"|  ID | {'Title'.ljust(longest_title)} | {'Author'.rjust(longest_author)} | "
               f"Hits | Commentable | In Graph | Hidden |")
 
         print(f"|-----|-{'-' * longest_title}-|-{'-' * longest_author}-|------|-------------|----------|--------|")
